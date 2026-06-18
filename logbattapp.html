@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LogBATT · Auftragsabwicklung</title>
+<style>
+  :root{
+    --blue:#2FADE3; --blue-dark:#1E96C8; --blue-tint:#EAF7FC;
+    --gray:#707074; --ink:#2D2D2F; --muted:#6B7176;
+    --line:#E2E5E8; --line-strong:#CFD4D8; --page:#ECEEF0; --card:#FFFFFF;
+    --amber:#E0A82E; --amber-tint:#FBF3DF; --green:#2E8A4F; --green-tint:#E4F4EA;
+    --teal:#0E9AA7; --teal-tint:#E0F3F4; --violet:#6B5BD2; --violet-tint:#ECE9FB;
+    --danger:#D14545;
+    --radius:10px; --shadow:0 1px 2px rgba(45,45,47,.04),0 8px 28px rgba(45,45,47,.06);
+    --font:'Segoe UI',system-ui,-apple-system,Roboto,Helvetica,Arial,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--page);color:var(--ink);font-family:var(--font);font-size:15px;line-height:1.5;}
+
+  /* ---------- header + nav ---------- */
+  .topbar{background:#fff;border-bottom:3px solid var(--blue);}
+  .topbar-inner{max-width:1180px;margin:0 auto;padding:16px 28px 0;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;}
+  .badge{display:inline-flex;align-items:center;gap:11px;}
+  .badge .num{width:40px;height:40px;border-radius:8px;background:var(--blue);color:#fff;font-weight:800;font-size:17px;display:flex;align-items:center;justify-content:center;}
+  .badge .ttl{font-size:14px;font-weight:700;color:var(--ink);line-height:1.2;}
+  .badge .ttl small{display:block;font-weight:400;color:var(--muted);font-size:11.5px;}
+  .logo{font-weight:800;font-size:30px;letter-spacing:-.5px;line-height:1;text-align:right;}
+  .logo .log{color:var(--gray);} .logo .batt{color:var(--blue);}
+  .logo .member{display:block;margin-top:3px;font-size:9px;font-weight:600;letter-spacing:1.4px;color:var(--gray);}
+  .logo .member b{color:var(--blue);}
+  .nav{max-width:1180px;margin:0 auto;padding:10px 28px 0;display:flex;gap:4px;}
+  .nav button{font-family:inherit;font-size:14px;font-weight:600;color:var(--muted);background:none;border:0;border-bottom:3px solid transparent;padding:10px 14px 12px;margin-bottom:-3px;cursor:pointer;}
+  .nav button:hover{color:var(--ink);}
+  .nav button.active{color:var(--blue-dark);border-bottom-color:var(--blue);}
+  .nav .navcount{display:inline-block;min-width:20px;font-size:12px;font-weight:700;color:#fff;background:var(--blue);border-radius:999px;padding:1px 7px;margin-left:6px;}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:24px 28px 80px;}
+  .wrap.narrow{max-width:920px;}
+
+  .lead{color:var(--muted);font-size:13.5px;margin:2px 0 22px;}
+  .banner{font-size:12.5px;border-radius:8px;padding:9px 12px;margin-bottom:16px;}
+  .banner.info{color:#33606e;background:var(--blue-tint);border:1px solid #CDEBF7;}
+  .banner.warn{color:#7a5e12;background:var(--amber-tint);border:1px solid #ECD89A;}
+  .banner.hide{display:none;}
+
+  /* ---------- cards / form ---------- */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);margin-bottom:18px;overflow:hidden;}
+  .card > .head{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--line);background:linear-gradient(0deg,#fff,#fbfdfe);}
+  .card > .head .step{flex:0 0 auto;width:26px;height:26px;border-radius:6px;background:var(--blue-tint);color:var(--blue-dark);font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .card > .head h2{margin:0;font-size:15.5px;font-weight:700;color:var(--ink);}
+  .card > .head .sub{margin-left:auto;font-size:12px;color:var(--muted);}
+  .card > .body{padding:18px 20px;}
+
+  .grid{display:grid;gap:14px 18px;}
+  .g2{grid-template-columns:1fr 1fr;} .g3{grid-template-columns:1fr 1fr 1fr;}
+  @media (max-width:640px){.g2,.g3{grid-template-columns:1fr;}}
+  .field{display:flex;flex-direction:column;gap:5px;}
+  .field.span2{grid-column:1 / -1;}
+  label.lbl{font-size:12.5px;font-weight:600;color:var(--gray);}
+  .req::after{content:" *";color:var(--blue-dark);font-weight:700;}
+  .hint{font-size:11.5px;color:var(--muted);}
+  input[type=text],input[type=email],input[type=tel],input[type=number],textarea,select{width:100%;font-family:inherit;font-size:14px;color:var(--ink);background:#fff;border:1px solid var(--line-strong);border-radius:8px;padding:9px 11px;transition:border-color .12s,box-shadow .12s;}
+  textarea{resize:vertical;min-height:74px;}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,173,227,.18);}
+  select{appearance:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'><path d='M1 1l5 5 5-5' fill='none' stroke='%23707074' stroke-width='1.6' stroke-linecap='round'/></svg>");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+  fieldset.choice{border:0;margin:0;padding:0;}
+  fieldset.choice > legend{font-size:12.5px;font-weight:600;color:var(--gray);padding:0;margin-bottom:6px;}
+  .opts{display:flex;flex-wrap:wrap;gap:8px;}
+  .opt{position:relative;display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-strong);border-radius:8px;padding:7px 12px;cursor:pointer;font-size:13.5px;background:#fff;transition:border-color .12s,background .12s;}
+  .opt:hover{border-color:var(--blue);}
+  .opt input{position:absolute;opacity:0;inset:0;cursor:pointer;margin:0;}
+  .opt .dot{width:15px;height:15px;border:1.6px solid var(--line-strong);flex:0 0 auto;display:inline-block;transition:all .12s;}
+  .opt input[type=radio] ~ .dot{border-radius:50%;}
+  .opt input[type=checkbox] ~ .dot{border-radius:4px;}
+  .opt input:checked ~ .dot{border-color:var(--blue);background:var(--blue);box-shadow:inset 0 0 0 3px #fff;}
+  .opt input:checked ~ span.txt{color:var(--blue-dark);font-weight:600;}
+  .opt input:focus-visible ~ .dot{box-shadow:0 0 0 3px rgba(47,173,227,.3);}
+  .opt.block{display:flex;width:100%;}
+  .inline-extra{margin-top:8px;}
+  .divider{height:1px;background:var(--line);margin:18px 0;border:0;}
+  .subhead{font-size:12px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--blue-dark);margin:2px 0 12px;}
+  .reveal{display:none;} .reveal.show{display:block;} .reveal.show.grid{display:grid;}
+  .note{font-size:12.5px;color:var(--muted);background:var(--blue-tint);border:1px solid #CDEBF7;border-radius:8px;padding:9px 12px;margin-top:8px;}
+  .footnote{font-size:11.5px;color:var(--muted);margin-top:6px;}
+  .legal{font-size:11.5px;color:var(--muted);line-height:1.45;border-top:1px solid var(--line);padding-top:14px;margin-top:6px;}
+  .actions{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-top:8px;}
+  .btn{font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;border-radius:9px;padding:11px 20px;border:1px solid transparent;transition:all .12s;}
+  .btn-sm{font-size:13.5px;padding:10px 16px;}
+  .btn-primary{background:var(--blue);color:#fff;} .btn-primary:hover{background:var(--blue-dark);}
+  .btn-ghost{background:#fff;color:var(--gray);border-color:var(--line-strong);} .btn-ghost:hover{border-color:var(--blue);color:var(--blue-dark);}
+  .btn-danger{background:#fff;color:var(--danger);border-color:#EBC2C2;} .btn-danger:hover{background:#FBEDED;}
+  .status{font-size:13px;color:var(--muted);} .status.ok{color:var(--green);} .status.err{color:var(--danger);}
+  .err-field input,.err-field textarea,.err-field select{border-color:var(--danger)!important;}
+  .todo{outline:1.5px dashed #E0B43A;}
+
+  /* ---------- overview ---------- */
+  .toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:18px;}
+  .search{position:relative;flex:1 1 240px;max-width:340px;}
+  .search input{width:100%;font-family:inherit;font-size:14px;border:1px solid var(--line-strong);border-radius:9px;padding:10px 12px 10px 36px;background:#fff;}
+  .search input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,173,227,.18);}
+  .search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);}
+  .seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:9px;overflow:hidden;background:#fff;}
+  .seg button{font-family:inherit;font-size:13px;font-weight:600;color:var(--muted);background:none;border:0;padding:9px 13px;cursor:pointer;border-right:1px solid var(--line);}
+  .seg button:last-child{border-right:0;}
+  .seg button.active{background:var(--blue-tint);color:var(--blue-dark);}
+  .spacer{margin-left:auto;}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  table{width:100%;border-collapse:collapse;}
+  thead th{font-size:11.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;color:var(--muted);text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);background:#fbfdfe;}
+  tbody td{padding:14px 16px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle;}
+  tbody tr{cursor:pointer;transition:background .1s;}
+  tbody tr:hover{background:var(--blue-tint);}
+  tbody tr:last-child td{border-bottom:0;}
+  tbody tr.flash{animation:flash 1.4s ease;}
+  @keyframes flash{0%{background:#D4F0FB;}100%{background:transparent;}}
+  .ref{font-weight:700;color:var(--ink);}
+  .subtxt{font-size:12px;color:var(--muted);}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;white-space:nowrap;}
+  .pill .d{width:7px;height:7px;border-radius:50%;}
+  .pill.neu{background:var(--blue-tint);color:var(--blue-dark);} .pill.neu .d{background:var(--blue);}
+  .pill.bearbeitung{background:var(--amber-tint);color:#8a6a12;} .pill.bearbeitung .d{background:var(--amber);}
+  .pill.abgeschlossen{background:var(--green-tint);color:var(--green);} .pill.abgeschlossen .d{background:var(--green);}
+  .pill.bestaetigt{background:var(--teal-tint);color:#0a6f78;} .pill.bestaetigt .d{background:var(--teal);}
+  .pill.ausgeliefert{background:var(--violet-tint);color:#4a3eb0;} .pill.ausgeliefert .d{background:var(--violet);}
+  .tag-typ{display:inline-block;font-size:12px;font-weight:600;color:var(--gray);background:#F1F3F5;border:1px solid var(--line);padding:3px 9px;border-radius:6px;}
+  .tag-abfall{display:inline-block;font-size:11px;font-weight:700;color:var(--blue-dark);margin-left:6px;}
+  .demo-flag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.4px;color:#8a6a12;background:var(--amber-tint);border:1px solid #ECD89A;border-radius:5px;padding:1px 6px;margin-left:8px;vertical-align:middle;}
+  .empty{padding:54px 24px;text-align:center;color:var(--muted);}
+  .empty h3{margin:0 0 6px;color:var(--ink);font-size:16px;}
+  .empty p{margin:0 0 16px;font-size:13.5px;}
+
+  .overlay{position:fixed;inset:0;background:rgba(30,40,46,.35);opacity:0;pointer-events:none;transition:opacity .18s;z-index:40;}
+  .overlay.show{opacity:1;pointer-events:auto;}
+  .drawer{position:fixed;top:0;right:0;height:100%;width:min(560px,100%);background:#fff;box-shadow:-12px 0 40px rgba(30,40,46,.18);transform:translateX(100%);transition:transform .22s ease;z-index:50;display:flex;flex-direction:column;}
+  .drawer.show{transform:translateX(0);}
+  .drawer-head{padding:18px 22px;border-bottom:1px solid var(--line);display:flex;align-items:flex-start;gap:12px;}
+  .drawer-head .x{margin-left:auto;background:none;border:0;font-size:24px;line-height:1;color:var(--muted);cursor:pointer;padding:0 4px;}
+  .drawer-head .x:hover{color:var(--ink);}
+  .drawer-title{font-size:18px;font-weight:800;color:var(--ink);}
+  .drawer-meta{font-size:12.5px;color:var(--muted);margin-top:3px;}
+  .drawer-body{padding:18px 22px;overflow-y:auto;flex:1;}
+  .drawer-foot{padding:14px 22px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+  .statusrow{display:flex;align-items:center;gap:8px;margin-bottom:18px;}
+  .statusrow .lbl{font-size:12px;font-weight:600;color:var(--gray);}
+  .status-seg{display:inline-flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;}
+  .status-seg button{font-family:inherit;font-size:12.5px;font-weight:600;background:none;border:0;border-right:1px solid var(--line);padding:7px 12px;cursor:pointer;color:var(--muted);}
+  .status-seg button:last-child{border-right:0;}
+  .status-seg button.active.neu{background:var(--blue-tint);color:var(--blue-dark);}
+  .status-seg button.active.bearbeitung{background:var(--amber-tint);color:#8a6a12;}
+  .status-seg button.active.abgeschlossen{background:var(--green-tint);color:var(--green);}
+  .status-seg button.active.bestaetigt{background:var(--teal-tint);color:#0a6f78;}
+  .status-seg button.active.ausgeliefert{background:var(--violet-tint);color:#4a3eb0;}
+  .status-seg{flex-wrap:wrap;}
+  /* two-way chat thread (Kunde <-> LogBATT) */
+  .thread{display:flex;flex-direction:column;gap:8px;max-height:300px;overflow-y:auto;padding:12px;background:#F7F9FA;border:1px solid var(--line);border-radius:10px;margin-bottom:10px;}
+  .tmsg{max-width:82%;padding:8px 11px;border-radius:11px;font-size:13px;line-height:1.4;white-space:pre-wrap;word-break:break-word;}
+  .tmsg .meta{display:block;font-size:10.5px;opacity:.75;margin-top:3px;}
+  .tmsg.mine{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:3px;}
+  .tmsg.theirs{align-self:flex-start;background:#fff;border:1px solid var(--line);color:var(--ink);border-bottom-left-radius:3px;}
+  .thread-empty{align-self:center;color:var(--muted);font-size:12.5px;font-style:italic;padding:8px;}
+  .thread-input{display:flex;gap:8px;align-items:flex-end;}
+  .thread-input textarea{flex:1;min-height:42px;resize:vertical;font-family:inherit;font-size:13.5px;border:1px solid var(--line-strong);border-radius:10px;padding:9px 11px;}
+  .thread-input textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,173,227,.18);}
+  .sec{margin-bottom:18px;}
+  .sec h4{font-size:11.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--blue-dark);margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line);}
+  .kv{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;font-size:13.5px;}
+  .kv dt{color:var(--muted);} .kv dd{margin:0;color:var(--ink);word-break:break-word;white-space:pre-wrap;}
+  .sec-empty{font-size:13px;color:var(--muted);font-style:italic;}
+  .foot-spacer{margin-left:auto;}
+
+  @media (max-width:780px){
+    thead{display:none;}
+    tbody td{display:block;border:0;padding:4px 16px;}
+    tbody tr{display:block;padding:12px 0;border-bottom:1px solid var(--line);}
+    .kv{grid-template-columns:1fr;gap:2px 0;}
+    .kv dt{margin-top:8px;}
+  }
+  @media print{
+    body{background:#fff;} .no-print{display:none!important;}
+    .card{box-shadow:none;break-inside:avoid;} .wrap{padding:8px 0;} .topbar{border-bottom-width:2px;}
+  }
+
+  /* ---------- chat widget ---------- */
+  .chat-launcher{position:fixed;right:22px;bottom:22px;z-index:60;display:flex;align-items:center;gap:8px;background:var(--blue);color:#fff;border:0;border-radius:999px;padding:12px 18px 12px 15px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;box-shadow:0 8px 24px rgba(47,173,227,.4);transition:background .12s,transform .12s;}
+  .chat-launcher:hover{background:var(--blue-dark);transform:translateY(-1px);}
+  .chat-launcher.hide{display:none;}
+  .chat-panel{position:fixed;right:22px;bottom:22px;z-index:61;width:min(380px,calc(100vw - 32px));height:min(560px,calc(100vh - 40px));background:#fff;border-radius:14px;box-shadow:0 18px 50px rgba(30,40,46,.28);display:none;flex-direction:column;overflow:hidden;}
+  .chat-panel.open{display:flex;}
+  .chat-head{background:var(--blue);color:#fff;padding:13px 16px;display:flex;align-items:center;gap:10px;}
+  .chat-head .ci{width:30px;height:30px;border-radius:8px;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;flex:0 0 auto;}
+  .chat-head .ct{font-size:14.5px;font-weight:700;line-height:1.2;}
+  .chat-head .ct small{display:block;font-weight:400;font-size:11.5px;opacity:.85;}
+  .chat-head .cx{margin-left:auto;background:none;border:0;color:#fff;font-size:22px;line-height:1;cursor:pointer;opacity:.9;padding:0 4px;}
+  .chat-head .cx:hover{opacity:1;}
+  .chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;background:#F7F9FA;}
+  .msg{max-width:84%;padding:10px 13px;border-radius:12px;font-size:13.5px;line-height:1.45;white-space:pre-wrap;word-break:break-word;}
+  .msg.bot{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:4px;color:var(--ink);}
+  .msg.user{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:4px;}
+  .msg.sys{align-self:center;background:var(--amber-tint);border:1px solid #ECD89A;color:#7a5e12;font-size:12.5px;text-align:center;max-width:100%;}
+  .typing{align-self:flex-start;display:inline-flex;gap:4px;padding:12px 14px;background:#fff;border:1px solid var(--line);border-radius:12px;border-bottom-left-radius:4px;}
+  .typing span{width:7px;height:7px;border-radius:50%;background:var(--line-strong);animation:bounce 1.2s infinite;}
+  .typing span:nth-child(2){animation-delay:.15s;} .typing span:nth-child(3){animation-delay:.3s;}
+  @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:.5;}30%{transform:translateY(-4px);opacity:1;}}
+  .chat-input{border-top:1px solid var(--line);padding:10px;display:flex;gap:8px;align-items:flex-end;background:#fff;}
+  .chat-input textarea{flex:1;resize:none;max-height:110px;min-height:40px;font-family:inherit;font-size:13.5px;border:1px solid var(--line-strong);border-radius:10px;padding:9px 11px;}
+  .chat-input textarea:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(47,173,227,.18);}
+  .chat-send{flex:0 0 auto;width:40px;height:40px;border-radius:10px;border:0;background:var(--blue);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+  .chat-send:hover{background:var(--blue-dark);} .chat-send:disabled{opacity:.5;cursor:default;}
+  .chat-tools{display:flex;gap:6px;padding:0 10px 8px;background:#fff;}
+  .chat-tool{font-family:inherit;font-size:12px;font-weight:600;color:var(--blue-dark);background:var(--blue-tint);border:1px solid #CDEBF7;border-radius:8px;padding:6px 10px;cursor:pointer;}
+  .chat-tool:hover{background:#dff2fb;}
+  @media print{.chat-launcher,.chat-panel{display:none!important;}}
+
+  /* ---------- modal ---------- */
+  .modal-ov{position:fixed;inset:0;background:rgba(30,40,46,.45);display:none;align-items:center;justify-content:center;z-index:70;padding:20px;}
+  .modal-ov.show{display:flex;}
+  .modal{background:#fff;border-radius:14px;box-shadow:0 18px 50px rgba(30,40,46,.3);width:min(440px,100%);overflow:hidden;}
+  .modal .mh{background:var(--blue);color:#fff;padding:18px 22px;font-size:17px;font-weight:800;}
+  .modal .mb{padding:22px;}
+  .modal .mb p{margin:0 0 14px;font-size:14px;color:var(--ink);}
+  .track-box{display:flex;align-items:center;gap:10px;background:var(--blue-tint);border:1px solid #CDEBF7;border-radius:10px;padding:12px 14px;margin-bottom:18px;}
+  .track-box .no{font-size:20px;font-weight:800;letter-spacing:1px;color:var(--blue-dark);font-family:'Courier New',monospace;}
+  .track-box .cp{margin-left:auto;font-size:12px;font-weight:600;color:var(--blue-dark);background:#fff;border:1px solid var(--line-strong);border-radius:7px;padding:6px 10px;cursor:pointer;}
+  .modal .mf{display:flex;gap:10px;justify-content:flex-end;padding:0 22px 20px;}
+
+  /* ---------- tracking view ---------- */
+  .track-lookup{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;margin-bottom:20px;}
+  .track-lookup .field{flex:1 1 240px;max-width:320px;}
+  .track-result{display:none;} .track-result.show{display:block;}
+  .track-status{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+  .track-head{font-size:18px;font-weight:800;color:var(--ink);}
+  .timeline{list-style:none;margin:0 0 20px;padding:0;}
+  .timeline li{position:relative;padding:0 0 16px 26px;}
+  .timeline li::before{content:'';position:absolute;left:6px;top:4px;width:11px;height:11px;border-radius:50%;background:var(--line-strong);}
+  .timeline li.done::before{background:var(--blue);}
+  .timeline li:not(:last-child)::after{content:'';position:absolute;left:11px;top:14px;bottom:0;width:1px;background:var(--line);}
+  .timeline .t-lbl{font-size:13.5px;font-weight:600;color:var(--ink);}
+  .timeline .t-time{font-size:12px;color:var(--muted);}
+  .notes-list{display:flex;flex-direction:column;gap:8px;margin-bottom:14px;}
+  .note-item{background:#F7F9FA;border:1px solid var(--line);border-radius:9px;padding:9px 12px;font-size:13px;}
+  .note-item .nt{font-size:11px;color:var(--muted);margin-bottom:2px;}
+  .note-add{display:flex;gap:8px;align-items:flex-end;}
+  .note-add textarea{flex:1;min-height:44px;}
+  .track-empty{font-size:13px;color:var(--muted);font-style:italic;}
+
+  /* ---------- Angebot / Preisberechnung ---------- */
+  .quote-box{background:#F7F9FA;border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin-bottom:14px;}
+  .quote-row{display:flex;justify-content:space-between;gap:10px;font-size:13.5px;padding:5px 0;border-bottom:1px dashed var(--line);}
+  .quote-row .l{color:var(--muted);}
+  .quote-row .v{color:var(--ink);font-weight:600;white-space:nowrap;}
+  .quote-total{display:flex;justify-content:space-between;gap:10px;font-size:16px;font-weight:800;color:var(--blue-dark);padding-top:10px;margin-top:4px;}
+  .quote-pending{font-size:13px;color:var(--muted);font-style:italic;}
+  .quote-error{font-size:12.5px;color:var(--danger);background:#FBEDED;border:1px solid #EBC2C2;border-radius:8px;padding:9px 12px;}
+  .quote-disclaimer{font-size:11px;color:var(--muted);margin-top:8px;}
+</style>
+</head>
+<body>
+
+<div id="js-error-bar" style="display:none;position:fixed;top:0;left:0;right:0;z-index:99999;background:#D14545;color:#fff;font:13px/1.45 sans-serif;padding:9px 13px;white-space:pre-wrap;"></div>
+<div id="js-heartbeat" style="display:none;position:fixed;left:10px;bottom:10px;z-index:9998;background:#2E8A4F;color:#fff;font:11px sans-serif;padding:4px 9px;border-radius:6px;">✓ App geladen</div>
+<script>
+(function(){
+  function showErr(msg){ var b=document.getElementById('js-error-bar'); if(b){ b.style.display='block'; b.textContent='⚠ JavaScript-Fehler: '+msg; } }
+  window.addEventListener('error', function(ev){ showErr((ev.message||'unbekannt')+' ('+(ev.filename||'')+':'+ev.lineno+':'+ev.colno+')'); });
+  window.addEventListener('unhandledrejection', function(ev){ var r=ev.reason; showErr('Promise: '+(r&&r.message?r.message:r)); });
+})();
+</script>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <div class="badge">
+      <div class="num">LB</div>
+      <div class="ttl">Auftragsabwicklung<small>Beförderung Batterie / Modul / Zelle</small></div>
+    </div>
+    <div class="logo"><span class="log">Log</span><span class="batt">BATT</span><span class="member">MEMBER <b>OF LAGERMAX GROUP</b></span></div>
+  </div>
+  <nav class="nav no-print">
+    <button id="tab-checkliste" class="active">Neue Checkliste</button>
+    <button id="tab-tracking">Sendung verfolgen</button>
+    <button id="tab-uebersicht">Auftragsübersicht <small style="font-weight:400;opacity:.7">(intern)</small> <span class="navcount" id="nav-count">0</span></button>
+  </nav>
+</header>
+
+<!-- ============================ VIEW: CHECKLISTE ============================ -->
+<main class="wrap narrow" id="view-checkliste">
+  <p class="lead">Bitte alle zutreffenden Felder ausfüllen. Felder mit <b>*</b> sind erforderlich. Nach dem Speichern erscheint der Auftrag in der Übersicht.</p>
+
+  <form id="cl" novalidate>
+
+    <section class="card">
+      <div class="head"><span class="step">1</span><h2>Beauftragung</h2></div>
+      <div class="body">
+        <fieldset class="choice">
+          <legend class="req">Art der Beauftragung</legend>
+          <div class="opts">
+            <label class="opt"><input type="radio" name="beauftragung" value="mit_entsorgung"><span class="dot"></span><span class="txt">Transport mit Entsorgung (Abfall)</span></label>
+            <label class="opt"><input type="radio" name="beauftragung" value="ohne_entsorgung"><span class="dot"></span><span class="txt">Transport ohne Entsorgung (Analyse oder Produkt)</span></label>
+          </div>
+        </fieldset>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="head"><span class="step">2</span><h2>Auftraggeber &amp; Abholung</h2></div>
+      <div class="body">
+        <div class="grid g3">
+          <div class="field span2"><label class="lbl req" for="ag_anschrift">Auftraggeber / Rechnungsanschrift</label><textarea id="ag_anschrift" name="ag_anschrift"></textarea></div>
+          <div class="field"><label class="lbl req" for="ab_adresse">Abholadresse + Abholzeiten</label><textarea id="ab_adresse" name="ab_adresse"></textarea></div>
+        </div>
+        <div class="grid g2" style="margin-top:14px;">
+          <div class="field"><label class="lbl req" for="ab_kontakt">Kontaktperson (Telefon + Mail)</label><textarea id="ab_kontakt" name="ab_kontakt" style="min-height:60px;"></textarea></div>
+        </div>
+        <hr class="divider">
+        <div class="subhead">Verladung Abholstelle</div>
+        <div class="grid g2">
+          <fieldset class="choice"><legend>Stapler vorhanden</legend><div class="opts">
+            <label class="opt"><input type="radio" name="ab_stapler" value="ja"><span class="dot"></span><span class="txt">Ja</span></label>
+            <label class="opt"><input type="radio" name="ab_stapler" value="nein"><span class="dot"></span><span class="txt">Nein</span></label>
+          </div></fieldset>
+          <fieldset class="choice"><legend>Rampenverladung möglich</legend><div class="opts">
+            <label class="opt"><input type="radio" name="ab_rampe" value="ja"><span class="dot"></span><span class="txt">Ja</span></label>
+            <label class="opt"><input type="radio" name="ab_rampe" value="nein"><span class="dot"></span><span class="txt">Nein</span></label>
+          </div></fieldset>
+          <fieldset class="choice"><legend>Gabellänge mind. 2 m</legend><div class="opts">
+            <label class="opt"><input type="radio" name="ab_gabel" value="ja"><span class="dot"></span><span class="txt">Ja</span></label>
+            <label class="opt"><input type="radio" name="ab_gabel" value="nein"><span class="dot"></span><span class="txt">Nein</span></label>
+          </div></fieldset>
+          <fieldset class="choice"><legend>Hebevorrichtung vorhanden</legend><div class="opts">
+            <label class="opt"><input type="radio" name="ab_hebe" value="ja"><span class="dot"></span><span class="txt">Ja</span></label>
+            <label class="opt"><input type="radio" name="ab_hebe" value="nein"><span class="dot"></span><span class="txt">Nein</span></label>
+          </div></fieldset>
+          <div class="field"><label class="lbl" for="ab_tragf">Tragfähigkeit in kg</label><input type="number" id="ab_tragf" name="ab_tragf" min="0"></div>
+          <fieldset class="choice"><legend>Zufahrt mit LKW / Sattelzug (SZ) möglich</legend><div class="opts">
+            <label class="opt"><input type="radio" name="ab_zufahrt" value="lkw"><span class="dot"></span><span class="txt">LKW (12 T)</span></label>
+            <label class="opt"><input type="radio" name="ab_zufahrt" value="sz"><span class="dot"></span><span class="txt">SZ (40 T)</span></label>
+            <label class="opt"><input type="radio" name="ab_zufahrt" value="keine"><span class="dot"></span><span class="txt">beides nicht</span></label>
+          </div></fieldset>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="head"><span class="step">3</span><h2>Lieferadresse</h2></div>
+      <div class="body">
+        <div class="grid g3">
+          <div class="field"><label class="lbl" for="li_firma">Lieferadresse (Firmenname)</label><textarea id="li_firma" name="li_firma"></textarea></div>
+          <div class="field"><label class="lbl" for="li_zeiten">Anlieferzeiten</label><textarea id="li_zeiten" name="li_zeiten"></textarea></div>
+          <div class="field"><label class="lbl" for="li_kontakt">Kontaktperson (Telefon + Mail)</label><textarea id="li_kontakt" name="li_kontakt"></textarea></div>
+        </div>
+        <hr class="divider">
+        <div class="subhead">Verladung Lieferstelle</div>
+        <div class="grid g2">
+          <fieldset class="choice"><legend>Stapler vorhanden</legend><div class="opts">
+            <label class="opt"><input type="radio" name="li_stapler" value="ja"><span class="dot"></span><span class="txt">Ja</span></label>
+            <label class="opt"><input type="radio" name="li_stapler" value="nein"><span class="dot"></span><span class="txt">Nein</span></label>
+          </div></fieldset>
+          <fieldset class="choice"><legend>Rampenverladung möglich</legend><div class="opts">
+            <label class="opt"><input type="radio" name="li_rampe" value="ja"><span class="dot"></span><span class="txt">Ja</span></label>
+            <label class="opt"><input type="radio" name="li_rampe" value="nein"><span class="dot"></span><span class="txt">Nein</span></label>
+          </div></fieldset>
+          <fieldset class="choice"><legend>Gabellänge mind. 2 m</legend><div class="opts">
+            <label class="opt"><input type="radio" name="li_gabel" value="ja"><span class="dot"></span><span class="txt">Ja</span></label>
+            <label class="opt"><input type="radio" name="li_gabel" value="nein"><span class="dot"></span><span class="txt">Nein</span></label>
+          </div></fieldset>
+          <fieldset class="choice"><legend>Hebevorrichtung vorhanden</legend><div class="opts">
+            <label class="opt"><input type="radio" name="li_hebe" value="ja"><span class="dot"></span><span class="txt">Ja</span></label>
+            <label class="opt"><input type="radio" name="li_hebe" value="nein"><span class="dot"></span><span class="txt">Nein</span></label>
+          </div></fieldset>
+          <div class="field"><label class="lbl" for="li_tragf">Tragfähigkeit in kg</label><input type="number" id="li_tragf" name="li_tragf" min="0"></div>
+          <fieldset class="choice"><legend>Sofortentleerung</legend><div class="opts">
+            <label class="opt"><input type="radio" name="li_sofort" value="ja"><span class="dot"></span><span class="txt">Ja</span></label>
+            <label class="opt"><input type="radio" name="li_sofort" value="nein"><span class="dot"></span><span class="txt">Nein</span></label>
+          </div></fieldset>
+          <fieldset class="choice" style="grid-column:1/-1"><legend>Zufahrt mit LKW / Sattelzug (SZ) möglich</legend><div class="opts">
+            <label class="opt"><input type="radio" name="li_zufahrt" value="lkw"><span class="dot"></span><span class="txt">LKW (12 T)</span></label>
+            <label class="opt"><input type="radio" name="li_zufahrt" value="sz"><span class="dot"></span><span class="txt">SZ (40 T)</span></label>
+            <label class="opt"><input type="radio" name="li_zufahrt" value="keine"><span class="dot"></span><span class="txt">beides nicht</span></label>
+          </div></fieldset>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="head"><span class="step">4</span><h2>Produktinfos</h2></div>
+      <div class="body">
+        <div class="grid g2">
+          <div class="field"><label class="lbl" for="p_ref">Referenznummer (oder Bestellnummer)</label><input type="text" id="p_ref" name="p_ref"></div>
+          <fieldset class="choice"><legend>Batterie / Modul / Zelle</legend><div class="opts">
+            <label class="opt"><input type="radio" name="p_typ" value="batterie"><span class="dot"></span><span class="txt">Batterie</span></label>
+            <label class="opt"><input type="radio" name="p_typ" value="modul"><span class="dot"></span><span class="txt">Modul</span></label>
+            <label class="opt"><input type="radio" name="p_typ" value="zelle"><span class="dot"></span><span class="txt">Zelle</span></label>
+          </div></fieldset>
+          <div class="field"><label class="lbl" for="p_bez">Batterie-Bezeichnung (Serien-Nr.)</label><input type="text" id="p_bez" name="p_bez"></div>
+          <div class="field"><label class="lbl" for="p_anzahl">Anzahl</label><input type="number" id="p_anzahl" name="p_anzahl" min="0"></div>
+          <div class="field"><label class="lbl" for="p_gew_stk">Gewicht in kg – pro Batterie</label><input type="number" id="p_gew_stk" name="p_gew_stk" min="0" step="any"></div>
+          <div class="field"><label class="lbl" for="p_gew_ges">Gewicht in kg – Gesamt</label><input type="number" id="p_gew_ges" name="p_gew_ges" min="0" step="any"></div>
+          <div class="field"><label class="lbl" for="p_abmasse">Abmaße (L×B×H) in mm</label><input type="text" id="p_abmasse" name="p_abmasse" placeholder="z. B. 1200 × 800 × 600"></div>
+          <div class="field"><label class="lbl" for="p_kwh">Nennenergiegehalt in kWh</label><input type="number" id="p_kwh" name="p_kwh" min="0" step="any"></div>
+        </div>
+        <hr class="divider">
+        <fieldset class="choice"><legend>Zellchemie</legend><div class="opts">
+          <label class="opt"><input type="checkbox" name="p_chemie" value="NMC"><span class="dot"></span><span class="txt">NMC</span></label>
+          <label class="opt"><input type="checkbox" name="p_chemie" value="NCA"><span class="dot"></span><span class="txt">NCA</span></label>
+          <label class="opt"><input type="checkbox" name="p_chemie" value="LCO"><span class="dot"></span><span class="txt">LCO</span></label>
+          <label class="opt"><input type="checkbox" name="p_chemie" value="LFP"><span class="dot"></span><span class="txt">LFP</span></label>
+          <label class="opt"><input type="checkbox" name="p_chemie" value="LMO"><span class="dot"></span><span class="txt">LMO</span></label>
+          <label class="opt"><input type="checkbox" name="p_chemie" value="andere" data-extra="p_chemie_andere"><span class="dot"></span><span class="txt">andere</span></label>
+        </div>
+        <div class="inline-extra reveal" data-for="p_chemie_andere"><input type="text" id="p_chemie_andere" name="p_chemie_andere" placeholder="andere Zellchemie"></div>
+        </fieldset>
+        <div style="height:14px"></div>
+        <fieldset class="choice"><legend>Zellformat</legend><div class="opts">
+          <label class="opt"><input type="radio" name="p_format" value="pouch"><span class="dot"></span><span class="txt">Pouch</span></label>
+          <label class="opt"><input type="radio" name="p_format" value="rund"><span class="dot"></span><span class="txt">Rundzellen / zylindrisch</span></label>
+          <label class="opt"><input type="radio" name="p_format" value="hardcase"><span class="dot"></span><span class="txt">Hardcase / prismatisch</span></label>
+        </div></fieldset>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="head"><span class="step">5</span><h2>Zustand &amp; gefahrgutrechtliche Einstufung</h2></div>
+      <div class="body">
+        <div class="grid g2">
+          <div class="field"><label class="lbl" for="s_art">Art der Beschädigung</label><input type="text" id="s_art" name="s_art"></div>
+          <div class="field">
+            <label class="lbl" for="s_katalog">Beschädigung nach Schadenskatalog</label>
+            <!-- TODO: echte Katalogwerte ergänzen – im Quell-PDF nicht enthalten -->
+            <select id="s_katalog" name="s_katalog" class="todo" title="Katalogwerte aus internem Schadenskatalog ergänzen">
+              <option value="">-- Beschädigung wählen --</option>
+              <option value="__platzhalter__" disabled>(Katalogwerte ergänzen)</option>
+            </select>
+            <span class="hint">Katalogwerte sind im Formular-PDF nicht hinterlegt – bitte intern befüllen.</span>
+          </div>
+        </div>
+        <div style="height:14px"></div>
+        <fieldset class="choice"><legend>Berührschutz vor HV-Spannung gegeben</legend><div class="opts">
+          <label class="opt"><input type="radio" name="s_beruehr" value="ja"><span class="dot"></span><span class="txt">Ja</span></label>
+          <label class="opt"><input type="radio" name="s_beruehr" value="nein"><span class="dot"></span><span class="txt">Nein</span></label>
+        </div></fieldset>
+        <div style="height:14px"></div>
+        <fieldset class="choice"><legend>Gefahrgutrechtliche Einstufung</legend>
+          <div class="opts" style="flex-direction:column;align-items:stretch;">
+            <label class="opt block"><input type="checkbox" name="s_einstufung" value="nicht_beschaedigt_sicher"><span class="dot"></span><span class="txt">Nicht beschädigt und Transportsicherheit kann garantiert werden</span></label>
+            <label class="opt block"><input type="checkbox" name="s_einstufung" value="beschaedigt_unsicher"><span class="dot"></span><span class="txt">Beschädigt und Transportsicherheit kann <b>nicht</b> garantiert werden</span></label>
+            <label class="opt block"><input type="checkbox" name="s_einstufung" value="beschaedigt_sicher"><span class="dot"></span><span class="txt">Beschädigt und Transportsicherheit kann garantiert werden</span></label>
+            <label class="opt block"><input type="checkbox" name="s_einstufung" value="un383"><span class="dot"></span><span class="txt">UN.T. 38.3 Prüfzertifikat vorhanden</span></label>
+          </div>
+        </fieldset>
+        <hr class="divider">
+        <fieldset class="choice"><legend>Wird eine gefahrgutrechtlich zugelassene Verpackung benötigt?</legend><div class="opts">
+          <label class="opt"><input type="radio" name="s_verpackung" value="ja"><span class="dot"></span><span class="txt">Ja</span></label>
+          <label class="opt"><input type="radio" name="s_verpackung" value="nein" data-extra="s_verp_angaben"><span class="dot"></span><span class="txt">Nein</span></label>
+        </div>
+        <div class="inline-extra reveal" data-for="s_verp_angaben">
+          <label class="lbl" for="s_verp_angaben_in">Verpackungsangaben (Art, Gewicht, Maße in cm, stapelbar)</label>
+          <textarea id="s_verp_angaben_in" name="s_verp_angaben"></textarea>
+        </div>
+        </fieldset>
+        <div style="height:14px"></div>
+        <fieldset class="choice"><legend>Fotomaterial vorhanden</legend><div class="opts">
+          <label class="opt"><input type="radio" name="s_foto" value="ja"><span class="dot"></span><span class="txt">Ja</span></label>
+          <label class="opt"><input type="radio" name="s_foto" value="nein"><span class="dot"></span><span class="txt">Nein</span></label>
+        </div>
+        <div class="reveal" data-foto-note><p class="note">Bitte das Fotomaterial zusammen mit dieser Checkliste an LogBATT senden.</p></div>
+        </fieldset>
+      </div>
+    </section>
+
+    <section class="card reveal" id="card-entsorgung">
+      <div class="head"><span class="step">6</span><h2>Zusätzliche Angaben bei Entsorgung</h2><span class="sub">nur bei „Transport mit Entsorgung"</span></div>
+      <div class="body">
+        <fieldset class="choice"><legend>Abfallschlüssel / AVV-Nummer</legend><div class="opts">
+          <label class="opt"><input type="checkbox" name="e_avv" value="160605"><span class="dot"></span><span class="txt">16 06 05</span></label>
+          <label class="opt"><input type="checkbox" name="e_avv" value="160121"><span class="dot"></span><span class="txt">16 01 21*</span></label>
+          <label class="opt"><input type="checkbox" name="e_avv" value="andere" data-extra="e_avv_andere"><span class="dot"></span><span class="txt">andere</span></label>
+        </div>
+        <div class="inline-extra reveal" data-for="e_avv_andere"><input type="text" id="e_avv_andere" name="e_avv_andere" placeholder="anderer Abfallschlüssel"></div>
+        </fieldset>
+        <div class="grid g2" style="margin-top:14px;">
+          <div class="field"><label class="lbl" for="e_erzeuger">Abfallerzeugernummer</label><input type="text" id="e_erzeuger" name="e_erzeuger"></div>
+        </div>
+        <div style="height:14px"></div>
+        <fieldset class="choice"><legend>Einzelentsorgungsnachweis (EN) vorhanden</legend><div class="opts">
+          <label class="opt"><input type="radio" name="e_en" value="nein"><span class="dot"></span><span class="txt">Nein</span></label>
+          <label class="opt"><input type="radio" name="e_en" value="ja" data-extra="e_en_nr"><span class="dot"></span><span class="txt">Ja</span></label>
+        </div>
+        <div class="inline-extra reveal" data-for="e_en_nr"><input type="text" id="e_en_nr" name="e_en_nr" placeholder="EN-Nr."></div>
+        </fieldset>
+        <div style="height:14px"></div>
+        <fieldset class="choice"><legend>MSDS / Sicherheitsdatenblatt vorhanden</legend><div class="opts">
+          <label class="opt"><input type="radio" name="e_msds" value="ja"><span class="dot"></span><span class="txt">Ja</span></label>
+          <label class="opt"><input type="radio" name="e_msds" value="nein"><span class="dot"></span><span class="txt">Nein</span></label>
+        </div>
+        <div class="reveal" data-msds-note><p class="note">Bitte das Sicherheitsdatenblatt an LogBATT senden.</p></div>
+        </fieldset>
+        <div class="field span2" style="margin-top:14px;"><label class="lbl" for="e_hinweise">Hinweise</label><textarea id="e_hinweise" name="e_hinweise"></textarea></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="head"><span class="step">7</span><h2>Zusätzliche Angaben bei Zoll</h2>
+        <label class="opt" style="margin-left:auto;font-size:12.5px;"><input type="checkbox" id="zoll-toggle"><span class="dot"></span><span class="txt">grenzüberschreitend</span></label>
+      </div>
+      <div class="body reveal" id="card-zoll-body">
+        <div class="grid g2">
+          <fieldset class="choice"><legend>Wer übernimmt die Import-Anmeldung?</legend><div class="opts">
+            <label class="opt"><input type="radio" name="z_import" value="logbatt" data-extra="z_logbatt_note"><span class="dot"></span><span class="txt">LogBATT</span></label>
+            <label class="opt"><input type="radio" name="z_import" value="kunde" data-extra="z_agent"><span class="dot"></span><span class="txt">Kunde / Agent</span></label>
+          </div></fieldset>
+          <fieldset class="choice"><legend>Wer übernimmt die Export-Anmeldung?</legend><div class="opts">
+            <label class="opt"><input type="radio" name="z_export" value="logbatt" data-extra="z_logbatt_note"><span class="dot"></span><span class="txt">LogBATT</span></label>
+            <label class="opt"><input type="radio" name="z_export" value="kunde" data-extra="z_agent"><span class="dot"></span><span class="txt">Kunde / Agent</span></label>
+          </div></fieldset>
+        </div>
+        <div class="reveal" data-for="z_logbatt_note"><p class="note">Bei LogBATT-Anmeldung bitte Handelsrechnung mit EORI-Nummer, Incoterm und HS-Codes übermitteln.</p></div>
+        <div class="inline-extra reveal grid g2" data-for="z_agent" style="margin-top:14px;">
+          <div class="field span2"><label class="lbl">Agent-Kontaktdaten</label></div>
+          <div class="field"><label class="lbl" for="z_agent_name">Name</label><input type="text" id="z_agent_name" name="z_agent_name"></div>
+          <div class="field"><label class="lbl" for="z_agent_mail">E-Mail</label><input type="email" id="z_agent_mail" name="z_agent_mail"></div>
+          <div class="field"><label class="lbl" for="z_agent_tel">Telefon</label><input type="tel" id="z_agent_tel" name="z_agent_tel"></div>
+        </div>
+        <div class="field span2" style="margin-top:14px;"><label class="lbl" for="z_hinweise">Zusätzliche Angaben (z. B. Zollstopp, Bewilligungen)</label><textarea id="z_hinweise" name="z_hinweise"></textarea></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="body">
+        <p class="legal">Bei Falschangaben oder unvollständigen Angaben durch den Auftraggeber, die zu einer Nichterfüllung des Auftrags vor Ort führen, behält sich LogBATT vor, die dadurch entstehenden Kosten (mindestens 50 % der Auftragssumme) zu berechnen.</p>
+        <div class="actions no-print">
+          <button type="submit" class="btn btn-primary">Checkliste speichern</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="btn-reset">Formular leeren</button>
+          <button type="button" class="btn btn-ghost btn-sm" id="btn-print">Als PDF drucken</button>
+          <span class="status" id="status"></span>
+        </div>
+      </div>
+    </section>
+  </form>
+</main>
+
+<!-- ============================ VIEW: ÜBERSICHT ============================ -->
+<main class="wrap" id="view-uebersicht" style="display:none;">
+  <div class="banner info" id="store-banner"></div>
+
+  <div class="toolbar">
+    <div class="search">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="#707074" stroke-width="1.6"/><path d="M11 11l3.5 3.5" stroke="#707074" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input type="text" id="search" placeholder="Suche: Ref-Nr., Auftraggeber, Bezeichnung …">
+    </div>
+    <div class="seg" id="filter">
+      <button data-f="alle" class="active">Alle <span data-c="alle">0</span></button>
+      <button data-f="neu">Neu <span data-c="neu">0</span></button>
+      <button data-f="bestaetigt">Bestätigt <span data-c="bestaetigt">0</span></button>
+      <button data-f="bearbeitung">In Bearbeitung <span data-c="bearbeitung">0</span></button>
+      <button data-f="ausgeliefert">Auslieferung <span data-c="ausgeliefert">0</span></button>
+      <button data-f="abgeschlossen">Abgeschlossen <span data-c="abgeschlossen">0</span></button>
+    </div>
+    <div class="spacer"></div>
+    <button class="btn btn-ghost btn-sm" id="btn-demo">Demo-Auftrag</button>
+    <button class="btn btn-ghost btn-sm" id="btn-import">JSON importieren</button>
+    <input type="file" id="file" accept="application/json,.json" multiple hidden>
+  </div>
+
+  <div class="panel">
+    <table>
+      <thead><tr>
+        <th style="width:22%">Referenz</th><th style="width:26%">Auftraggeber</th>
+        <th style="width:16%">Produkt</th><th style="width:14%">Eingang</th><th style="width:14%">Status</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+    <div class="empty" id="empty" style="display:none;">
+      <h3>Noch keine Aufträge</h3>
+      <p>Lege eine Checkliste an („Neue Checkliste" → Speichern), importiere JSON oder erzeuge einen Demo-Auftrag.</p>
+      <button class="btn btn-primary" id="empty-new">Neue Checkliste</button>
+    </div>
+  </div>
+</main>
+
+<!-- ============================ VIEW: SENDUNGSVERFOLGUNG ============================ -->
+<main class="wrap narrow" id="view-tracking" style="display:none;">
+  <p class="lead">Geben Sie Ihre Sendungsnummer ein, um den aktuellen Status zu sehen und Anmerkungen zu hinterlegen.</p>
+
+  <div class="card">
+    <div class="body">
+      <div class="track-lookup">
+        <div class="field"><label class="lbl" for="track-input">Sendungsnummer</label><input type="text" id="track-input" placeholder="z. B. LB-XXXXXX" autocomplete="off"></div>
+        <button class="btn btn-primary" id="track-go">Verfolgen</button>
+      </div>
+      <p class="track-empty" id="track-msg" style="display:none;">Keine Sendung mit dieser Nummer gefunden. Bitte Nummer prüfen.</p>
+
+      <div class="track-result" id="track-result">
+        <hr class="divider">
+        <div class="track-status">
+          <span class="pill" id="track-pill"><span class="d"></span><span id="track-pill-lbl"></span></span>
+          <div class="track-head" id="track-head"></div>
+        </div>
+
+        <div class="subhead">Sendungsverlauf</div>
+        <ul class="timeline" id="track-timeline"></ul>
+
+        <div class="subhead">Ihr Angebot</div>
+        <div id="track-quote"></div>
+
+        <div class="subhead">Nachrichten an LogBATT</div>
+        <div class="thread" id="track-thread"></div>
+        <div class="thread-input">
+          <textarea id="track-msg-text" placeholder="Nachricht an LogBATT schreiben …"></textarea>
+          <button class="btn btn-primary btn-sm" id="track-msg-send">Senden</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- success modal with tracking number -->
+<div class="modal-ov" id="save-modal">
+  <div class="modal">
+    <div class="mh">Checkliste übermittelt</div>
+    <div class="mb">
+      <p>Vielen Dank. Ihr Auftrag wurde gespeichert. Mit dieser Sendungsnummer können Sie den Status verfolgen:</p>
+      <div class="track-box">
+        <span class="no" id="modal-trackno">—</span>
+        <button class="cp" id="modal-copy">Kopieren</button>
+      </div>
+      <p style="font-size:12.5px;color:var(--muted);">Bitte notieren Sie sich die Nummer. Sie finden die Sendungsverfolgung oben im Reiter „Sendung verfolgen".</p>
+      <div class="subhead">Ihr voraussichtliches Angebot</div>
+      <div id="modal-quote"></div>
+    </div>
+    <div class="mf">
+      <button class="btn btn-ghost btn-sm" id="modal-new">Neue Checkliste</button>
+      <button class="btn btn-primary btn-sm" id="modal-track">Sendung verfolgen</button>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="overlay"></div>
+<aside class="drawer" id="drawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div><div class="drawer-title" id="d-title">—</div><div class="drawer-meta" id="d-meta"></div></div>
+    <button class="x" id="d-close" aria-label="Schließen">×</button>
+  </div>
+  <div class="drawer-body" id="d-body"></div>
+  <div class="drawer-foot">
+    <button class="btn btn-ghost btn-sm" id="d-export">JSON exportieren</button>
+    <button class="btn btn-danger btn-sm foot-spacer" id="d-delete">Auftrag löschen</button>
+  </div>
+</aside>
+
+<!-- ============================ CHATBOT ============================ -->
+<button class="chat-launcher no-print" id="chat-launcher" aria-label="Fragen-Chat öffnen">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v12H9l-5 4V4z" fill="#fff"/></svg>
+  Fragen?
+</button>
+<section class="chat-panel no-print" id="chat-panel" aria-hidden="true">
+  <div class="chat-head">
+    <div class="ci"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v12H9l-5 4V4z" fill="#fff"/></svg></div>
+    <div class="ct">LogBATT Assistent<small>Fragen &amp; Checkliste ausfüllen</small></div>
+    <button class="cx" id="chat-close" aria-label="Schließen">×</button>
+  </div>
+  <div class="chat-msgs" id="chat-msgs"></div>
+  <div class="chat-tools">
+    <button class="chat-tool" id="chat-fill">📋 Auftrag einfügen &amp; ausfüllen lassen</button>
+  </div>
+  <div class="chat-input">
+    <textarea id="chat-text" rows="1" placeholder="Frage eingeben …"></textarea>
+    <button class="chat-send" id="chat-send" aria-label="Senden"><svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M3 11l18-8-8 18-2-8-8-2z" fill="#fff"/></svg></button>
+  </div>
+</section>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ================= shared storage layer ================= */
+  var PREFIX='auftrag:';
+  var hasWS = !!(window.storage && window.storage.get);
+  var hasLS = (function(){ try{ var k='__t'+Date.now(); window.localStorage.setItem(k,'1'); window.localStorage.removeItem(k); return true; }catch(e){ return false; } })();
+  var backend = hasWS ? 'cloud' : (hasLS ? 'local' : 'memory');
+  var mem = {};
+  var store = {
+    async list(){
+      if(backend==='cloud'){ try{ var r=await window.storage.list(PREFIX); return (r&&r.keys)||[]; }catch(e){ return []; } }
+      if(backend==='local'){ var out=[]; for(var i=0;i<localStorage.length;i++){ var k=localStorage.key(i); if(k && k.indexOf(PREFIX)===0) out.push(k);} return out; }
+      return Object.keys(mem);
+    },
+    async get(k){
+      if(backend==='cloud'){ try{ var r=await window.storage.get(k); return r?JSON.parse(r.value):null; }catch(e){ return null; } }
+      if(backend==='local'){ var v=localStorage.getItem(k); return v?JSON.parse(v):null; }
+      return mem[k]||null;
+    },
+    async set(k,v){
+      if(backend==='cloud'){ try{ await window.storage.set(k,JSON.stringify(v)); return; }catch(e){} }
+      else if(backend==='local'){ localStorage.setItem(k,JSON.stringify(v)); return; }
+      mem[k]=v;
+    },
+    async del(k){
+      if(backend==='cloud'){ try{ await window.storage.delete(k); return; }catch(e){} }
+      else if(backend==='local'){ localStorage.removeItem(k); return; }
+      delete mem[k];
+    }
+  };
+  (function(){
+    var b=document.getElementById('store-banner');
+    if(backend==='cloud'){ b.className='banner info'; b.textContent='Speicher: Claude-Artefakt – Aufträge bleiben über Sitzungen erhalten.'; }
+    else if(backend==='local'){ b.className='banner info'; b.textContent='Speicher: lokaler Browser (localStorage) – Aufträge bleiben auf diesem Gerät/in diesem Browser erhalten.'; }
+    else { b.className='banner warn'; b.textContent='Kein dauerhafter Speicher verfügbar – Aufträge bleiben nur bis zum Neuladen erhalten.'; }
+  })();
+
+  /* ================= navigation ================= */
+  var orders=[];
+  function showView(v){
+    [['checkliste','view-checkliste','tab-checkliste'],
+     ['tracking','view-tracking','tab-tracking'],
+     ['uebersicht','view-uebersicht','tab-uebersicht']].forEach(function(t){
+      var on=t[0]===v;
+      document.getElementById(t[1]).style.display=on?'block':'none';
+      document.getElementById(t[2]).classList.toggle('active',on);
+    });
+    if(v==='uebersicht') loadAll();
+    if(typeof window.__lbSetChatView==='function') window.__lbSetChatView(v==='checkliste');
+  }
+  document.getElementById('tab-checkliste').addEventListener('click',function(){ showView('checkliste'); });
+  document.getElementById('tab-tracking').addEventListener('click',function(){ showView('tracking'); });
+  document.getElementById('tab-uebersicht').addEventListener('click',function(){ showView('uebersicht'); });
+  document.getElementById('empty-new').addEventListener('click',function(){ showView('checkliste'); });
+
+  /* ================= CHECKLIST ================= */
+  var form=document.getElementById('cl');
+  var statusEl=document.getElementById('status');
+
+  function refreshReveals(){
+    document.querySelectorAll('#view-checkliste .reveal[data-for]').forEach(function(el){ el.classList.remove('show'); });
+    document.querySelectorAll('#cl input[data-extra]').forEach(function(inp){
+      if(inp.checked){ var t=document.querySelector('.reveal[data-for="'+inp.dataset.extra+'"]'); if(t) t.classList.add('show'); }
+    });
+    toggleNote('s_foto','ja','[data-foto-note]');
+    toggleNote('e_msds','nein','[data-msds-note]');
+  }
+  function toggleNote(name,val,sel){
+    var n=document.querySelector(sel); if(!n) return;
+    var checked=form.querySelector('input[name="'+name+'"]:checked');
+    n.classList.toggle('show', !!(checked && checked.value===val));
+  }
+  function refreshEntsorgung(){
+    var b=form.querySelector('input[name="beauftragung"]:checked');
+    document.getElementById('card-entsorgung').classList.toggle('show', !!(b && b.value==='mit_entsorgung'));
+  }
+  document.getElementById('zoll-toggle').addEventListener('change',function(){
+    document.getElementById('card-zoll-body').classList.toggle('show', this.checked);
+  });
+  form.addEventListener('change',function(){ refreshReveals(); refreshEntsorgung(); });
+
+  function collect(){
+    var d={}; var fd=new FormData(form); var keys=new Set();
+    fd.forEach(function(v,k){ keys.add(k); });
+    keys.forEach(function(k){
+      var all=fd.getAll(k).filter(function(x){ return x!==''; });
+      if(all.length>1) d[k]=all; else if(all.length===1) d[k]=all[0];
+    });
+    return { formular:'L4 Checkliste Beförderung Batterie / Modul / Zelle', version:'L4_011.1_f003 (Web)', erstellt:new Date().toISOString(), daten:d };
+  }
+
+  var REQUIRED=[
+    {name:'beauftragung',label:'Art der Beauftragung'},
+    {name:'ag_anschrift',label:'Auftraggeber / Rechnungsanschrift'},
+    {name:'ab_adresse',label:'Abholadresse'},
+    {name:'ab_kontakt',label:'Kontaktperson Abholung'}
+  ];
+  function validate(){
+    document.querySelectorAll('.err-field').forEach(function(e){ e.classList.remove('err-field'); });
+    var missing=[];
+    REQUIRED.forEach(function(r){
+      try{
+        var el=form.elements[r.name]; var ok; var markEl=null;
+        if(el && el.length!==undefined && el[0] && el[0].type==='radio'){
+          ok=!!form.querySelector('input[name="'+r.name+'"]:checked');
+          markEl = el[0]; // einzelnes Radio-Input nutzen, NodeList hat kein closest()
+        } else {
+          ok=el && String(el.value).trim()!=='';
+          markEl = el;
+        }
+        if(!ok){
+          missing.push(r.label);
+          var f = markEl && markEl.closest ? markEl.closest('.field, fieldset.choice') : null;
+          if(f) f.classList.add('err-field');
+        }
+      }catch(_e){ missing.push(r.label); }
+    });
+    return missing;
+  }
+
+  var lastSavedKey=null;
+  form.addEventListener('submit',async function(e){
+    e.preventDefault();
+    try{
+      var missing=validate();
+      if(missing.length){
+        statusEl.textContent='Bitte ausfüllen: '+missing.join(', '); statusEl.className='status err';
+        var f=document.querySelector('.err-field'); if(f && f.scrollIntoView) f.scrollIntoView({behavior:'smooth',block:'center'});
+        return;
+      }
+      var payload=collect();
+      var rec=await addOrder(payload,{});
+      lastSavedKey=rec.key;
+      statusEl.textContent='Gespeichert. Sendungsnummer '+rec.trackNo+'.'; statusEl.className='status ok';
+      form.reset(); refreshReveals(); refreshEntsorgung();
+      document.getElementById('card-zoll-body').classList.remove('show');
+      document.getElementById('zoll-toggle').checked=false;
+      openSaveModal(rec);
+    }catch(err){
+      console.error('LogBATT Checkliste – Fehler beim Speichern:', err);
+      statusEl.textContent='Fehler beim Speichern: '+(err&&err.message?err.message:err); statusEl.className='status err';
+    }
+  });
+
+  /* ---------- save modal ---------- */
+  var modalOrderKey=null;
+  function openSaveModal(rec){
+    modalOrderKey=rec.key;
+    document.getElementById('modal-trackno').textContent=rec.trackNo;
+    renderQuoteInto('modal-quote', rec);
+    document.getElementById('save-modal').classList.add('show');
+  }
+  function closeSaveModal(){ document.getElementById('save-modal').classList.remove('show'); }
+  document.getElementById('modal-copy').addEventListener('click',function(){
+    var no=document.getElementById('modal-trackno').textContent;
+    if(navigator.clipboard&&navigator.clipboard.writeText){ navigator.clipboard.writeText(no); this.textContent='Kopiert'; var b=this; setTimeout(function(){b.textContent='Kopieren';},1500); }
+  });
+  document.getElementById('modal-new').addEventListener('click',function(){ closeSaveModal(); showView('checkliste'); });
+  document.getElementById('modal-track').addEventListener('click',function(){
+    var no=document.getElementById('modal-trackno').textContent;
+    closeSaveModal(); showView('tracking');
+    document.getElementById('track-input').value=no; doTrack(no);
+  });
+
+  document.getElementById('btn-reset').addEventListener('click',function(){
+    form.reset(); refreshReveals(); refreshEntsorgung();
+    document.getElementById('card-zoll-body').classList.remove('show');
+    document.getElementById('zoll-toggle').checked=false;
+    statusEl.textContent=''; statusEl.className='status';
+  });
+  document.getElementById('btn-print').addEventListener('click',function(){ window.print(); });
+
+  /* ================= ANGEBOTSBERECHNUNG (OpenRouteService) ================= */
+  /* SICHERHEITSHINWEIS: Ein hier eingetragener apiKey ist im Browser-Quelltext SICHTBAR.
+     Für die Live-Seite den Key serverseitig über einen Proxy halten statt hier einzutragen. */
+  var ORS_CONFIG = {
+    apiKey: ''   // hier den OpenRouteService API-Key eintragen
+  };
+  var DEPOT_TEXT = 'Plochingen, Deutschland'; // Platzhalter für LogBATT-Standort
+  var PRICE = { ohneBatterie: 1.00, mitBatterie: 1.20, staplerStueck: 890 };
+  var geocodeCache = {};
+
+  function eur(n){ return n.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
+  function km(n){ return n.toLocaleString('de-DE',{minimumFractionDigits:1,maximumFractionDigits:1})+' km'; }
+
+  async function geocode(text){
+    text=(text||'').trim();
+    if(!text) throw new Error('Keine Adresse angegeben.');
+    if(geocodeCache[text]) return geocodeCache[text];
+    if(!ORS_CONFIG.apiKey) throw new Error('Kein OpenRouteService API-Key konfiguriert.');
+    var url='https://api.openrouteservice.org/geocode/search?api_key='+encodeURIComponent(ORS_CONFIG.apiKey)+'&size=1&text='+encodeURIComponent(text);
+    var res=await fetch(url);
+    if(!res.ok) throw new Error('Geocoding fehlgeschlagen (Status '+res.status+') für „'+text+'".');
+    var data=await res.json();
+    var f=data && data.features && data.features[0];
+    if(!f) throw new Error('Adresse nicht auffindbar: „'+text+'".');
+    var coord=f.geometry.coordinates; // [lon,lat]
+    geocodeCache[text]=coord;
+    return coord;
+  }
+
+  async function routeKm(coordA,coordB){
+    if(!ORS_CONFIG.apiKey) throw new Error('Kein OpenRouteService API-Key konfiguriert.');
+    var res=await fetch('https://api.openrouteservice.org/v2/matrix/driving-car',{
+      method:'POST',
+      headers:{'Authorization':ORS_CONFIG.apiKey,'Content-Type':'application/json'},
+      body:JSON.stringify({locations:[coordA,coordB],metrics:['distance'],units:'km'})
+    });
+    if(!res.ok) throw new Error('Distanzberechnung fehlgeschlagen (Status '+res.status+').');
+    var data=await res.json();
+    var d=data && data.distances && data.distances[0] && data.distances[0][1];
+    if(typeof d!=='number') throw new Error('Distanz konnte nicht ermittelt werden.');
+    return d;
+  }
+
+  /* berechnet das Angebot für einen Auftrag und speichert es als o.quote */
+  async function computeQuote(o){
+    var d=o.payload.daten||{};
+    try{
+      var pickupText=firstLine(d.ab_adresse);
+      var deliveryText=firstLine(d.li_firma);
+      if(!pickupText) throw new Error('Keine Abholadresse erfasst.');
+      var depotCoord=await geocode(DEPOT_TEXT);
+      var pickupCoord=await geocode(pickupText);
+      var deliveryCoord = deliveryText ? await geocode(deliveryText) : depotCoord;
+      var leg1km=await routeKm(depotCoord,pickupCoord);       // Anfahrt ohne Batterie: Plochingen -> Abholadresse
+      var leg2km=await routeKm(pickupCoord,deliveryCoord);    // Fahrt mit Batterie: Abholadresse -> Lieferadresse/Entsorger (sonst zurück nach Plochingen)
+      var staplerCount=(d.ab_stapler==='ja'?1:0)+(d.li_stapler==='ja'?1:0);
+      var leg1cost=leg1km*PRICE.ohneBatterie;
+      var leg2cost=leg2km*PRICE.mitBatterie;
+      var staplerCost=staplerCount*PRICE.staplerStueck;
+      o.quote={
+        ok:true, calculatedAt:new Date().toISOString(),
+        deliveryIsDepot: !deliveryText,
+        leg1km:leg1km, leg2km:leg2km, leg1cost:leg1cost, leg2cost:leg2cost,
+        staplerCount:staplerCount, staplerCost:staplerCost,
+        total: leg1cost+leg2cost+staplerCost
+      };
+    }catch(err){
+      o.quote={ ok:false, calculatedAt:new Date().toISOString(), error: (err&&err.message)?err.message:String(err) };
+    }
+    await store.set(o.key,o);
+    var idx=orders.findIndex(function(x){return x.key===o.key;}); if(idx>=0) orders[idx]=o;
+    return o.quote;
+  }
+
+  function quoteHTML(o){
+    var q=o.quote;
+    if(!q) return '<p class="quote-pending">Angebot wird berechnet …</p>';
+    if(!q.ok) return '<p class="quote-error">Angebot konnte nicht automatisch berechnet werden: '+esc(q.error)+'</p>';
+    var rows=
+      '<div class="quote-row"><span class="l">Anfahrt ohne Batterie ('+km(q.leg1km)+' × '+eur(PRICE.ohneBatterie)+'/km)</span><span class="v">'+eur(q.leg1cost)+'</span></div>'+
+      '<div class="quote-row"><span class="l">Transport mit Batterie ('+km(q.leg2km)+' × '+eur(PRICE.mitBatterie)+'/km'+(q.deliveryIsDepot?' – zurück nach Plochingen':'')+')</span><span class="v">'+eur(q.leg2cost)+'</span></div>'+
+      (q.staplerCount? '<div class="quote-row"><span class="l">Stapler ('+q.staplerCount+' × '+eur(PRICE.staplerStueck)+')</span><span class="v">'+eur(q.staplerCost)+'</span></div>' : '');
+    return '<div class="quote-box">'+rows+
+      '<div class="quote-total"><span>Gesamt (netto)</span><span>'+eur(q.total)+'</span></div>'+
+      '<div class="quote-disclaimer">Automatisch berechnetes, vorläufiges Angebot auf Basis der erfassten Angaben – ohne Gewähr, zzgl. ges. MwSt.</div>'+
+      '</div>';
+  }
+  function renderQuoteInto(elId,o){ var el=document.getElementById(elId); if(el) el.innerHTML=quoteHTML(o); }
+
+  /* ================= OVERVIEW ================= */
+  var MAP={
+    beauftragung:{mit_entsorgung:'Transport mit Entsorgung (Abfall)',ohne_entsorgung:'Transport ohne Entsorgung'},
+    p_typ:{batterie:'Batterie',modul:'Modul',zelle:'Zelle'},
+    p_format:{pouch:'Pouch',rund:'Rundzellen / zylindrisch',hardcase:'Hardcase / prismatisch'},
+    zufahrt:{lkw:'LKW (12 T)',sz:'SZ (40 T)',keine:'beides nicht'},
+    janein:{ja:'Ja',nein:'Nein'},
+    einstufung:{nicht_beschaedigt_sicher:'Nicht beschädigt, Transportsicherheit garantiert',beschaedigt_unsicher:'Beschädigt, Transportsicherheit NICHT garantiert',beschaedigt_sicher:'Beschädigt, Transportsicherheit garantiert',un383:'UN.T. 38.3 Prüfzertifikat vorhanden'},
+    avv:{'160605':'16 06 05','160121':'16 01 21*',andere:'andere'},
+    zoll:{logbatt:'LogBATT',kunde:'Kunde / Agent'}
+  };
+  function m(dict,v){ if(Array.isArray(v)) return v.map(function(x){return MAP[dict]&&MAP[dict][x]||x;}).join(', '); return (MAP[dict]&&MAP[dict][v])||v; }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}); }
+  function fmtDate(iso){ try{var d=new Date(iso);return d.toLocaleDateString('de-DE')+' '+d.toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'});}catch(e){return iso||'—';} }
+  function firstLine(s){ return s?String(s).split('\n')[0].trim():''; }
+  function deriveRef(d){ return firstLine(d.p_ref)||firstLine(d.p_bez)||'— ohne Referenz —'; }
+  function deriveAG(d){ return firstLine(d.ag_anschrift)||'—'; }
+  var STATUS_FLOW=['neu','bestaetigt','bearbeitung','ausgeliefert','abgeschlossen'];
+  function statusLabel(s){ return {neu:'Neu',bestaetigt:'Bestätigt',bearbeitung:'In Bearbeitung',ausgeliefert:'Wird ausgeliefert',abgeschlossen:'Abgeschlossen'}[s]||s; }
+
+  /* gemeinsamer Chat-Thread Kunde <-> LogBATT */
+  function ensureChat(o){
+    if(!Array.isArray(o.chat)){
+      o.chat = [];
+      if(Array.isArray(o.notes)){ o.notes.forEach(function(n){ o.chat.push({ts:n.ts,from:(n.by==='LogBATT'?'logbatt':'kunde'),text:n.text}); }); }
+    }
+    return o.chat;
+  }
+  function renderThread(el, o, viewer){
+    var chat=ensureChat(o); el.innerHTML='';
+    if(!chat.length){ el.innerHTML='<div class="thread-empty">Noch keine Nachrichten.</div>'; return; }
+    chat.forEach(function(msg){
+      var mine = msg.from===viewer;
+      var who = msg.from==='logbatt' ? 'LogBATT' : 'Kunde';
+      var div=document.createElement('div'); div.className='tmsg '+(mine?'mine':'theirs');
+      div.innerHTML=esc(msg.text)+'<span class="meta">'+who+' · '+fmtDate(msg.ts)+'</span>';
+      el.appendChild(div);
+    });
+    el.scrollTop=el.scrollHeight;
+  }
+  async function postMessage(o, from, text){
+    text=(text||'').trim(); if(!text) return false;
+    ensureChat(o).push({ts:new Date().toISOString(), from:from, text:text});
+    await store.set(o.key,o);
+    var idx=orders.findIndex(function(x){return x.key===o.key;}); if(idx>=0) orders[idx]=o;
+    return true;
+  }
+  function unreadFromCustomer(o){ var c=Array.isArray(o.chat)?o.chat:[]; return c.filter(function(m){return m.from==='kunde';}).length; }
+
+  var filter='alle', query='';
+  async function loadAll(){
+    var keys=await store.list();
+    var items=await Promise.all(keys.map(function(k){ return store.get(k); }));
+    orders=items.filter(Boolean);
+    orders.sort(function(a,b){ return (b.received||'').localeCompare(a.received||''); });
+    render();
+  }
+  function counts(){ var c={alle:orders.length,neu:0,bestaetigt:0,bearbeitung:0,ausgeliefert:0,abgeschlossen:0}; orders.forEach(function(o){ if(c[o.status]!=null) c[o.status]++; }); return c; }
+
+  function render(){
+    var c=counts();
+    Object.keys(c).forEach(function(k){ var el=document.querySelector('[data-c="'+k+'"]'); if(el) el.textContent=c[k]; });
+    document.getElementById('nav-count').textContent=c.alle;
+
+    var rows=document.getElementById('rows'), empty=document.getElementById('empty');
+    var list=orders.filter(function(o){
+      if(filter!=='alle' && o.status!==filter) return false;
+      if(query){ var d=o.payload.daten||{}; var hay=(deriveRef(d)+' '+deriveAG(d)+' '+(d.p_bez||'')).toLowerCase(); if(hay.indexOf(query)<0) return false; }
+      return true;
+    });
+    rows.innerHTML='';
+    empty.style.display = orders.length===0?'block':'none';
+    if(orders.length===0) return;
+    if(list.length===0){ rows.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--muted);padding:34px;">Keine Treffer für die aktuelle Auswahl.</td></tr>'; return; }
+
+    list.forEach(function(o){
+      var d=o.payload.daten||{};
+      var abfall=d.beauftragung==='mit_entsorgung'?'<span class="tag-abfall">· Abfall</span>':'';
+      var demo=o.isDemo?'<span class="demo-flag">DEMO</span>':'';
+      var nMsg=unreadFromCustomer(o);
+      var chatBadge=nMsg?'<span class="demo-flag" style="color:#0a6f78;background:var(--teal-tint);border-color:#BfE6EA;">💬 '+nMsg+'</span>':'';
+      var tr=document.createElement('tr');
+      if(o.key===lastSavedKey) tr.className='flash';
+      tr.innerHTML=
+        '<td><span class="ref">'+esc(deriveRef(d))+'</span>'+demo+'</td>'+
+        '<td>'+esc(deriveAG(d))+'<div class="subtxt">'+esc(firstLine(d.ab_adresse))+'</div></td>'+
+        '<td><span class="tag-typ">'+esc(m('p_typ',d.p_typ)||'—')+'</span>'+abfall+'</td>'+
+        '<td class="subtxt">'+fmtDate(o.received)+'</td>'+
+        '<td><span class="pill '+o.status+'"><span class="d"></span>'+statusLabel(o.status)+'</span>'+chatBadge+'</td>';
+      tr.addEventListener('click',function(){ openDrawer(o.key); });
+      rows.appendChild(tr);
+    });
+    lastSavedKey=null;
+  }
+
+  /* drawer detail */
+  var current=null;
+  function row(label,val){ if(val==null||val===''||(Array.isArray(val)&&!val.length)) return ''; return '<dt>'+esc(label)+'</dt><dd>'+esc(val)+'</dd>'; }
+  function section(title,html){ if(!html.trim()) return ''; return '<div class="sec"><h4>'+esc(title)+'</h4><dl class="kv">'+html+'</dl></div>'; }
+  function buildDetail(d){
+    var h='';
+    h+=section('Beauftragung',row('Art',m('beauftragung',d.beauftragung)));
+    h+=section('Auftraggeber & Abholung',
+      row('Auftraggeber',d.ag_anschrift)+row('Abholadresse',d.ab_adresse)+row('Kontakt',d.ab_kontakt)+
+      row('Stapler',m('janein',d.ab_stapler))+row('Rampenverladung',m('janein',d.ab_rampe))+
+      row('Gabellänge ≥2m',m('janein',d.ab_gabel))+row('Hebevorrichtung',m('janein',d.ab_hebe))+
+      row('Tragfähigkeit',d.ab_tragf?d.ab_tragf+' kg':'')+row('Zufahrt',m('zufahrt',d.ab_zufahrt)));
+    h+=section('Lieferadresse',
+      row('Firma',d.li_firma)+row('Anlieferzeiten',d.li_zeiten)+row('Kontakt',d.li_kontakt)+
+      row('Stapler',m('janein',d.li_stapler))+row('Rampenverladung',m('janein',d.li_rampe))+
+      row('Gabellänge ≥2m',m('janein',d.li_gabel))+row('Hebevorrichtung',m('janein',d.li_hebe))+
+      row('Tragfähigkeit',d.li_tragf?d.li_tragf+' kg':'')+row('Sofortentleerung',m('janein',d.li_sofort))+
+      row('Zufahrt',m('zufahrt',d.li_zufahrt)));
+    var chem=Array.isArray(d.p_chemie)?d.p_chemie.slice():(d.p_chemie?[d.p_chemie]:[]);
+    if(d.p_chemie_andere) chem=chem.filter(function(x){return x!=='andere';}).concat(d.p_chemie_andere);
+    h+=section('Produktinfos',
+      row('Referenz-/Bestellnr.',d.p_ref)+row('Typ',m('p_typ',d.p_typ))+row('Bezeichnung (Serien-Nr.)',d.p_bez)+
+      row('Anzahl',d.p_anzahl)+row('Gewicht / Stück',d.p_gew_stk?d.p_gew_stk+' kg':'')+row('Gewicht gesamt',d.p_gew_ges?d.p_gew_ges+' kg':'')+
+      row('Abmaße (L×B×H)',d.p_abmasse?d.p_abmasse+' mm':'')+row('Nennenergie',d.p_kwh?d.p_kwh+' kWh':'')+
+      row('Zellchemie',chem.join(', '))+row('Zellformat',m('p_format',d.p_format)));
+    h+=section('Zustand & Gefahrgut',
+      row('Art der Beschädigung',d.s_art)+row('Schadenskatalog',d.s_katalog)+row('Berührschutz HV',m('janein',d.s_beruehr))+
+      row('Einstufung',m('einstufung',d.s_einstufung))+row('Zugel. Verpackung nötig',m('janein',d.s_verpackung))+
+      row('Verpackungsangaben',d.s_verp_angaben)+row('Fotomaterial',m('janein',d.s_foto)));
+    if(d.beauftragung==='mit_entsorgung'||d.e_avv||d.e_erzeuger||d.e_en||d.e_msds){
+      var avv=Array.isArray(d.e_avv)?d.e_avv.slice():(d.e_avv?[d.e_avv]:[]);
+      if(d.e_avv_andere) avv=avv.filter(function(x){return x!=='andere';}).concat(d.e_avv_andere);
+      h+=section('Entsorgung',
+        row('Abfallschlüssel/AVV',avv.map(function(x){return m('avv',x);}).join(', '))+
+        row('Abfallerzeugernr.',d.e_erzeuger)+row('Einzelnachweis (EN)',m('janein',d.e_en))+row('EN-Nr.',d.e_en_nr)+
+        row('MSDS/SDB',m('janein',d.e_msds))+row('Hinweise',d.e_hinweise));
+    }
+    if(d.z_import||d.z_export||d.z_agent_name||d.z_hinweise){
+      h+=section('Zoll',
+        row('Import-Anmeldung',m('zoll',d.z_import))+row('Export-Anmeldung',m('zoll',d.z_export))+
+        row('Agent Name',d.z_agent_name)+row('Agent E-Mail',d.z_agent_mail)+row('Agent Telefon',d.z_agent_tel)+
+        row('Hinweise',d.z_hinweise));
+    }
+    return h||'<p class="sec-empty">Keine weiteren Angaben erfasst.</p>';
+  }
+  async function openDrawer(key){
+    var o=await store.get(key); if(!o) return; current=o;
+    var d=o.payload.daten||{};
+    document.getElementById('d-title').textContent=deriveRef(d);
+    document.getElementById('d-meta').textContent='Sendungsnr. '+(o.trackNo||'—')+' · Eingang: '+fmtDate(o.received)+(o.isDemo?' · Demo':'');
+    document.getElementById('d-body').innerHTML=
+      '<div class="statusrow"><span class="lbl">Status</span><div class="status-seg" id="statusseg">'+
+        STATUS_FLOW.map(function(s){ return '<button data-s="'+s+'" class="'+(o.status===s?'active '+s:'')+'">'+statusLabel(s)+'</button>'; }).join('')+
+      '</div></div>'+
+      buildDetail(d)+
+      '<div class="sec"><h4>Angebot <button class="btn btn-ghost btn-sm" id="drawer-quote-recalc" style="margin-left:8px;padding:4px 10px;font-size:11.5px;">Neu berechnen</button></h4><div id="drawer-quote"></div></div>'+
+      '<div class="sec"><h4>Chat mit dem Kunden</h4><div class="thread" id="drawer-thread"></div>'+
+        '<div class="thread-input"><textarea id="drawer-msg-text" placeholder="Antwort an den Kunden …"></textarea>'+
+        '<button class="btn btn-primary btn-sm" id="drawer-msg-send">Senden</button></div></div>';
+
+    document.getElementById('statusseg').addEventListener('click',async function(e){
+      var btn=e.target.closest('button[data-s]'); if(!btn) return;
+      if(current.status!==btn.dataset.s){
+        current.status=btn.dataset.s;
+        if(!current.history) current.history=[];
+        current.history.push({status:current.status, ts:new Date().toISOString()});
+        await store.set(current.key,current);
+      }
+      [].forEach.call(this.children,function(b){ b.className=(b.dataset.s===current.status?'active '+current.status:''); });
+      var idx=orders.findIndex(function(x){return x.key===current.key;}); if(idx>=0) orders[idx]=current; render();
+    });
+
+    renderQuoteInto('drawer-quote', current);
+    document.getElementById('drawer-quote-recalc').addEventListener('click',async function(){
+      this.disabled=true;
+      await computeQuote(current);
+      renderQuoteInto('drawer-quote', current);
+      this.disabled=false;
+    });
+
+    var dThread=document.getElementById('drawer-thread');
+    renderThread(dThread, current, 'logbatt');
+    var dText=document.getElementById('drawer-msg-text');
+    async function sendDrawer(){
+      if(await postMessage(current,'logbatt',dText.value)){ dText.value=''; renderThread(dThread,current,'logbatt'); render(); }
+    }
+    document.getElementById('drawer-msg-send').addEventListener('click',sendDrawer);
+    dText.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendDrawer(); } });
+
+    document.getElementById('overlay').classList.add('show');
+    var dr=document.getElementById('drawer'); dr.classList.add('show'); dr.setAttribute('aria-hidden','false');
+  }
+  function closeDrawer(){
+    document.getElementById('overlay').classList.remove('show');
+    var dr=document.getElementById('drawer'); dr.classList.remove('show'); dr.setAttribute('aria-hidden','true'); current=null;
+  }
+  document.getElementById('d-close').addEventListener('click',closeDrawer);
+  document.getElementById('overlay').addEventListener('click',closeDrawer);
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeDrawer(); });
+  document.getElementById('d-export').addEventListener('click',function(){
+    if(!current) return; var d=current.payload.daten||{};
+    var a=document.createElement('a');
+    a.href='data:application/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(current.payload,null,2));
+    a.download='LogBATT_'+(deriveRef(d).replace(/[^a-z0-9_-]/gi,'_')||'auftrag')+'.json';
+    document.body.appendChild(a); a.click(); a.remove();
+  });
+  document.getElementById('d-delete').addEventListener('click',async function(){
+    if(!current) return; if(!confirm('Diesen Auftrag wirklich löschen?')) return;
+    await store.del(current.key); orders=orders.filter(function(x){return x.key!==current.key;}); closeDrawer(); render();
+  });
+
+  /* add / import */
+  function genKey(){ return PREFIX+Date.now().toString(36)+Math.random().toString(36).slice(2,7); }
+  function genTrackNo(){
+    var s=(Date.now().toString(36)+Math.random().toString(36).slice(2)).toUpperCase().replace(/[^A-Z0-9]/g,'');
+    return 'LB-'+s.slice(0,6);
+  }
+  async function addOrder(payload,opts){
+    opts=opts||{};
+    var rec={ key:genKey(), trackNo:genTrackNo(), status:'neu', received:new Date().toISOString(),
+              isDemo:!!opts.isDemo, chat:[], history:[{status:'neu', ts:new Date().toISOString()}], payload:payload };
+    await store.set(rec.key,rec); orders.unshift(rec); render();
+    computeQuote(rec).then(function(){
+      if(modalOrderKey===rec.key) renderQuoteInto('modal-quote', rec);
+      if(trackCurrent && trackCurrent.key===rec.key) renderQuoteInto('track-quote', rec);
+      if(current && current.key===rec.key) renderQuoteInto('drawer-quote', rec);
+    });
+    return rec;
+  }
+  function looksLikeChecklist(obj){ return obj && typeof obj==='object' && obj.daten && typeof obj.daten==='object'; }
+  document.getElementById('btn-import').addEventListener('click',function(){ document.getElementById('file').click(); });
+  document.getElementById('file').addEventListener('change',function(e){
+    var files=[].slice.call(e.target.files); var added=0,bad=0,done=0; if(!files.length) return;
+    files.forEach(function(f){
+      var r=new FileReader();
+      r.onload=async function(){
+        try{ var obj=JSON.parse(r.result);
+          if(looksLikeChecklist(obj)){ await addOrder(obj,{}); added++; }
+          else if(obj && obj.formular){ await addOrder({formular:obj.formular,daten:obj.daten||obj},{}); added++; }
+          else bad++;
+        }catch(err){ bad++; }
+        if(++done===files.length){
+          var b=document.getElementById('store-banner');
+          b.className='banner info';
+          b.textContent=(added?added+' Auftrag/Aufträge importiert. ':'')+(bad?bad+' Datei(en) waren keine gültige Checkliste.':'');
+        }
+      };
+      r.readAsText(f);
+    });
+    e.target.value='';
+  });
+  document.getElementById('btn-demo').addEventListener('click',function(){
+    addOrder({ formular:'L4 Checkliste Beförderung Batterie / Modul / Zelle', version:'Demo',
+      daten:{ beauftragung:'mit_entsorgung',
+        ag_anschrift:'Muster GmbH\nIndustriestr. 5\n73207 Plochingen',
+        ab_adresse:'Werk 2, Tor 4\nMo–Fr 08:00–15:00',
+        ab_kontakt:'M. Mustermann\n+49 7153 000000\nmuster@example.de',
+        ab_stapler:'ja',ab_rampe:'ja',ab_gabel:'ja',ab_hebe:'nein',ab_tragf:'2500',ab_zufahrt:'sz',
+        li_firma:'Recyclinghof Süd',li_zeiten:'nach Absprache',li_kontakt:'Annahme +49 711 000000',
+        li_stapler:'ja',li_rampe:'ja',li_sofort:'nein',li_zufahrt:'lkw',
+        p_ref:'AB-2024-0815',p_typ:'modul',p_bez:'Modulpaket SN-4471',p_anzahl:'6',
+        p_gew_stk:'48',p_gew_ges:'288',p_abmasse:'600 × 400 × 200',p_kwh:'5.2',
+        p_chemie:['NMC'],p_format:'hardcase',
+        s_art:'Gehäuse leicht verformt',s_beruehr:'ja',s_einstufung:['beschaedigt_sicher','un383'],s_verpackung:'ja',s_foto:'ja',
+        e_avv:['160605'],e_erzeuger:'DE 0000000',e_en:'nein',e_msds:'ja' }
+    },{isDemo:true});
+  });
+
+  /* filters */
+  document.getElementById('filter').addEventListener('click',function(e){
+    var b=e.target.closest('button[data-f]'); if(!b) return; filter=b.dataset.f;
+    [].forEach.call(this.querySelectorAll('button'),function(x){x.classList.toggle('active',x===b);}); render();
+  });
+  document.getElementById('search').addEventListener('input',function(){ query=this.value.trim().toLowerCase(); render(); });
+
+  /* ================= SENDUNGSVERFOLGUNG ================= */
+  var trackCurrent=null;
+  async function findByTrackNo(no){
+    no=(no||'').trim().toUpperCase();
+    if(!no) return null;
+    var keys=await store.list();
+    for(var i=0;i<keys.length;i++){ var o=await store.get(keys[i]); if(o && (o.trackNo||'').toUpperCase()===no) return o; }
+    return null;
+  }
+  async function doTrack(no){
+    var o=await findByTrackNo(no);
+    var res=document.getElementById('track-result'), msg=document.getElementById('track-msg');
+    if(!o){ res.classList.remove('show'); msg.style.display='block'; trackCurrent=null; return; }
+    msg.style.display='none'; trackCurrent=o; res.classList.add('show');
+    var d=o.payload.daten||{};
+    document.getElementById('track-head').textContent=deriveRef(d);
+    var pill=document.getElementById('track-pill');
+    pill.className='pill '+o.status;
+    document.getElementById('track-pill-lbl').textContent=statusLabel(o.status);
+    // timeline
+    var reached=STATUS_FLOW.indexOf(o.status);
+    var hist={}; (o.history||[]).forEach(function(h){ if(!hist[h.status]) hist[h.status]=h.ts; });
+    var tl=document.getElementById('track-timeline'); tl.innerHTML='';
+    STATUS_FLOW.forEach(function(s,i){
+      var li=document.createElement('li'); if(i<=reached) li.className='done';
+      li.innerHTML='<div class="t-lbl">'+statusLabel(s)+'</div>'+(hist[s]?'<div class="t-time">'+fmtDate(hist[s])+'</div>':'');
+      tl.appendChild(li);
+    });
+    renderThread(document.getElementById('track-thread'), o, 'kunde');
+    renderQuoteInto('track-quote', o);
+  }
+  document.getElementById('track-go').addEventListener('click',function(){ doTrack(document.getElementById('track-input').value); });
+  document.getElementById('track-input').addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); doTrack(this.value); } });
+  async function sendTrackMsg(){
+    if(!trackCurrent) return;
+    var t=document.getElementById('track-msg-text');
+    if(await postMessage(trackCurrent,'kunde',t.value)){ t.value=''; renderThread(document.getElementById('track-thread'),trackCurrent,'kunde'); }
+  }
+  document.getElementById('track-msg-send').addEventListener('click',sendTrackMsg);
+  document.getElementById('track-msg-text').addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); sendTrackMsg(); } });
+
+  /* ================= BOT FÜLLT CHECKLISTE ================= */
+  /* Schema: welche Felder existieren und welche Werte erlaubt sind.
+     Wird (a) zum Validieren des Bot-Outputs und (b) als Kontext an die API genutzt. */
+  var FIELD_SCHEMA = {
+    beauftragung:['mit_entsorgung','ohne_entsorgung'],
+    ag_anschrift:'text', ab_adresse:'text', ab_kontakt:'text',
+    ab_stapler:['ja','nein'], ab_rampe:['ja','nein'], ab_gabel:['ja','nein'], ab_hebe:['ja','nein'],
+    ab_tragf:'text', ab_zufahrt:['lkw','sz','keine'],
+    li_firma:'text', li_zeiten:'text', li_kontakt:'text',
+    li_stapler:['ja','nein'], li_rampe:['ja','nein'], li_gabel:['ja','nein'], li_hebe:['ja','nein'],
+    li_tragf:'text', li_sofort:['ja','nein'], li_zufahrt:['lkw','sz','keine'],
+    p_ref:'text', p_typ:['batterie','modul','zelle'], p_bez:'text', p_anzahl:'text',
+    p_gew_stk:'text', p_gew_ges:'text', p_abmasse:'text', p_kwh:'text',
+    p_chemie:['NMC','NCA','LCO','LFP','LMO'], p_chemie_andere:'text',
+    p_format:['pouch','rund','hardcase'],
+    s_art:'text', s_beruehr:['ja','nein'],
+    s_einstufung:['nicht_beschaedigt_sicher','beschaedigt_unsicher','beschaedigt_sicher','un383'],
+    s_verpackung:['ja','nein'], s_verp_angaben:'text', s_foto:['ja','nein'],
+    e_avv:['160605','160121','andere'], e_avv_andere:'text', e_erzeuger:'text',
+    e_en:['ja','nein'], e_en_nr:'text', e_msds:['ja','nein'], e_hinweise:'text',
+    z_import:['logbatt','kunde'], z_export:['logbatt','kunde'],
+    z_agent_name:'text', z_agent_mail:'text', z_agent_tel:'text', z_hinweise:'text'
+  };
+  function schemaText(){
+    var lines=['Verfügbare Felder der Checkliste (Feldname: erlaubte Werte | "Freitext"):'];
+    Object.keys(FIELD_SCHEMA).forEach(function(k){
+      var v=FIELD_SCHEMA[k];
+      lines.push('- '+k+': '+(Array.isArray(v)?v.join(' / '):'Freitext'));
+    });
+    return lines.join('\n');
+  }
+  function setNativeValue(el,val){
+    var proto=el.tagName==='TEXTAREA'?window.HTMLTextAreaElement.prototype:(el.tagName==='SELECT'?window.HTMLSelectElement.prototype:window.HTMLInputElement.prototype);
+    var setter=Object.getOwnPropertyDescriptor(proto,'value'); if(setter&&setter.set) setter.set.call(el,val); else el.value=val;
+  }
+  /* applyFill: nimmt {feld:wert,...} und trägt nur gültige Felder/Werte ein.
+     Gibt {filled:[...], skipped:[...]} zurück. */
+  function applyFill(obj){
+    var filled=[], skipped=[];
+    Object.keys(obj||{}).forEach(function(name){
+      if(!(name in FIELD_SCHEMA)){ skipped.push(name+' (unbekanntes Feld)'); return; }
+      var val=obj[name]; var spec=FIELD_SCHEMA[name];
+      var els=form.querySelectorAll('[name="'+name+'"]');
+      if(!els.length){ skipped.push(name); return; }
+      var first=els[0];
+      if(first.type==='radio'||first.type==='checkbox'){
+        var vals=Array.isArray(val)?val:[val];
+        var anyMatch=false;
+        vals.forEach(function(v){
+          var vv=String(v).toLowerCase();
+          var match=null;
+          els.forEach(function(el){ if(String(el.value).toLowerCase()===vv) match=el; });
+          if(match){ match.checked=true; anyMatch=true; }
+          else skipped.push(name+'="'+v+'" (Wert nicht erlaubt)');
+        });
+        if(anyMatch) filled.push(name);
+      } else {
+        setNativeValue(first, Array.isArray(val)?val.join(', '):String(val));
+        filled.push(name);
+      }
+    });
+    // Trigger UI-Updates (bedingte Felder etc.)
+    form.dispatchEvent(new Event('change',{bubbles:true}));
+    return {filled:filled, skipped:skipped};
+  }
+
+  /* nach außen (für das Chat-Skript) bereitstellen */
+  window.__lbApplyFill = applyFill;
+  window.__lbSchemaText = schemaText;
+  window.__lbGoChecklist = function(){ showView('checkliste'); };
+
+  /* init */
+  refreshReveals(); refreshEntsorgung(); loadAll();
+
+  /* Diagnose: bestätigt, dass das Haupt-Skript vollständig durchgelaufen ist */
+  (function(){ var hb=document.getElementById('js-heartbeat'); if(hb){ hb.style.display='block'; setTimeout(function(){ hb.style.display='none'; },4000); } })();
+})();
+</script>
+
+<script>
+/* ============================ CHATBOT ============================ */
+(function(){
+  "use strict";
+
+  /* =====================================================================
+     CHATBOT-KONFIGURATION — hier API & Prompt eintragen, sobald verfügbar
+     ---------------------------------------------------------------------
+     provider:
+       'custom'    : eigener Endpoint / Proxy / n8n-Webhook  (EMPFOHLEN für Live)
+                     POST {system, model, messages:[{role,content}]} -> erwartet {reply:"..."}
+       'anthropic' : Anthropic Messages API direkt
+       'openai'    : OpenAI Chat Completions API direkt
+
+     SICHERHEITSHINWEIS: Ein hier eingetragener apiKey ist im Browser-Quelltext
+     SICHTBAR. Für die Live-Seite KEINEN echten Schlüssel hier ablegen, sondern
+     provider:'custom' mit Server-/Proxy-Endpoint nutzen, der den Key serverseitig hält.
+     ===================================================================== */
+  var CHAT_CONFIG = {
+    provider: 'custom',
+    endpoint: '',          // z.B. 'https://DEIN-n8n/webhook/checkliste-bot'
+    apiKey:   '',          // nur bei direktem Anbieter; im Client sichtbar!
+    model:    'claude-sonnet-4-6',
+    maxTokens: 1200,
+    systemPrompt: 'PLATZHALTER – hier den System-Prompt für den LogBATT-Checklisten-Assistenten eintragen.',
+    autoAppendSchema: true // beim Ausfüllen das Feld-Schema automatisch an den Prompt anhängen
+  };
+  /* ===================================================================== */
+
+  var FILL_INSTRUCTION =
+    'Extrahiere aus dem folgenden Auftragstext alle eindeutig auffindbaren Angaben für die Checkliste. '+
+    'Gib AUSSCHLIESSLICH ein JSON-Objekt der Form {"fill": { "feldname": "wert", ... }} zurück – ohne weitere Erklärung. '+
+    'Verwende nur Feldnamen und erlaubte Werte aus dem Schema. Bei Mehrfachfeldern (p_chemie, s_einstufung, e_avv) ein Array. '+
+    'Felder, die nicht eindeutig im Text stehen, weglassen (nichts erraten).';
+
+  var launcher=document.getElementById('chat-launcher');
+  var panel=document.getElementById('chat-panel');
+  var msgsEl=document.getElementById('chat-msgs');
+  var textEl=document.getElementById('chat-text');
+  var sendBtn=document.getElementById('chat-send');
+  var fillBtn=document.getElementById('chat-fill');
+  var history=[]; var greeted=false; var fillMode=false; var checklistActive=true;
+
+  function openPanel(){
+    panel.classList.add('open'); panel.setAttribute('aria-hidden','false'); launcher.classList.add('hide');
+    if(!greeted){ greeted=true; addMsg('bot','Hallo! Ich beantworte Fragen zum Ausfüllen der Checkliste. Sie können mir auch einen Auftrag in beliebigem Format geben – ich übertrage die Angaben dann in die Checkliste.'); }
+    textEl.focus();
+  }
+  function closePanel(){ panel.classList.remove('open'); panel.setAttribute('aria-hidden','true'); if(checklistActive) launcher.classList.remove('hide'); }
+
+  function addMsg(role,text){
+    var d=document.createElement('div'); d.className='msg '+(role==='user'?'user':role==='sys'?'sys':'bot'); d.textContent=text;
+    msgsEl.appendChild(d); msgsEl.scrollTop=msgsEl.scrollHeight; return d;
+  }
+  function showTyping(){ var t=document.createElement('div'); t.className='typing'; t.id='typing'; t.innerHTML='<span></span><span></span><span></span>'; msgsEl.appendChild(t); msgsEl.scrollTop=msgsEl.scrollHeight; }
+  function hideTyping(){ var t=document.getElementById('typing'); if(t) t.remove(); }
+
+  function buildSystem(forFill){
+    var sys=CHAT_CONFIG.systemPrompt;
+    if(forFill && CHAT_CONFIG.autoAppendSchema && typeof window.__lbSchemaText==='function'){
+      sys += '\n\n'+window.__lbSchemaText()+'\n\n'+FILL_INSTRUCTION;
+    }
+    return sys;
+  }
+
+  async function callApi(userText, forFill){
+    var cfg=CHAT_CONFIG;
+    if(cfg.provider==='custom' && !cfg.endpoint) throw {kind:'noconfig'};
+    if((cfg.provider==='anthropic'||cfg.provider==='openai') && !cfg.apiKey) throw {kind:'noconfig'};
+    var sys=buildSystem(forFill);
+    var msgs=history.concat([{role:'user',content:userText}]);
+    var url, headers, body, parse;
+    if(cfg.provider==='anthropic'){
+      url=cfg.endpoint||'https://api.anthropic.com/v1/messages';
+      headers={'content-type':'application/json','x-api-key':cfg.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'};
+      body={model:cfg.model,max_tokens:cfg.maxTokens,system:sys,messages:msgs};
+      parse=function(d){ return (d.content||[]).filter(function(x){return x.type==='text';}).map(function(x){return x.text;}).join('\n'); };
+    } else if(cfg.provider==='openai'){
+      url=cfg.endpoint||'https://api.openai.com/v1/chat/completions';
+      headers={'content-type':'application/json','Authorization':'Bearer '+cfg.apiKey};
+      body={model:cfg.model,max_tokens:cfg.maxTokens,messages:[{role:'system',content:sys}].concat(msgs)};
+      parse=function(d){ return d.choices&&d.choices[0]&&d.choices[0].message&&d.choices[0].message.content||''; };
+    } else {
+      url=cfg.endpoint; headers={'content-type':'application/json'};
+      if(cfg.apiKey) headers['Authorization']='Bearer '+cfg.apiKey;
+      body={system:sys,model:cfg.model,messages:msgs};
+      parse=function(d){ return d.reply||d.text||d.message||(typeof d==='string'?d:JSON.stringify(d)); };
+    }
+    var res=await fetch(url,{method:'POST',headers:headers,body:JSON.stringify(body)});
+    if(!res.ok){ var t=await res.text().catch(function(){return'';}); throw {kind:'http',status:res.status,detail:t}; }
+    return parse(await res.json());
+  }
+
+  /* erkennt {"fill":{...}} in einer Antwort */
+  function extractFill(text){
+    var cands=[]; var m=text.match(/```(?:json)?\s*([\s\S]*?)```/i); if(m) cands.push(m[1]); cands.push(text);
+    for(var i=0;i<cands.length;i++){ var c=cands[i]; var s=c.indexOf('{'), e=c.lastIndexOf('}'); if(s<0||e<=s) continue;
+      try{ var o=JSON.parse(c.slice(s,e+1)); if(o && o.fill && typeof o.fill==='object') return o.fill; }catch(_){} }
+    return null;
+  }
+  function applyAndReport(fillObj){
+    if(typeof window.__lbApplyFill!=='function'){ addMsg('sys','Ausfüllen nicht verfügbar.'); return; }
+    var r=window.__lbApplyFill(fillObj);
+    if(typeof window.__lbGoChecklist==='function') window.__lbGoChecklist();
+    var txt='✓ In die Checkliste übertragen: '+(r.filled.length?r.filled.join(', '):'(keine Felder)')+'.';
+    if(r.skipped.length) txt+='\nNicht übernommen: '+r.skipped.join(', ')+'.';
+    txt+='\nBitte die Eingaben in der Checkliste prüfen.';
+    addMsg('bot',txt);
+  }
+
+  async function send(){
+    var text=textEl.value.trim(); if(!text) return;
+    var thisFill=fillMode;
+    textEl.value=''; textEl.style.height='auto';
+    addMsg('user', thisFill ? '[Auftragstext zum Ausfüllen übergeben]' : text);
+    sendBtn.disabled=true; showTyping();
+    if(thisFill){ fillMode=false; fillBtn.style.background=''; textEl.placeholder='Frage eingeben …'; }
+    try{
+      var reply=await callApi(text, thisFill);
+      hideTyping();
+      var fill=extractFill(reply);
+      if(fill){ applyAndReport(fill); }
+      else if(thisFill){ addMsg('bot', reply || 'Ich konnte im Text keine eindeutig übertragbaren Felder finden.'); }
+      else { addMsg('bot', reply||'(keine Antwort)'); history.push({role:'user',content:text}); history.push({role:'assistant',content:reply}); }
+    }catch(err){
+      hideTyping();
+      if(err&&err.kind==='noconfig') addMsg('sys','Der Chatbot ist noch nicht mit einer API verbunden. Bitte Zugang in CHAT_CONFIG eintragen.');
+      else if(err&&err.kind==='http') addMsg('sys','Fehler bei der Anfrage (Status '+err.status+'). Bitte API-Konfiguration prüfen.');
+      else addMsg('sys','Verbindung fehlgeschlagen. Endpoint/CORS prüfen.');
+    }finally{ sendBtn.disabled=false; textEl.focus(); }
+  }
+
+  fillBtn.addEventListener('click',function(){
+    if(panel.classList.contains('open')===false) openPanel();
+    fillMode=!fillMode;
+    if(fillMode){ this.style.background='#dff2fb'; textEl.placeholder='Auftragstext hier einfügen und absenden …'; addMsg('sys','Auftrag einfügen: Bitte den kompletten Auftragstext einfügen und absenden. Ich übertrage die auffindbaren Angaben in die Checkliste.'); textEl.focus(); }
+    else { this.style.background=''; textEl.placeholder='Frage eingeben …'; }
+  });
+
+  textEl.addEventListener('input',function(){ this.style.height='auto'; this.style.height=Math.min(this.scrollHeight,110)+'px'; });
+  textEl.addEventListener('keydown',function(e){ if(e.key==='Enter'&&!e.shiftKey){ e.preventDefault(); send(); } });
+  sendBtn.addEventListener('click',send);
+  launcher.addEventListener('click',openPanel);
+  document.getElementById('chat-close').addEventListener('click',closePanel);
+
+  /* Sichtbarkeit an Checklisten-Ansicht koppeln (von showView aufgerufen) */
+  window.__lbSetChatView=function(isChecklist){
+    checklistActive=isChecklist;
+    if(isChecklist){ if(!panel.classList.contains('open')) launcher.classList.remove('hide'); }
+    else { launcher.classList.add('hide'); closePanel(); }
+  };
+  // initial: Checkliste ist aktiv
+  launcher.classList.remove('hide');
+})();
+</script>
+</body>
+</html>
