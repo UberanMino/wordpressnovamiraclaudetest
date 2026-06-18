@@ -53,6 +53,20 @@ node src/cli.js send acme.com
 node src/cli.js send --send-all
 ```
 
+## Web dashboard
+
+A LogBATT-branded dashboard wraps the same pipeline in a browser UI: prospect, run, review/edit
+drafted emails, attach contacts, and send — all from one page.
+
+```bash
+npm run dashboard
+# open http://localhost:4173
+```
+
+It's a thin Express server (`src/server.js`) over the same `src/pipeline.js` functions the CLI
+uses, so both stay in sync. Branding assets (logo, process-flow icons) live in `public/assets/`,
+extracted from LogBATT's own presentation deck.
+
 ## What's intentionally not built yet
 
 - **Contact discovery**: finding a named decision-maker's email at a qualified company is a manual

@@ -1,11 +1,6 @@
 #!/usr/bin/env node
 import "dotenv/config";
-import { searchCompanies, defaultProspectingQueries } from "./prospecting.js";
-import { researchCompany } from "./research.js";
-import { qualifyLead } from "./qualify.js";
-import { draftEmail } from "./draft.js";
-import { sendEmail } from "./send.js";
-import * as store from "./store.js";
+import * as pipeline from "./pipeline.js";
 
 function parseArgs(argv) {
   const [command, ...rest] = argv;
@@ -30,57 +25,29 @@ function parseArgs(argv) {
 }
 
 async function cmdProspect({ flags }) {
-  const queries = flags.query ? [flags.query] : defaultProspectingQueries();
-  console.log(`Running ${queries.length} prospecting query(ies)...`);
-
-  for (const query of queries) {
-    console.log(`\n[search] ${query}`);
-    const candidates = await searchCompanies(query, { num: Number(flags.num) || 10 });
-    for (const c of candidates) {
-      if (store.findByDomain(c.domain)) continue;
-      store.upsert({ ...c, stage: "prospected", sourceQuery: query });
-      console.log(`  + ${c.domain} (${c.name})`);
-    }
-  }
-  console.log("\nDone. Run `npm run run` to research, qualify, and draft outreach.");
+  console.log("Prospecting...");
+  const added = await pipeline.prospect({ query: flags.query, num: Number(flags.num) || 10 });
+  for (const lead of added) console.log(`  + ${lead.domain} (${lead.name})`);
+  console.log(`\nAdded ${added.length} new lead(s). Run \`npm run run\` next.`);
 }
 
-async function cmdRun({ flags }) {
-  const leads = store.getAll().filter((l) => l.stage === "prospected");
-  if (!leads.length) {
+async function cmdRun() {
+  const results = await pipeline.runPipeline({
+    onProgress: (lead) => {
+      if (lead.stage === "disqualified") {
+        console.log(`[${lead.domain}] disqualified (score ${lead.qualification.score}): ${lead.qualification.reason}`);
+      } else {
+        console.log(`[${lead.domain}] drafted: "${lead.email.subject}"`);
+      }
+    },
+  });
+  if (!results.length) {
     console.log("No prospected leads to process. Run `npm run prospect` first.");
-    return;
   }
-
-  for (const lead of leads) {
-    console.log(`\n[${lead.domain}] researching...`);
-    const research = await researchCompany(lead);
-    store.upsert({ domain: lead.domain, research });
-
-    const qualification = await qualifyLead(lead, research);
-    store.upsert({ domain: lead.domain, qualification });
-
-    if (!qualification.qualified) {
-      store.setStage(lead.domain, "disqualified");
-      console.log(`  disqualified (score ${qualification.score}): ${qualification.reason}`);
-      continue;
-    }
-
-    console.log(`  qualified (score ${qualification.score}): ${qualification.painPoint}`);
-    const email = await draftEmail(lead, research, qualification);
-    store.upsert({ domain: lead.domain, email, stage: "drafted" });
-    console.log(`  drafted email: "${email.subject}"`);
-  }
-
-  console.log(
-    "\nDone. Review drafts with `npm run lead-tool list`, attach a contact address with " +
-      "`node src/cli.js set-contact <domain> <email>`, then send with " +
-      "`node src/cli.js send <domain>` (or --send-all)."
-  );
 }
 
 async function cmdList() {
-  const leads = store.getAll();
+  const leads = pipeline.listLeads();
   if (!leads.length) {
     console.log("No leads yet.");
     return;
@@ -96,33 +63,20 @@ async function cmdList() {
 async function cmdSetContact({ positional }) {
   const [domain, email] = positional;
   if (!domain || !email) throw new Error("Usage: set-contact <domain> <email>");
-  store.upsert({ domain, contactEmail: email });
+  pipeline.setContact(domain, email);
   console.log(`Set contact for ${domain} -> ${email}`);
 }
 
 async function cmdSend({ flags, positional }) {
-  const targets = flags["send-all"]
-    ? store.getAll().filter((l) => l.stage === "drafted" && l.contactEmail)
-    : store.getAll().filter((l) => l.domain === positional[0]);
-
-  if (!targets.length) {
-    console.log("Nothing to send. Leads need stage=drafted and a contactEmail set.");
+  if (flags["send-all"]) {
+    const sent = await pipeline.sendAll();
+    console.log(`Sent ${sent.length} email(s).`);
     return;
   }
-
-  for (const lead of targets) {
-    if (lead.stage !== "drafted") {
-      console.log(`  skip ${lead.domain}: stage is "${lead.stage}", expected "drafted"`);
-      continue;
-    }
-    if (!lead.contactEmail) {
-      console.log(`  skip ${lead.domain}: no contactEmail set`);
-      continue;
-    }
-    await sendEmail({ to: lead.contactEmail, subject: lead.email.subject, body: lead.email.body });
-    store.setStage(lead.domain, "sent");
-    console.log(`  sent to ${lead.contactEmail} (${lead.domain})`);
-  }
+  const [domain] = positional;
+  if (!domain) throw new Error("Usage: send <domain> | --send-all");
+  await pipeline.sendLead(domain);
+  console.log(`Sent to ${domain}.`);
 }
 
 async function main() {
@@ -146,6 +100,8 @@ Commands:
   list                                   Show all leads and their stage
   set-contact <domain> <email>           Attach a verified contact email to a lead
   send <domain> | --send-all             Send the drafted email (requires contactEmail set)
+
+Or run \`npm run dashboard\` for the web UI.
 `);
     process.exit(command ? 1 : 0);
   }

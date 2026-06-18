@@ -10,11 +10,13 @@
   "scripts": {
     "prospect": "node src/cli.js prospect",
     "run": "node src/cli.js run",
-    "list": "node src/cli.js list"
+    "list": "node src/cli.js list",
+    "dashboard": "node src/server.js"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.32.1",
     "dotenv": "^16.4.5",
+    "express": "^4.21.1",
     "nodemailer": "^6.9.16"
   },
   "engines": {

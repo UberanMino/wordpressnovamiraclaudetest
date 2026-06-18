@@ -1,0 +1,282 @@
+:root {
+  --logbatt-blue: #29abe2;
+  --logbatt-blue-dark: #1c8dbf;
+  --logbatt-grey: #707074;
+  --logbatt-grey-light: #e3e3e3;
+  --logbatt-grey-bg: #f4f5f6;
+  --white: #ffffff;
+  --radius: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: var(--logbatt-grey-bg);
+  color: #2b2b2d;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--white);
+  padding: 18px 32px;
+}
+
+.topbar .logo {
+  height: 48px;
+}
+
+.tagline {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--logbatt-grey);
+  letter-spacing: 0.02em;
+}
+
+.accent-bar {
+  height: 6px;
+  background: var(--logbatt-blue);
+}
+
+main {
+  max-width: 1100px;
+  margin: 28px auto 60px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panel {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.panel h2 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--logbatt-blue-dark);
+}
+
+.hint {
+  margin: 0 0 14px;
+  color: var(--logbatt-grey);
+  font-size: 13.5px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+textarea {
+  border: 1px solid var(--logbatt-grey-light);
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+input[type="text"] {
+  flex: 1;
+  min-width: 220px;
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+#prospect-num {
+  width: 90px;
+}
+
+.btn {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--logbatt-blue);
+  color: var(--white);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--logbatt-blue-dark);
+}
+
+.btn-accent {
+  background: #4caf50;
+  color: var(--white);
+}
+
+.btn-accent:hover:not(:disabled) {
+  background: #3d8b40;
+}
+
+.btn-ghost {
+  background: var(--logbatt-grey-light);
+  color: var(--logbatt-grey);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: #d5d5d5;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.status {
+  margin-top: 12px;
+  font-size: 13px;
+  white-space: pre-wrap;
+  color: var(--logbatt-grey);
+}
+
+.status.error {
+  color: #c0392b;
+}
+
+#process-flow-panel {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+.process-flow {
+  max-width: 480px;
+  width: 100%;
+}
+
+.leads-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.leads-actions {
+  display: flex;
+  gap: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--logbatt-grey-light);
+  vertical-align: top;
+}
+
+th {
+  color: var(--logbatt-grey);
+  text-transform: uppercase;
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--white);
+}
+
+.badge-prospected {
+  background: var(--logbatt-grey);
+}
+.badge-disqualified {
+  background: #b0b0b0;
+}
+.badge-drafted {
+  background: var(--logbatt-blue);
+}
+.badge-sent {
+  background: #4caf50;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+.modal-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 100%;
+  max-width: 560px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-card h3 {
+  margin: 0 0 10px;
+  color: var(--logbatt-blue-dark);
+}
+
+.modal-card label {
+  font-size: 12px;
+  color: var(--logbatt-grey);
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  border: none;
+  background: none;
+  font-size: 22px;
+  color: var(--logbatt-grey);
+  cursor: pointer;
+}

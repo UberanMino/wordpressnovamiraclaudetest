@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LogBATT &mdash; Lead Acquisition</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <img class="logo" src="assets/logbatt-logo.png" alt="LogBATT, member of Lagermax Group" />
+    <h1 class="tagline">Cold Acquisition Dashboard</h1>
+  </header>
+  <div class="accent-bar"></div>
+
+  <main>
+    <section class="panel" id="prospect-panel">
+      <h2>1. Prospect</h2>
+      <p class="hint">Search for candidate companies matching LogBATT's ICP. Leave the query empty to use the default battery/EV reverse-logistics queries.</p>
+      <form id="prospect-form" class="row">
+        <input type="text" id="prospect-query" placeholder="Custom search query (optional)" />
+        <input type="number" id="prospect-num" value="10" min="1" max="20" title="Results per query" />
+        <button type="submit" class="btn btn-primary">Search</button>
+      </form>
+      <div id="prospect-status" class="status"></div>
+    </section>
+
+    <section class="panel" id="run-panel">
+      <h2>2. Research, Qualify &amp; Draft</h2>
+      <p class="hint">Runs every newly prospected company through research, ICP qualification, and email drafting.</p>
+      <button id="run-btn" class="btn btn-primary">Run pipeline</button>
+      <div id="run-status" class="status"></div>
+    </section>
+
+    <section class="panel" id="process-flow-panel">
+      <img src="assets/process-flow.png" alt="Pickup, Package, Transport, Storage, Recycling" class="process-flow" />
+    </section>
+
+    <section class="panel" id="leads-panel">
+      <div class="leads-header">
+        <h2>Leads</h2>
+        <div class="leads-actions">
+          <button id="refresh-btn" class="btn btn-ghost">Refresh</button>
+          <button id="send-all-btn" class="btn btn-accent">Send all drafted &amp; contacted</button>
+        </div>
+      </div>
+      <table id="leads-table">
+        <thead>
+          <tr>
+            <th>Company</th>
+            <th>Stage</th>
+            <th>Score</th>
+            <th>Pain point / reason</th>
+            <th>Contact</th>
+            <th>Email</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="leads-body"></tbody>
+      </table>
+      <p id="leads-empty" class="hint" hidden>No leads yet &mdash; run a search above to get started.</p>
+    </section>
+  </main>
+
+  <div id="email-modal" class="modal" hidden>
+    <div class="modal-card">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <h3 id="modal-domain"></h3>
+      <label>Subject</label>
+      <input type="text" id="modal-subject" />
+      <label>Body</label>
+      <textarea id="modal-body" rows="10"></textarea>
+      <div class="row">
+        <button id="modal-save-email" class="btn btn-ghost">Save email edits</button>
+      </div>
+      <div class="row">
+        <input type="email" id="modal-contact" placeholder="contact email" />
+        <button id="modal-save-contact" class="btn btn-ghost">Save contact</button>
+        <button id="modal-send" class="btn btn-accent">Send</button>
+      </div>
+      <div id="modal-status" class="status"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
