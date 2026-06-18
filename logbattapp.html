@@ -1377,9 +1377,9 @@
      provider:'custom' mit Server-/Proxy-Endpoint nutzen, der den Key serverseitig hält.
      ===================================================================== */
   var CHAT_CONFIG = {
-    provider: 'custom',
+    provider: 'anthropic',
     endpoint: '',          // z.B. 'https://DEIN-n8n/webhook/checkliste-bot'
-    apiKey:   '',          // nur bei direktem Anbieter; im Client sichtbar!
+    apiKey:   '',          // <- hier den Anthropic API-Key eintragen (zwischen die Anführungszeichen!)
     model:    'claude-sonnet-4-6',
     maxTokens: 1200,
     systemPrompt: 'PLATZHALTER – hier den System-Prompt für den LogBATT-Checklisten-Assistenten eintragen.',
