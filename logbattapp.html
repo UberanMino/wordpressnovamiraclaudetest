@@ -93,6 +93,7 @@
   .status{font-size:13px;color:var(--muted);} .status.ok{color:var(--green);} .status.err{color:var(--danger);}
   .err-field input,.err-field textarea,.err-field select{border-color:var(--danger)!important;}
   .todo{outline:1.5px dashed #E0B43A;}
+  .card.dimmed > .body{opacity:.45;pointer-events:none;}
 
   /* ---------- overview ---------- */
   .toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:12px;margin-bottom:18px;}
@@ -306,11 +307,11 @@
       <div class="body">
         <div class="grid g3">
           <div class="field span2"><label class="lbl req" for="ag_anschrift">Auftraggeber / Rechnungsanschrift</label><textarea id="ag_anschrift" name="ag_anschrift"></textarea></div>
-          <div class="field"><label class="lbl req" for="ab_adresse">Abholadresse + Abholzeiten</label><textarea id="ab_adresse" name="ab_adresse"></textarea></div>
+          <div class="field"><label class="lbl req" for="ab_adresse">Abholzeiten</label><textarea id="ab_adresse" name="ab_adresse" placeholder="z. B. Mo–Fr 08:00–15:00"></textarea></div>
         </div>
         <div class="grid g2" style="margin-top:14px;">
           <div class="field"><label class="lbl req" for="ab_kontakt">Kontaktperson (Telefon + Mail)</label><textarea id="ab_kontakt" name="ab_kontakt" style="min-height:60px;"></textarea></div>
-          <div class="field"><label class="lbl" for="ab_adresse_geo">Straße, PLZ, Ort der Abholstelle</label><input type="text" id="ab_adresse_geo" name="ab_adresse_geo" placeholder="z. B. Industriestr. 5, 73207 Plochingen"><span class="hint">Für die automatische Angebotsberechnung – bitte als reine Adresse ohne Zeiten/Hinweise eintragen.</span></div>
+          <div class="field"><label class="lbl req" for="ab_adresse_geo">Straße, PLZ, Ort der Abholstelle</label><input type="text" id="ab_adresse_geo" name="ab_adresse_geo" placeholder="z. B. Industriestr. 5, 73207 Plochingen"><span class="hint">Für die automatische Angebotsberechnung.</span></div>
         </div>
         <hr class="divider">
         <div class="subhead">Verladung Abholstelle</div>
@@ -341,16 +342,16 @@
       </div>
     </section>
 
-    <section class="card">
-      <div class="head"><span class="step">3</span><h2>Lieferadresse</h2></div>
-      <div class="body">
+    <section class="card" id="card-lieferadresse">
+      <div class="head"><span class="step">3</span><h2>Lieferadresse</h2><span class="sub" id="li-entsorgung-hint" style="display:none;">entfällt bei Entsorgung – Rückfahrt nach Plochingen wird angenommen</span></div>
+      <div class="body" id="card-lieferadresse-body">
         <div class="grid g3">
           <div class="field"><label class="lbl" for="li_firma">Lieferadresse (Firmenname)</label><textarea id="li_firma" name="li_firma"></textarea></div>
           <div class="field"><label class="lbl" for="li_zeiten">Anlieferzeiten</label><textarea id="li_zeiten" name="li_zeiten"></textarea></div>
           <div class="field"><label class="lbl" for="li_kontakt">Kontaktperson (Telefon + Mail)</label><textarea id="li_kontakt" name="li_kontakt"></textarea></div>
         </div>
         <div class="grid g2" style="margin-top:14px;">
-          <div class="field"><label class="lbl" for="li_adresse_geo">Straße, PLZ, Ort der Lieferstelle</label><input type="text" id="li_adresse_geo" name="li_adresse_geo" placeholder="z. B. Recyclingweg 3, 70173 Stuttgart"><span class="hint">Für die automatische Angebotsberechnung. Leer lassen, wenn die Ladung zurück an den LogBATT-Standort Plochingen geht.</span></div>
+          <div class="field"><label class="lbl" for="li_adresse_geo">Straße, PLZ, Ort der Lieferstelle</label><input type="text" id="li_adresse_geo" name="li_adresse_geo" placeholder="z. B. Recyclingweg 3, 70173 Stuttgart"><span class="hint">Für die automatische Angebotsberechnung.</span></div>
         </div>
         <hr class="divider">
         <div class="subhead">Verladung Lieferstelle</div>
@@ -750,10 +751,17 @@
     var b=form.querySelector('input[name="beauftragung"]:checked');
     document.getElementById('card-entsorgung').classList.toggle('show', !!(b && b.value==='mit_entsorgung'));
   }
+  function refreshLieferadresse(){
+    var b=form.querySelector('input[name="beauftragung"]:checked');
+    var mitEntsorgung=!!(b && b.value==='mit_entsorgung');
+    document.getElementById('card-lieferadresse').classList.toggle('dimmed', mitEntsorgung);
+    document.getElementById('li-entsorgung-hint').style.display = mitEntsorgung ? 'inline' : 'none';
+    document.querySelectorAll('#card-lieferadresse-body input, #card-lieferadresse-body textarea').forEach(function(el){ el.disabled = mitEntsorgung; });
+  }
   document.getElementById('zoll-toggle').addEventListener('change',function(){
     document.getElementById('card-zoll-body').classList.toggle('show', this.checked);
   });
-  form.addEventListener('change',function(){ refreshReveals(); refreshEntsorgung(); });
+  form.addEventListener('change',function(){ refreshReveals(); refreshEntsorgung(); refreshLieferadresse(); });
 
   function collect(){
     var d={}; var fd=new FormData(form); var keys=new Set();
@@ -768,7 +776,8 @@
   var REQUIRED=[
     {name:'beauftragung',label:'Art der Beauftragung'},
     {name:'ag_anschrift',label:'Auftraggeber / Rechnungsanschrift'},
-    {name:'ab_adresse',label:'Abholadresse'},
+    {name:'ab_adresse_geo',label:'Straße, PLZ, Ort der Abholstelle'},
+    {name:'ab_adresse',label:'Abholzeiten'},
     {name:'ab_kontakt',label:'Kontaktperson Abholung'}
   ];
   function validate(){
@@ -808,7 +817,7 @@
       var rec=await addOrder(payload,{});
       lastSavedKey=rec.key;
       statusEl.textContent='Gespeichert. Sendungsnummer '+rec.trackNo+'.'; statusEl.className='status ok';
-      form.reset(); refreshReveals(); refreshEntsorgung();
+      form.reset(); refreshReveals(); refreshEntsorgung(); refreshLieferadresse();
       document.getElementById('card-zoll-body').classList.remove('show');
       document.getElementById('zoll-toggle').checked=false;
       openSaveModal(rec);
@@ -839,7 +848,7 @@
   });
 
   document.getElementById('btn-reset').addEventListener('click',function(){
-    form.reset(); refreshReveals(); refreshEntsorgung();
+    form.reset(); refreshReveals(); refreshEntsorgung(); refreshLieferadresse();
     document.getElementById('card-zoll-body').classList.remove('show');
     document.getElementById('zoll-toggle').checked=false;
     statusEl.textContent=''; statusEl.className='status';
@@ -1043,7 +1052,7 @@
       if(o.key===lastSavedKey) tr.className='flash';
       tr.innerHTML=
         '<td><span class="ref">'+esc(deriveRef(d))+'</span>'+demo+'</td>'+
-        '<td>'+esc(deriveAG(d))+'<div class="subtxt">'+esc(firstLine(d.ab_adresse))+'</div></td>'+
+        '<td>'+esc(deriveAG(d))+'<div class="subtxt">'+esc(firstLine(d.ab_adresse_geo)||firstLine(d.ab_adresse))+'</div></td>'+
         '<td><span class="tag-typ">'+esc(m('p_typ',d.p_typ)||'—')+'</span>'+abfall+'</td>'+
         '<td class="subtxt">'+fmtDate(o.received)+'</td>'+
         '<td><span class="pill '+o.status+'"><span class="d"></span>'+statusLabel(o.status)+'</span>'+chatBadge+'</td>';
@@ -1061,7 +1070,7 @@
     var h='';
     h+=section('Beauftragung',row('Art',m('beauftragung',d.beauftragung)));
     h+=section('Auftraggeber & Abholung',
-      row('Auftraggeber',d.ag_anschrift)+row('Abholadresse',d.ab_adresse)+row('Adresse (Routenberechnung)',d.ab_adresse_geo)+row('Kontakt',d.ab_kontakt)+
+      row('Auftraggeber',d.ag_anschrift)+row('Adresse Abholstelle',d.ab_adresse_geo)+row('Abholzeiten',d.ab_adresse)+row('Kontakt',d.ab_kontakt)+
       row('Stapler',m('janein',d.ab_stapler))+row('Rampenverladung',m('janein',d.ab_rampe))+
       row('Gabellänge ≥2m',m('janein',d.ab_gabel))+row('Hebevorrichtung',m('janein',d.ab_hebe))+
       row('Tragfähigkeit',d.ab_tragf?d.ab_tragf+' kg':'')+row('Zufahrt',m('zufahrt',d.ab_zufahrt)));
@@ -1342,7 +1351,7 @@
   window.__lbGoChecklist = function(){ showView('checkliste'); };
 
   /* init */
-  refreshReveals(); refreshEntsorgung(); loadAll();
+  refreshReveals(); refreshEntsorgung(); refreshLieferadresse(); loadAll();
 
   /* Diagnose: bestätigt, dass das Haupt-Skript vollständig durchgelaufen ist */
   (function(){ var hb=document.getElementById('js-heartbeat'); if(hb){ hb.style.display='block'; setTimeout(function(){ hb.style.display='none'; },4000); } })();
