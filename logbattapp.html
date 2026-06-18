@@ -310,6 +310,7 @@
         </div>
         <div class="grid g2" style="margin-top:14px;">
           <div class="field"><label class="lbl req" for="ab_kontakt">Kontaktperson (Telefon + Mail)</label><textarea id="ab_kontakt" name="ab_kontakt" style="min-height:60px;"></textarea></div>
+          <div class="field"><label class="lbl" for="ab_adresse_geo">Straße, PLZ, Ort der Abholstelle</label><input type="text" id="ab_adresse_geo" name="ab_adresse_geo" placeholder="z. B. Industriestr. 5, 73207 Plochingen"><span class="hint">Für die automatische Angebotsberechnung – bitte als reine Adresse ohne Zeiten/Hinweise eintragen.</span></div>
         </div>
         <hr class="divider">
         <div class="subhead">Verladung Abholstelle</div>
@@ -347,6 +348,9 @@
           <div class="field"><label class="lbl" for="li_firma">Lieferadresse (Firmenname)</label><textarea id="li_firma" name="li_firma"></textarea></div>
           <div class="field"><label class="lbl" for="li_zeiten">Anlieferzeiten</label><textarea id="li_zeiten" name="li_zeiten"></textarea></div>
           <div class="field"><label class="lbl" for="li_kontakt">Kontaktperson (Telefon + Mail)</label><textarea id="li_kontakt" name="li_kontakt"></textarea></div>
+        </div>
+        <div class="grid g2" style="margin-top:14px;">
+          <div class="field"><label class="lbl" for="li_adresse_geo">Straße, PLZ, Ort der Lieferstelle</label><input type="text" id="li_adresse_geo" name="li_adresse_geo" placeholder="z. B. Recyclingweg 3, 70173 Stuttgart"><span class="hint">Für die automatische Angebotsberechnung. Leer lassen, wenn die Ladung zurück an den LogBATT-Standort Plochingen geht.</span></div>
         </div>
         <hr class="divider">
         <div class="subhead">Verladung Lieferstelle</div>
@@ -855,19 +859,42 @@
   function eur(n){ return n.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+' €'; }
   function km(n){ return n.toLocaleString('de-DE',{minimumFractionDigits:1,maximumFractionDigits:1})+' km'; }
 
+  /* normalisiert Freitext-Adressangaben: nur die erste sinnvolle Zeile, ohne
+     Telefon/E-Mail/Zeiten-Reste, mehrfache Leerzeichen zusammengefasst. */
+  function normalizeAddressText(s){
+    if(!s) return '';
+    var lines=String(s).split(/\r?\n/).map(function(l){return l.trim();}).filter(Boolean);
+    var line=lines.find(function(l){
+      return !/^(mo|di|mi|do|fr|sa|so|montag|dienstag|mittwoch|donnerstag|freitag|samstag|sonntag)/i.test(l)
+          && !/@/.test(l)
+          && !/^(tel|fon|mobil|email|e-mail)[:\s]/i.test(l)
+          && !/^\+?\d[\d\s\/\-]{5,}$/.test(l);
+    }) || lines[0] || '';
+    return line.replace(/\s{2,}/g,' ').trim();
+  }
+
+  /* liefert die für die Geocodierung zu verwendende Adresse:
+     bevorzugt das dedizierte Adressfeld, sonst Fallback auf das gemischte Freitextfeld. */
+  function resolveAddress(dedicated, freitext){
+    var clean=(dedicated||'').trim();
+    if(clean) return clean;
+    return normalizeAddressText(freitext);
+  }
+
   async function geocode(text){
     text=(text||'').trim();
     if(!text) throw new Error('Keine Adresse angegeben.');
-    if(geocodeCache[text]) return geocodeCache[text];
+    var cacheKey=text.toLowerCase();
+    if(geocodeCache[cacheKey]) return geocodeCache[cacheKey];
     if(!ORS_CONFIG.apiKey) throw new Error('Kein OpenRouteService API-Key konfiguriert.');
     var url='https://api.openrouteservice.org/geocode/search?api_key='+encodeURIComponent(ORS_CONFIG.apiKey)+'&size=1&text='+encodeURIComponent(text);
     var res=await fetch(url);
     if(!res.ok) throw new Error('Geocoding fehlgeschlagen (Status '+res.status+') für „'+text+'".');
     var data=await res.json();
     var f=data && data.features && data.features[0];
-    if(!f) throw new Error('Adresse nicht auffindbar: „'+text+'".');
+    if(!f) throw new Error('Adresse nicht auffindbar: „'+text+'". Bitte Straße, PLZ und Ort prüfen.');
     var coord=f.geometry.coordinates; // [lon,lat]
-    geocodeCache[text]=coord;
+    geocodeCache[cacheKey]=coord;
     return coord;
   }
 
@@ -889,8 +916,8 @@
   async function computeQuote(o){
     var d=o.payload.daten||{};
     try{
-      var pickupText=firstLine(d.ab_adresse);
-      var deliveryText=firstLine(d.li_firma);
+      var pickupText=resolveAddress(d.ab_adresse_geo, d.ab_adresse);
+      var deliveryText=resolveAddress(d.li_adresse_geo, d.li_firma);
       if(!pickupText) throw new Error('Keine Abholadresse erfasst.');
       var depotCoord=await geocode(DEPOT_TEXT);
       var pickupCoord=await geocode(pickupText);
@@ -1034,12 +1061,12 @@
     var h='';
     h+=section('Beauftragung',row('Art',m('beauftragung',d.beauftragung)));
     h+=section('Auftraggeber & Abholung',
-      row('Auftraggeber',d.ag_anschrift)+row('Abholadresse',d.ab_adresse)+row('Kontakt',d.ab_kontakt)+
+      row('Auftraggeber',d.ag_anschrift)+row('Abholadresse',d.ab_adresse)+row('Adresse (Routenberechnung)',d.ab_adresse_geo)+row('Kontakt',d.ab_kontakt)+
       row('Stapler',m('janein',d.ab_stapler))+row('Rampenverladung',m('janein',d.ab_rampe))+
       row('Gabellänge ≥2m',m('janein',d.ab_gabel))+row('Hebevorrichtung',m('janein',d.ab_hebe))+
       row('Tragfähigkeit',d.ab_tragf?d.ab_tragf+' kg':'')+row('Zufahrt',m('zufahrt',d.ab_zufahrt)));
     h+=section('Lieferadresse',
-      row('Firma',d.li_firma)+row('Anlieferzeiten',d.li_zeiten)+row('Kontakt',d.li_kontakt)+
+      row('Firma',d.li_firma)+row('Adresse (Routenberechnung)',d.li_adresse_geo)+row('Anlieferzeiten',d.li_zeiten)+row('Kontakt',d.li_kontakt)+
       row('Stapler',m('janein',d.li_stapler))+row('Rampenverladung',m('janein',d.li_rampe))+
       row('Gabellänge ≥2m',m('janein',d.li_gabel))+row('Hebevorrichtung',m('janein',d.li_hebe))+
       row('Tragfähigkeit',d.li_tragf?d.li_tragf+' kg':'')+row('Sofortentleerung',m('janein',d.li_sofort))+
@@ -1182,9 +1209,10 @@
       daten:{ beauftragung:'mit_entsorgung',
         ag_anschrift:'Muster GmbH\nIndustriestr. 5\n73207 Plochingen',
         ab_adresse:'Werk 2, Tor 4\nMo–Fr 08:00–15:00',
+        ab_adresse_geo:'Industriestr. 5, 73207 Plochingen',
         ab_kontakt:'M. Mustermann\n+49 7153 000000\nmuster@example.de',
         ab_stapler:'ja',ab_rampe:'ja',ab_gabel:'ja',ab_hebe:'nein',ab_tragf:'2500',ab_zufahrt:'sz',
-        li_firma:'Recyclinghof Süd',li_zeiten:'nach Absprache',li_kontakt:'Annahme +49 711 000000',
+        li_firma:'Recyclinghof Süd',li_adresse_geo:'Ulmer Str. 100, 70188 Stuttgart',li_zeiten:'nach Absprache',li_kontakt:'Annahme +49 711 000000',
         li_stapler:'ja',li_rampe:'ja',li_sofort:'nein',li_zufahrt:'lkw',
         p_ref:'AB-2024-0815',p_typ:'modul',p_bez:'Modulpaket SN-4471',p_anzahl:'6',
         p_gew_stk:'48',p_gew_ges:'288',p_abmasse:'600 × 400 × 200',p_kwh:'5.2',
@@ -1247,10 +1275,10 @@
      Wird (a) zum Validieren des Bot-Outputs und (b) als Kontext an die API genutzt. */
   var FIELD_SCHEMA = {
     beauftragung:['mit_entsorgung','ohne_entsorgung'],
-    ag_anschrift:'text', ab_adresse:'text', ab_kontakt:'text',
+    ag_anschrift:'text', ab_adresse:'text', ab_adresse_geo:'text', ab_kontakt:'text',
     ab_stapler:['ja','nein'], ab_rampe:['ja','nein'], ab_gabel:['ja','nein'], ab_hebe:['ja','nein'],
     ab_tragf:'text', ab_zufahrt:['lkw','sz','keine'],
-    li_firma:'text', li_zeiten:'text', li_kontakt:'text',
+    li_firma:'text', li_adresse_geo:'text', li_zeiten:'text', li_kontakt:'text',
     li_stapler:['ja','nein'], li_rampe:['ja','nein'], li_gabel:['ja','nein'], li_hebe:['ja','nein'],
     li_tragf:'text', li_sofort:['ja','nein'], li_zufahrt:['lkw','sz','keine'],
     p_ref:'text', p_typ:['batterie','modul','zelle'], p_bez:'text', p_anzahl:'text',
