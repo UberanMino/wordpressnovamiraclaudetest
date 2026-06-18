@@ -832,7 +832,7 @@
   function openSaveModal(rec){
     modalOrderKey=rec.key;
     document.getElementById('modal-trackno').textContent=rec.trackNo;
-    renderQuoteInto('modal-quote', rec);
+    renderQuoteInto('modal-quote', rec, true);
     document.getElementById('save-modal').classList.add('show');
   }
   function closeSaveModal(){ document.getElementById('save-modal').classList.remove('show'); }
@@ -924,6 +924,7 @@
   /* berechnet das Angebot für einen Auftrag und speichert es als o.quote */
   async function computeQuote(o){
     var d=o.payload.daten||{};
+    o.quoteReleased=false; // jede Neuberechnung muss erneut intern freigegeben werden
     try{
       var pickupText=resolveAddress(d.ab_adresse_geo, d.ab_adresse);
       var deliveryText=resolveAddress(d.li_adresse_geo, d.li_firma);
@@ -956,16 +957,48 @@
     var q=o.quote;
     if(!q) return '<p class="quote-pending">Angebot wird berechnet …</p>';
     if(!q.ok) return '<p class="quote-error">Angebot konnte nicht automatisch berechnet werden: '+esc(q.error)+'</p>';
+    var effectiveTotal=(typeof q.overrideTotal==='number')?q.overrideTotal:q.total;
     var rows=
       '<div class="quote-row"><span class="l">Anfahrt ohne Batterie ('+km(q.leg1km)+' × '+eur(PRICE.ohneBatterie)+'/km)</span><span class="v">'+eur(q.leg1cost)+'</span></div>'+
       '<div class="quote-row"><span class="l">Transport mit Batterie ('+km(q.leg2km)+' × '+eur(PRICE.mitBatterie)+'/km'+(q.deliveryIsDepot?' – zurück nach Plochingen':'')+')</span><span class="v">'+eur(q.leg2cost)+'</span></div>'+
       (q.staplerCount? '<div class="quote-row"><span class="l">Stapler ('+q.staplerCount+' × '+eur(PRICE.staplerStueck)+')</span><span class="v">'+eur(q.staplerCost)+'</span></div>' : '');
     return '<div class="quote-box">'+rows+
-      '<div class="quote-total"><span>Gesamt (netto)</span><span>'+eur(q.total)+'</span></div>'+
-      '<div class="quote-disclaimer">Automatisch berechnetes, vorläufiges Angebot auf Basis der erfassten Angaben – ohne Gewähr, zzgl. ges. MwSt.</div>'+
+      '<div class="quote-total"><span>Berechnet (netto)</span><span>'+eur(q.total)+'</span></div>'+
+      '<div class="quote-disclaimer">Automatisch berechnetes Angebot auf Basis der erfassten Angaben – ohne Gewähr, zzgl. ges. MwSt. Nur intern sichtbar, solange nicht freigegeben.</div>'+
+      '<div class="field" style="margin-top:10px;"><label class="lbl" for="quote-override-input">Angebotssumme für den Kunden (netto, €)</label>'+
+        '<input type="number" step="0.01" id="quote-override-input" value="'+effectiveTotal.toFixed(2)+'"></div>'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;gap:10px;">'+
+        '<span class="pill" style="font-size:11.5px;'+(o.quoteReleased?'background:#E3F3E8;color:#1E7A3C;':'')+'">'+(o.quoteReleased?'Für Kunden freigegeben':'Noch nicht freigegeben')+'</span>'+
+        '<button class="btn btn-primary btn-sm" id="quote-release-btn">'+(o.quoteReleased?'Erneut freigeben':'Freigeben')+'</button>'+
+      '</div>'+
       '</div>';
   }
-  function renderQuoteInto(elId,o){ var el=document.getElementById(elId); if(el) el.innerHTML=quoteHTML(o); }
+  function quoteCustomerHTML(o){
+    var q=o.quote;
+    if(!o.quoteReleased || !q || !q.ok) return '<p class="quote-pending">Ihr Auftrag wird bearbeitet.</p>';
+    var effectiveTotal=(typeof q.overrideTotal==='number')?q.overrideTotal:q.total;
+    return '<div class="quote-box">'+
+      '<div class="quote-total"><span>Ihr Angebot (netto)</span><span>'+eur(effectiveTotal)+'</span></div>'+
+      '<div class="quote-disclaimer">Vorläufiges Angebot – zzgl. der gesetzlichen MwSt.</div>'+
+      '</div>';
+  }
+  function renderQuoteInto(elId,o,customer){
+    var el=document.getElementById(elId); if(!el) return;
+    el.innerHTML = customer ? quoteCustomerHTML(o) : quoteHTML(o);
+    if(customer) return;
+    var btn=document.getElementById('quote-release-btn');
+    var input=document.getElementById('quote-override-input');
+    if(btn && input){
+      btn.addEventListener('click', async function(){
+        var val=parseFloat(input.value);
+        if(o.quote && !isNaN(val)) o.quote.overrideTotal=val;
+        o.quoteReleased=true;
+        await store.set(o.key,o);
+        var idx=orders.findIndex(function(x){return x.key===o.key;}); if(idx>=0) orders[idx]=o;
+        renderQuoteInto(elId,o,false);
+      });
+    }
+  }
 
   /* ================= OVERVIEW ================= */
   var MAP={
@@ -1134,11 +1167,11 @@
       var idx=orders.findIndex(function(x){return x.key===current.key;}); if(idx>=0) orders[idx]=current; render();
     });
 
-    renderQuoteInto('drawer-quote', current);
+    renderQuoteInto('drawer-quote', current, false);
     document.getElementById('drawer-quote-recalc').addEventListener('click',async function(){
       this.disabled=true;
       await computeQuote(current);
-      renderQuoteInto('drawer-quote', current);
+      renderQuoteInto('drawer-quote', current, false);
       this.disabled=false;
     });
 
@@ -1185,9 +1218,9 @@
               isDemo:!!opts.isDemo, chat:[], history:[{status:'neu', ts:new Date().toISOString()}], payload:payload };
     await store.set(rec.key,rec); orders.unshift(rec); render();
     computeQuote(rec).then(function(){
-      if(modalOrderKey===rec.key) renderQuoteInto('modal-quote', rec);
-      if(trackCurrent && trackCurrent.key===rec.key) renderQuoteInto('track-quote', rec);
-      if(current && current.key===rec.key) renderQuoteInto('drawer-quote', rec);
+      if(modalOrderKey===rec.key) renderQuoteInto('modal-quote', rec, true);
+      if(trackCurrent && trackCurrent.key===rec.key) renderQuoteInto('track-quote', rec, true);
+      if(current && current.key===rec.key) renderQuoteInto('drawer-quote', rec, false);
     });
     return rec;
   }
@@ -1267,7 +1300,7 @@
       tl.appendChild(li);
     });
     renderThread(document.getElementById('track-thread'), o, 'kunde');
-    renderQuoteInto('track-quote', o);
+    renderQuoteInto('track-quote', o, true);
   }
   document.getElementById('track-go').addEventListener('click',function(){ doTrack(document.getElementById('track-input').value); });
   document.getElementById('track-input').addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); doTrack(this.value); } });
