@@ -1,0 +1,23 @@
+{
+  "name": "lead-management-tool",
+  "version": "0.1.0",
+  "description": "Automated cold acquisition sales agent for LogBATT: prospecting, qualification, and AI-personalized email outreach.",
+  "type": "module",
+  "private": true,
+  "bin": {
+    "lead-tool": "./src/cli.js"
+  },
+  "scripts": {
+    "prospect": "node src/cli.js prospect",
+    "run": "node src/cli.js run",
+    "list": "node src/cli.js list"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.32.1",
+    "dotenv": "^16.4.5",
+    "nodemailer": "^6.9.16"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
