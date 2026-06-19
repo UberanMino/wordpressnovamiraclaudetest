@@ -1,0 +1,2541 @@
+[
+  {
+    "id": "idiada",
+    "name": "IDIADA",
+    "country": "Spanien",
+    "address": "L'Albornar - PO Box 20, E-43710 Santa Oliva (Terragona)",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Alejandro Morales",
+        "position": "Passive Safety Engineer",
+        "email": "alejandro.morales@idiada.com",
+        "phone": "+34 977 166 000"
+      },
+      {
+        "name": "Jordi Beltran",
+        "position": "Data Acquisition Engineer",
+        "email": "jordi.beltran@idiada.com",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Alejandro Morales",
+        "need": "Interesse Miete Storageboxen\nto do MK",
+        "kam": "MK",
+        "status": "Gewonnen",
+        "revenue": 5986.05,
+        "revenueDate": "2025-06-27T00:00:00",
+        "notes": "aktuell kein Interesse",
+        "notes2": "aktueller Bedarf: Reparatur und After-Sales --> PO bereits geschrieben"
+      },
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Jordi Beltran",
+        "need": "Interesse Miete Storageboxen\nto do MK",
+        "kam": "MK",
+        "status": "Gewonnen",
+        "revenue": 1867.95,
+        "revenueDate": "2025-06-27T00:00:00",
+        "notes": "aktuell kein Interesse",
+        "notes2": "aktueller Bedarf: Reparatur und After-Sales --> PO bereits geschrieben"
+      }
+    ]
+  },
+  {
+    "id": "volkswagen",
+    "name": "Volkswagen",
+    "country": "Deutschland",
+    "address": "38436 Wolfsburg",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Sebastian Hoinza",
+        "position": "Forschung und Entwicklung / Planung Prüfstände",
+        "email": "sebastian.hoinza@volkswagen.de",
+        "phone": "+49 5361 9 43101"
+      },
+      {
+        "name": "Ranjith Kumar",
+        "position": "Gefahrgutbeauftragter",
+        "email": null,
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Sebastian Hoinza",
+        "need": "Anfrage nach eigenen Boxen (Individualmaße) --> Kleinserie 1-5 St. Keine Frage des Geldes, müssen brandschutzsicher sein --> vom Prüfstand bis ans Band transportiert werden --> braucht 2 Zugänge für Messtechnik",
+        "kam": "BK",
+        "status": "Gewonnen",
+        "revenue": 8905,
+        "revenueDate": "2025-09-04T00:00:00",
+        "notes": "30.06.25: Termin mit Martin Feldhaus und Marcus Klabas: Präsentation der XL-Storage vor Ort avisiert. Nachhaken durch BK",
+        "notes2": "Wir durch MK guten Kontakt zu VW in Braunschweig (Martin Feldhaus) aufgebaut. Kürzlich auch Kontaktschiene zu VW in Salzgitter (Peter Schmitzer) und Kassel hergestellt. "
+      },
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Ranjith Kumar",
+        "need": "sucht Lösung für Sondertransporte\nKontaktdaten bei Nadine Mobile",
+        "kam": "BK",
+        "status": "Gewonnen",
+        "revenue": null,
+        "revenueDate": "2025-09-04T00:00:00",
+        "notes": "30.06.25: Termin mit Martin Feldhaus und Marcus Klabas: Präsentation der XL-Storage vor Ort avisiert. Nachhaken durch BK",
+        "notes2": "Wir durch MK guten Kontakt zu VW in Braunschweig (Martin Feldhaus) aufgebaut. Kürzlich auch Kontaktschiene zu VW in Salzgitter (Peter Schmitzer) und Kassel hergestellt. "
+      }
+    ]
+  },
+  {
+    "id": "man",
+    "name": "MAN",
+    "country": "Deutschland",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Roman Randzinger",
+        "position": "Montageplanung",
+        "email": null,
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": "Roman Randzinger",
+        "need": "Alle Infos wegen Scania Test 208 kWh --> evtl. Batterie 219 kWh von MAN (Oliver Uhl)",
+        "kam": "BK",
+        "status": "Gewonnen",
+        "revenue": 6086.28,
+        "revenueDate": "2025-07-25T00:00:00",
+        "notes": "Treffen mit GK und MK und Herr Uhl aufgrund Test Batterie 210 kWh. Zentrale Koordination über Scania. Weitere To-Do's BK und gK",
+        "notes2": "BK, 25.07.25: Bestellung von MAN heute eingegangen."
+      }
+    ]
+  },
+  {
+    "id": "robert-kunzmann-gmbh-co-kg",
+    "name": "Robert Kunzmann GmbH & Co. KG",
+    "country": "Deutschland",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Manfred Zentgraf",
+        "position": "Arbeitssicherheit",
+        "email": "manfred.zentgraf@kunzmann.de",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": null,
+        "contact": "Manfred Zentgraf",
+        "need": "Interesse Messe-Rabatt\n2 x Container 20ft und 3 XL-Storage",
+        "kam": "CW",
+        "status": "Gewonnen",
+        "revenue": 127559.2,
+        "revenueDate": "2025-06-30T00:00:00",
+        "notes": "gewonnen",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "royal-haskoning-dhv",
+    "name": "Royal Haskoning DHV",
+    "country": "Niederlande",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Lou Rutjens",
+        "position": null,
+        "email": "lou.rutjens@rhdhv.com ",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-03-18T00:00:00",
+        "contact": "Lou Rutjens",
+        "need": "Vernetzung",
+        "kam": "CW",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "08.08.25: Telefonat mit KUnde. Warten auf richtigen Ansprechpartner. CW geht hinterher."
+      }
+    ]
+  },
+  {
+    "id": "alstom",
+    "name": "Alstom",
+    "country": "Deutschland",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Christian Hufenbach",
+        "position": "Systems Engineering",
+        "email": "christian.hufenbach@alstomgroup.com",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Christian Hufenbach",
+        "need": "ggf. Interesse Transporte. To Do MK Kontaktaufnahme",
+        "kam": "MK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "Umsatz in Frankreich ",
+        "notes2": "SK, 09.09.25: ? Im System kein Umsatz hinterlegt."
+      }
+    ]
+  },
+  {
+    "id": "enersys",
+    "name": "EnerSys",
+    "country": "Deutschland",
+    "address": "Dieckstraße 42, 58089 Hagen",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Jan-Hendrik Seeger",
+        "position": "Global Product Manager",
+        "email": "jan.seegler@de.enersys.com",
+        "phone": "+49 171 7302707"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Jan-Hendrik Seeger",
+        "need": "XL-Storage + Logistik\nTo Do CW",
+        "kam": "CW",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "08.08.25: Richtiger Ansprechpartner in Frankreich. CW wartet auf Rückmeldung."
+      }
+    ]
+  },
+  {
+    "id": "green-testing-lab-gmbh",
+    "name": "Green Testing Lab GmbH",
+    "country": "Österreich",
+    "address": "Gewerbepark Greenbach Ost 342, 8230 Greinbach",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Dr. Max Hofer",
+        "position": "General Manager",
+        "email": "m.hofer@greentestinglab.com",
+        "phone": "+43 664 16 25 780"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Dr. Max Hofer",
+        "need": "Testinstitut für Batterien  (auch große). Storage + Logistik + Recycling\nTo Do MK",
+        "kam": "MK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "13.8 reminder von MK",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "haw-hamburg",
+    "name": "HAW Hamburg",
+    "country": "Deutschland",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Eugen Hein",
+        "position": null,
+        "email": "eugen.hein@haw-hamburg.de",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Eugen Hein",
+        "need": "Hochschule Hamburg --> suchen Boxen für Testing",
+        "kam": "BK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "28.8.: Mail geschickt mit Fachartikeln und Broschüre. Kunde bis 8.9. ausser Haus. "
+      }
+    ]
+  },
+  {
+    "id": "maxxen",
+    "name": "Maxxen",
+    "country": "Türkei",
+    "address": "Kemalpasa Av. 7405 St. No.8, Pinarbasi/Izmir",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Muhammed Erdin",
+        "position": "R&D Director",
+        "email": "muhammed.erdin@maxxen.com",
+        "phone": "+90 531 687 55 73"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Muhammed Erdin",
+        "need": "Batteriespeichersysteme aus der Türkei nach EU. Konkrete Anfrage für 4 Stück Container. Perspektivisch auch Interesse an rote Batterie Transporte.\nto do BK, Kunde erwartet Rückmeldung zu Möglichkeiten des Container-Transports.",
+        "kam": "BK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "Kontaktiert am 23.06.2025.",
+        "notes2": "29.08.25: Reminder an Kunde."
+      }
+    ]
+  },
+  {
+    "id": "rpi-motors",
+    "name": "RPI Motors",
+    "country": "Deutschland",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Herr Ohlinger",
+        "position": null,
+        "email": "c.ohlinger@rpi-motors.com",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Herr Ohlinger",
+        "need": "Hohe Priorität. Logistik + Recycling\nT Do CW",
+        "kam": "CW",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "08.08.25: Keine Reaktion Kunde. Geplanten Call abgesagt, und um Verschiebung in den Herbst gebeten, da Projekt noch nicht so weit. CW bleibt dran."
+      }
+    ]
+  },
+  {
+    "id": "seiplan",
+    "name": "SEIPLAN",
+    "country": "Deutschland",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Sascha Ginter",
+        "position": "CPO",
+        "email": "sascha.ginter@seiplan.com",
+        "phone": "+49 151 224 60 300"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Sascha Ginter",
+        "need": "suchen Logistik-Partner --> für CW",
+        "kam": "CW",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "08.08.25: PH hatte CEO-Call mit Kunde. CW wartet auf Rückmeldung PH."
+      }
+    ]
+  },
+  {
+    "id": "trigo-c-e-e-kft",
+    "name": "Trigo C.E.E. KFT.",
+    "country": "Ungarn",
+    "address": "Gödöllöi ut 6/b, H-2600 Vác",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Atilla Vitos",
+        "position": "Global Battery & NEV expert director",
+        "email": "attila.vitos@trigo-group.com",
+        "phone": "+36 30 826 3521"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Atilla Vitos",
+        "need": "hat Kontakte zu After Sales Leuten von OEM's die Interesse an Storageboxen haben könnten\nTo Do BK",
+        "kam": "BK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "28.8.: Mail geschickt mit Fachartikeln und Broschüre. Kunde ist Dienstleistungsunternehmen. Fraglich ob hier wirklich Potential besteht."
+      }
+    ]
+  },
+  {
+    "id": "wattical",
+    "name": "Wattical",
+    "country": "Deutschland",
+    "address": "Philippstraße 8, 52068 Aachen",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Changxin Li",
+        "position": "Project Engineer",
+        "email": "changxin@wattical.com",
+        "phone": "+49 162 498 0818"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Changxin Li",
+        "need": "kontaktieren uns",
+        "kam": "CW",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "08.08.25: Interessantes Thema; Austausch mit Lagermax. Anfang September Besuch beim Kunden in Frankfurt zusammen mit LMX."
+      }
+    ]
+  },
+  {
+    "id": "aspilsan-enerji-a-s",
+    "name": "Aspilsan Enerji A.S.",
+    "country": "Türkei",
+    "address": "Mimarsinan O.S.B. Mahalle 1. Cadde No. 43, Melikgazi/Kayseri",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Burak Atilgan",
+        "position": "Business Development Executive",
+        "email": "burak.atilgan@aspilsan.com",
+        "phone": "+90 352 321 12 15 6300"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Burak Atilgan",
+        "need": "sucht Logistikpartner. Transport China nach Europa + Türkei zum Endkunden.\nTo Do BK",
+        "kam": "BK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "Mail am 27.06.2025 gesendet inkl. Broschüre, Kundenstammdatenblatt und Checkliste.",
+        "notes2": "29.08.25: Reminder an Kunde."
+      }
+    ]
+  },
+  {
+    "id": "audi",
+    "name": "Audi",
+    "country": "Deutschland",
+    "address": "Ingolstadt",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Roberto Cardona Martinez",
+        "position": null,
+        "email": "roberto.cardona.martinez@audi.de",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Roberto Cardona Martinez",
+        "need": "hat Interesse an Storagboxen\nwichtig! Follow-up 03.07.2025",
+        "kam": "MK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "BK, 25.07.25: BK in Kontakt mit Kunde. Projekt ist noch nicht reif. WV nach der Sommerpause (Anfang September).",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "business-upper-austria",
+    "name": "Business Upper Austria",
+    "country": "Österreich",
+    "address": "Hafenstraße 47-51, 4020 Linz",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Robert Kerzendorfer",
+        "position": "Projektmanager",
+        "email": "robert.ketzendorfer@biz-up.at",
+        "phone": "+43 664 78 62 98"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Robert Kerzendorfer",
+        "need": "arbeitet mit Lagermax zusammen und hat diverse Kontakte und Events in Österreich zum Vernetzen\nTo Do MK",
+        "kam": "MK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "12.8 reminder",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "chb-logistics-s-r-o",
+    "name": "CHB Logistics s.r.o.",
+    "country": "Tschechien",
+    "address": "Jilska 527/2, 11000 Prag",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Jan Choi",
+        "position": "CEO",
+        "email": "choi@chb-prague.com",
+        "phone": "+420 724 362 853"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Jan Choi",
+        "need": "Interesse Kooperation. Lager von 100000m² --> Neubatterien + evtl. Entsorgung für Ungarn, Slowenien, Tschechien\nTo Do BK",
+        "kam": "BK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "5.9.: mail geschrieben und broschüre geschickt. "
+      }
+    ]
+  },
+  {
+    "id": "dekra",
+    "name": "Dekra",
+    "country": "Deutschland",
+    "address": "Handwerkstraße 15, 70565 Stuttgart",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Joachim Defrancesco",
+        "position": "Techniker Prüflabor",
+        "email": "joachim.defrancesco@dekra.com",
+        "phone": "+49 711 7861 3449"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Joachim Defrancesco",
+        "need": "Dekrashop inkl. Logistische Dienstleistung.  500€ zu teuer Transport. Stuttgart nach Braunschweig (grün/fertige Verriegelung, Gabelstapler vor Ort).\nTo Do MK",
+        "kam": "MK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": "?",
+        "notes": "nachfragen, ob alternatives Angebot --> to do NC",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "enpower-greentech-gmbh",
+    "name": "Enpower Greentech GmbH",
+    "country": "Deutschland",
+    "address": "Amalie-Baader-Straße 2, 76187 Karlsruhe",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Xin Zhang",
+        "position": "Managing Director",
+        "email": "xin.zhang@enpower-greentech.com",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Xin Zhang",
+        "need": "suchen Logistikpartner + Lagerlösungen. --> Batterien kommen in Containern nach EU. EU-Logistik muss noch aufgebaut werden.\nTo Do CW",
+        "kam": "CW",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "08.08.25: Am 06.08.25 eine NDA erhalten. Warten nun auf Ausschreibungsunterlagen. Spannender Lead."
+      }
+    ]
+  },
+  {
+    "id": "gpa",
+    "name": "GPA",
+    "country": "Frankreich",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Marc Jolivet",
+        "position": null,
+        "email": "marc.jolivet@groupe-gpa.fr",
+        "phone": "+33 777 75 33 39"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Marc Jolivet",
+        "need": "Hohe Prio! Autoverwerter in FR, braucht dringend Boxen + später Logistik --> wünscht Termin in Paris\nto do CW: Meeting",
+        "kam": "CW",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "08.08.25: Im Austausch mit Kunde. CW ist dran. Evtl. Notifizierung Frankreich-Schweiz."
+      }
+    ]
+  },
+  {
+    "id": "honda-trading-europe-gmbh",
+    "name": "Honda Trading Europe GmbH",
+    "country": "Deutschland",
+    "address": "Hanauer Landstrasse 222-226, 60314 Frankfurt",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Raymond Chiu",
+        "position": "Branch Manager",
+        "email": "raymond.chiu@hondatrading.eu.com",
+        "phone": "+49 162 2567 150"
+      },
+      {
+        "name": "Eva Leung",
+        "position": "Senior Coordinator",
+        "email": "eva.leung@hondatrading.eu.com",
+        "phone": "+49 162 1012289"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Raymond Chiu",
+        "need": "Interesse Boxen + Logistik\nschon in Kontakt mit CW",
+        "kam": "CW",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "08.08.25: Sind im Austausch. Komplizierter Prozess, warten auf Angebot."
+      },
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Eva Leung",
+        "need": "Interesse Boxen + Logistik\nschon in Kontakt mit CW",
+        "kam": "CW",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "08.08.25: Sind im Austausch. Komplizierter Prozess, warten auf Angebot."
+      },
+      {
+        "date": "2025-04-25T00:00:00",
+        "contact": "Eva Leung",
+        "need": "Transport Schwarze Masse Ex Europa",
+        "kam": "MK",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "kein Interesse",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "hoppecke-systemtechnik-gmbh",
+    "name": "Hoppecke Systemtechnik GmbH",
+    "country": "Deutschland",
+    "address": "Dr.-Sinsteden-Straße 8, 08056 Zwickau",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Henrik Meyer-Venhaus",
+        "position": "Peoduct Manager Innovation",
+        "email": "henrik.meyer-venhaus@hoppecke.com",
+        "phone": "+49 171 97 811 58"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Henrik Meyer-Venhaus",
+        "need": "benötigen Lösungen für Entsorgung + Boxen Container",
+        "kam": "BK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "BK, 07.07.25: Kunde kontaktiert und Lösungen präsentiert. Demnächst Mail+Anruf.",
+        "notes2": "25.07.: mail geschrieben und am 28.8. angerufen: kontakt besteht bereits. keine weiteren Informationen zum aktuellen Zeitpunkt benötigt. "
+      }
+    ]
+  },
+  {
+    "id": "lg-energy-solution-europe-gmbh",
+    "name": "LG Energy Solution Europe GmbH",
+    "country": "Deutschland",
+    "address": "Otto-Volger-Straße 7C, 65843 Sulzbach (Taunus)",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Yeni Ha",
+        "position": "Specialist ESS Residental Planning Part",
+        "email": "yeniha@lgensol.com",
+        "phone": "+49 152 5471 2641"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Yeni Ha",
+        "need": "Interesse an Gesamtlösung",
+        "kam": "CW",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "08.08.25: CW wartet auf Termin mit Kunde; bisher keine Reaktion."
+      }
+    ]
+  },
+  {
+    "id": "mann-teknik-ab",
+    "name": "Mann Teknik AB",
+    "country": "Schweden",
+    "address": "Strandvägen 16, 54231 Mariestad",
+    "industry": null,
+    "description": null,
+    "contacts": [],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": null,
+        "need": "Kaltakquise\nto do BK",
+        "kam": "BK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "5.9: Mail mit Broschüre geschickt."
+      }
+    ]
+  },
+  {
+    "id": "marubeni-corporation",
+    "name": "Marubeni  Corporation",
+    "country": "Japan",
+    "address": "4-2, Ohtemachi 1-chome, Chiyuda-ku, Tokyo",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Kosuke Ninomiya",
+        "position": "Assistant General Manager",
+        "email": "ninomiya-k@marubeni.com",
+        "phone": "+81 3 3282 4428"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Kosuke Ninomiya",
+        "need": "Partner in USA + UK. Interessiert an Boxen + Logistik --> kommt wieder auf uns zu.\nto do MK",
+        "kam": "MK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "MK reminder",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "numatic-international-limited",
+    "name": "Numatic International Limited",
+    "country": "UK",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Piotr Kleszyk",
+        "position": "Energy Storage Lead R&D",
+        "email": "piotr.kleszyk@numatic.co.uk",
+        "phone": "+44 1460 247 877"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Piotr Kleszyk",
+        "need": "Interesse an Storageboxen",
+        "kam": "BK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "BK, 07.07.25: Kunde kontaktiert und Lösungen präsentiert. Demnächst Mail+Anruf.",
+        "notes2": "9.08.25: Reminder an Kunde."
+      }
+    ]
+  },
+  {
+    "id": "oku-automation",
+    "name": "OKU-Automation",
+    "country": "Deutschland",
+    "address": "Winterbach",
+    "industry": null,
+    "description": null,
+    "contacts": [],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": null,
+        "need": "Fragen mit speziellen Batterien an Produktionsanlage, meldet sich.\nKontaktdaten bei Nadine Mobile",
+        "kam": "MK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "in Kontakt: brauchen weitere Informationen. BD hat bei Ecobat angefragt",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "rhine-capital",
+    "name": "Rhine Capital",
+    "country": "UK",
+    "address": "128 City Road, EC12NX London",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "David Lewis",
+        "position": "Director",
+        "email": "david@rhinecapital.co.uk",
+        "phone": "+44 7717395373"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "David Lewis",
+        "need": "Interesse an Logistik für BESS Systeme",
+        "kam": "BK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "hatten Teams Call und Anfrage bekommen. Nachdem Rosa weg war, wurde die Anfrage nicht weiter verfolgt. "
+      }
+    ]
+  },
+  {
+    "id": "tvs-motor-company-limited",
+    "name": "TVS Motor Company Limited",
+    "country": "Indien",
+    "address": "P.B. No. 4, Harita, Hosur - 635 109, Tamil Nadu",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "S Anand",
+        "position": "Member PED",
+        "email": "anand.s@tvsmotor.com",
+        "phone": "+91 4344 276780 - 2807"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "S Anand",
+        "need": "Batteriehersteller. 2 Produktionsfabriken --> sucht Lösung für Transport. Interesse an Boxen.",
+        "kam": "MK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "reminder 12.8",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "avs-international",
+    "name": "AVS International",
+    "country": "Deutschland",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Ahmet Baran",
+        "position": "Inhaber/Owner",
+        "email": "a.baran@avs-international.de",
+        "phone": "+49 172 8803135"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": "Ahmet Baran",
+        "need": "Kunde möchte Informationen über Lager- und Transportboxen in der Türkei. Evtl. Transport-Dienstleister",
+        "kam": "CW",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "08.08.25: CW wartet auf Kontaktaufnahme Kunde. DIeser wird sich im Herbst melden."
+      }
+    ]
+  },
+  {
+    "id": "ligixmetal",
+    "name": "Ligixmetal",
+    "country": "Ungarn",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "James Jiang",
+        "position": null,
+        "email": "james.jiang@ligixmetal.com",
+        "phone": "+36 70 204 1989"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": "James Jiang",
+        "need": "Transporte Ungarn Thailand",
+        "kam": "BK",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "5.9.: mail geschrieben und broschüre geschickt. "
+      }
+    ]
+  },
+  {
+    "id": "expo-display-studio-pvt-ltd",
+    "name": "Expo Display Studio Pvt Ltd",
+    "country": "UK",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Oliver Smith",
+        "position": null,
+        "email": "oliver@expodisplaysstudio.com ",
+        "phone": null
+      },
+      {
+        "name": "Alexander Klein",
+        "position": null,
+        "email": "alexander@expodisplaystudio.de ",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-01-22T00:00:00",
+        "contact": "Oliver Smith",
+        "need": "wollen Messebau zukünftig anbieten.",
+        "kam": "MK",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "vertrieblich nicht interessant.",
+        "notes2": null
+      },
+      {
+        "date": "2025-03-07T00:00:00",
+        "contact": "Alexander Klein",
+        "need": "wollen Messebau zukünftig anbieten.",
+        "kam": "MK",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "vertrieblich nicht interessant.",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "port-de-dunkerque",
+    "name": "Port de Dunkerque",
+    "country": "Frankreich",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Julien Cattoen",
+        "position": null,
+        "email": "jcattoen@portdedunkerque.fr ",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-03-11T00:00:00",
+        "contact": "Julien Cattoen",
+        "need": "Vernetzung",
+        "kam": "CW",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": null,
+        "notes2": "08.08.25: Telefonat mit Kunde. Fokus Vernetzung und Informationsaustausch. Kein Umsatz erwartet."
+      }
+    ]
+  },
+  {
+    "id": "jcl-logistics-benelux",
+    "name": "JCL Logistics Benelux",
+    "country": "Niederlande",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Rehim Duman",
+        "position": null,
+        "email": "rehim.duman@jcl-logistics.com ",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-03-24T00:00:00",
+        "contact": "Rehim Duman",
+        "need": "Vernetzung",
+        "kam": "CW",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": null,
+        "notes2": "08.08.25: Keine Reaktion Kunde."
+      }
+    ]
+  },
+  {
+    "id": "pipistrel-aircraft",
+    "name": "Pipistrel Aircraft",
+    "country": "Slowenien",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Tina Paljk",
+        "position": null,
+        "email": "tina.paljk@pipistrel-aircraft.com",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Tina Paljk",
+        "need": "Interesse Recycling\nTo Do BK",
+        "kam": "BK",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "29.08.25: Mail kann nicht zugestellt werden; AP vermutlich nicht länger im Unternehmen.",
+        "notes2": "Am 29.7. Mail geschrieben. Keine Antwort erhalten\n29.08.25: Reminder an Kunde."
+      }
+    ]
+  },
+  {
+    "id": "rmr",
+    "name": "RMR",
+    "country": "Griechenland",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Apostolos Panagopoulos",
+        "position": "Logistics Coordinator",
+        "email": "a.panagopoulos@rmr.gr",
+        "phone": "0030 2410 669040"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Apostolos Panagopoulos",
+        "need": "machen Beratung hinsichtlich Schadstoffe in Griechenland --> organisieren als ``Zwischenhämdler`` Transporte und Verpackungen --> Interesse an Zusammenarbeit Batterielogistik mit LogBATT --> profitieren von Netzwerken\nTo Do MK --> Kontaktaufnahme",
+        "kam": "MK",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "kein Interesse",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "wt-management",
+    "name": "WT Management",
+    "country": "Deutschland",
+    "address": "Im Löchle 14/2, 71717 Beilstein",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Gerald Hohmann",
+        "position": "Vertriebsmanager",
+        "email": "gerald.hohmann@wt-management.eu",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Gerald Hohmann",
+        "need": "irgendetwas mit Marketing",
+        "kam": "SK",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "nicht vertriebsrelevant",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "alpha-engineered-composites-europe-gmbh",
+    "name": "Alpha Engineered Composites Europe GmbH",
+    "country": "Deutschland",
+    "address": "Zum Schürmannsgraben 24, 47441 Moers",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Alexander Hillmann",
+        "position": "Key Account Manager",
+        "email": "a.hillmann@alphainc-europe.com",
+        "phone": "+49 2841 881 280-22"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Alexander Hillmann",
+        "need": "wollte wissen, wer unsere Lieferanten für LogCOVER sind",
+        "kam": "MKr",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "aperam",
+    "name": "Aperam",
+    "country": "Deutschland",
+    "address": "Aperam Allee 1, 42781 Haan",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Dr. Reiner Steins",
+        "position": "Chief Innovation and R&D Officer",
+        "email": "reiner.steins@aperam.com",
+        "phone": "+49 174 1704713"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Dr. Reiner Steins",
+        "need": "Hersteller \"Stainlees Steel\"\nTo Do GK",
+        "kam": "GK",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "nicht vertriebsrelevant",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "asygn",
+    "name": "ASYGN",
+    "country": "Frankreich",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Ivan Samyshev",
+        "position": "Sales & Business Development Manager",
+        "email": "ivan.samyshev@asygn.com",
+        "phone": "+33 7 68 41 78 89"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Ivan Samyshev",
+        "need": "bieten Sensoren an\nTo Do GK",
+        "kam": "GK",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "nicht vertriebsrelevant",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "dbw-advanced-fiber-technologies-gmbh",
+    "name": "DBW Advanced Fiber Technologies GmbH",
+    "country": "Deutschland",
+    "address": "Rodetal 40, 37120 Bovenden",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Mark-Lubomir Cierny",
+        "position": "Product Development / R&D Chemist",
+        "email": "mark.cierny@dbw.de",
+        "phone": "+49 151 536 310 21"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Mark-Lubomir Cierny",
+        "need": "Glasfaser/Steinwolle Materialien für Auskleidung und LogBAGs",
+        "kam": "MKr",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "nicht vertriebsrelevant",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "deutzer-ag",
+    "name": "Deutzer AG",
+    "country": "Deutschland",
+    "address": "Hauptsitz in Köln",
+    "industry": null,
+    "description": null,
+    "contacts": [],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": null,
+        "need": "Visitenkarte mitgenommen; Interesse an M-1 und melden sich.\nto do CW: Hinweis mehrere Anfragen für SBB + Transporte",
+        "kam": "CW",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": null,
+        "notes2": "08.08.25: Keine Kontaktdaten, CW kann nicht nachgehen."
+      }
+    ]
+  },
+  {
+    "id": "mehler-engineered-products-lda",
+    "name": "Mehler Engineered Products LDA",
+    "country": "Portugal",
+    "address": "Rua de Segures 21, 4770-330 Landim, V.N. Famalicao",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Elisabete Silva",
+        "position": "Innovation Manager",
+        "email": "elisabete.silva@mehler-ep.com",
+        "phone": "+351 252 302 723"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Elisabete Silva",
+        "need": "bieten Brandschutzdecken an (Weberei)\nTo Do GK",
+        "kam": "GK",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "nicht vertriebsrelevant",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "rimac",
+    "name": "Rimac",
+    "country": "Kroatien",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Amas Zjajo",
+        "position": null,
+        "email": "amar.zjajo@rimac-technology.com",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Amas Zjajo",
+        "need": "spricht Deutsch, war bei BMW Einheiten für Zellen ",
+        "kam": "MK",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "zur Zeit keinen Bedarf",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "s-p-samson-gmbh",
+    "name": "S+P Samson GmbH",
+    "country": "Deutschland",
+    "address": "Industriestraße 32, 86438 Kissing",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Matthias Leuschner",
+        "position": "Industrielle Kennzeichnung",
+        "email": "matthias.leuschner@sp-samson.com",
+        "phone": "+49 170 5712604"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Matthias Leuschner",
+        "need": "Herstellung Etiketten ",
+        "kam": "GK/MKr",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "nicht vertriebsrelevant",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "saba-dinxperlo-bv",
+    "name": "SABA Dinxperlo BV",
+    "country": "Niederlande",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Michel Menting",
+        "position": "Technical Product Manager",
+        "email": "michel.menting@saba-adhesives.com",
+        "phone": "+31 653 969 501"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Michel Menting",
+        "need": "würde gerne Lösungen vorstellen, um die Nieten an unseren Boxen zu ersetzen.",
+        "kam": "GK",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "nicht vertriebsrelevant",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "stellantis",
+    "name": "Stellantis",
+    "country": null,
+    "address": "Rüsselsheim",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Ralph P. Rump",
+        "position": null,
+        "email": null,
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Ralph P. Rump",
+        "need": "hat gefragt, welche unsere größere Transportbox ist. --> SBB XL-2.2+ scheint ok. Sie hatten einen Fall, bei welchem Spediteur keine passende Box hatte.",
+        "kam": "CW",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": null,
+        "notes2": "08.08.25: Wie im letzten Jahr reagiert er auf keine Mail und Telefonversuche."
+      }
+    ]
+  },
+  {
+    "id": "zarya-partners",
+    "name": "Zarya Partners",
+    "country": "Schweden",
+    "address": "Karlavägen 18, 114 31 Stockholm",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Fredrik Kannesten",
+        "position": "Partner",
+        "email": "fredrik.kennesten@zaryapartners.com",
+        "phone": "+46 735 52 41 77"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Fredrik Kannesten",
+        "need": "Kupplung-Hersteller --> eventuell interessant für Entwicklung",
+        "kam": "GK",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "nicht vertriebsrelevant",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "bester-traum",
+    "name": "Bester Traum",
+    "country": "Deutschland",
+    "address": "65779 Kelkheim",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Julius Kim",
+        "position": "Manager",
+        "email": "Julius@bester-traum.com",
+        "phone": "+49 152 0660 9168"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": "Julius Kim",
+        "need": "sucht Entsorger",
+        "kam": "CW",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": null,
+        "notes2": "08.08.25: Keine Reaktion auf Kontaktversuche."
+      }
+    ]
+  },
+  {
+    "id": "cleverframe",
+    "name": "Cleverframe",
+    "country": "Deutschland",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": null,
+        "need": "Messebauer",
+        "kam": "SK",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "nicht vertriebsrelevant",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "hktdc",
+    "name": "HKTDC",
+    "country": "China",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Wie Liu",
+        "position": null,
+        "email": "wie.liu@hktdc.org",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": "Wie Liu",
+        "need": "Events rund um Logistik. In diesem Jahr erstmalig zum Thema Gefahrgut --> suchen Experten für die Teilnahme an Events und Fachvorträge",
+        "kam": "MK",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "erledigt, 12.8",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "instawerk",
+    "name": "Instawerk",
+    "country": "Deutschland",
+    "address": "Zettachring 12A, 70567 Stuttgart",
+    "industry": null,
+    "description": null,
+    "contacts": [],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": null,
+        "need": "Hersteller für Dreh- und Fräßteile --> Kontakt MKr",
+        "kam": "MKr",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "nicht vertriebsrelevant",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "prettl-metal-components-gmbh",
+    "name": "Prettl metal components GmbH",
+    "country": "Deutschland",
+    "address": "Marktstraße 155, 72793 Pfullingen",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Eugen Miller",
+        "position": "Projektleiter Technischer Betriebsleiter",
+        "email": "eugen.miller@prettl.com",
+        "phone": "+49 151 440 61 477"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": "Eugen Miller",
+        "need": "Lieferant von Blech, Biege- und Laserteile",
+        "kam": "MKr",
+        "status": "Kein Angebot",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "nicht vertriebsrelevant",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "huawei",
+    "name": "Huawei",
+    "country": "Deutschland",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Berk Civici",
+        "position": null,
+        "email": "berk.civici@huawei.com",
+        "phone": "0178 3856576"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Berk Civici",
+        "need": "Hohe Prio! Sitz in Nürnberg + Kollegen aus Ungarn. --> brauchen dringend Unterstützung bei Logistik für kritische Zellen\nTo Do BK",
+        "kam": "BK",
+        "status": "Schwebend",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "2.09.25: Teilangebot an Huawei übermittelt.",
+        "notes2": "Kontaktschiene durch Teams Call am 18.6. installiert. NDA gezeichnet. Kunde hat Anfrage geschickt. Transport 50 defekter Zellen. Weitere Anfragen folgen: Transport EU 50 defekte Batterie Packs + Lagerung von defekter Batterien bzw. Havariebox."
+      }
+    ]
+  },
+  {
+    "id": "recovolt",
+    "name": "RecoVolt",
+    "country": null,
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Dr. Mahfuz Kamal",
+        "position": null,
+        "email": "mahfuz@recovolt.io",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Dr. Mahfuz Kamal",
+        "need": "Looking for battery isolation for thermal runaway cases.  Needs removable lid with water fill if possible. Located in UK. Producer start up of battery discharging systems..\nto do BK: urgent meeting next week",
+        "kam": "BK",
+        "status": "Schwebend",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "Meeting am 12.06.25. BK ist dran.\n29.08.25: Angebot an Kunde versendet(11003374).\nFälligkeit bis 30.09.2025.",
+        "notes2": "Teams Call mit Heiko und Kunden am 12.6. Kunde wünscht modifizierte Box XL2.2+. Follow up call mit Gerd und Kunde für 30.6. fixiert. Haben NDA erhalten. Philipp prüft. Elias hat Kunden auf der AABC in Mainz getroffen. Gerd hat Angebot geschickt Mitte August. Entscheidung erst Jahresende zu erwarten"
+      }
+    ]
+  },
+  {
+    "id": "bredenoord-b-v",
+    "name": "Bredenoord B.V.",
+    "country": "Niederlande",
+    "address": "Zutphensestraat 315, 7325 WT Apeldoorn",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Lukas Krüger",
+        "position": "Produktspezialist Batteriespeichersysteme",
+        "email": "l.krueger@bredenoord.com",
+        "phone": "+49 160 2713130"
+      },
+      {
+        "name": "Robbin Sanders",
+        "position": "Product Manager Energy Storage",
+        "email": "r.sanders@bredenoord.com",
+        "phone": "+31 613 424303"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Lukas Krüger",
+        "need": "Interesse an Boxen + Container (universelle Batterien) --> ggf. Logistik für defekte Batterien",
+        "kam": "CW",
+        "status": "Schwebend",
+        "revenue": null,
+        "revenueDate": "?",
+        "notes": null,
+        "notes2": "08.08.25: Angebot für Container erhalten. Wollen sich mit der Entscheidung im Herbst zurückmelden. CW bleibt dran."
+      },
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Robbin Sanders",
+        "need": "Interesse an Boxen + Container (universelle Batterien) --> ggf. Logistik für defekte Batterien",
+        "kam": "CW",
+        "status": "Schwebend",
+        "revenue": null,
+        "revenueDate": "?",
+        "notes": null,
+        "notes2": "08.08.25: Angebot für Container erhalten. Wollen sich mit der Entscheidung im Herbst zurückmelden. CW bleibt dran."
+      }
+    ]
+  },
+  {
+    "id": "atc",
+    "name": "ATC",
+    "country": "Deutschland",
+    "address": "Parkallee 20, 74638 Waldenburg",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Dennis Franke",
+        "position": "Head of Sales, EMEA",
+        "email": "dennis.franke@atcreman.com",
+        "phone": "+49 160 222 3660"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": "Dennis Franke",
+        "need": "Kunde braucht Transport-DL zur Abholung von Batterien europaweit.",
+        "kam": "CW",
+        "status": "Schwebend",
+        "revenue": null,
+        "revenueDate": "?",
+        "notes": null,
+        "notes2": "08.08.25: Hochspannendes Thema. Sind aktuell dabei, das Angebot zu finalisieren."
+      }
+    ]
+  },
+  {
+    "id": "liebherr",
+    "name": "Liebherr",
+    "country": "Deutschlabd",
+    "address": "Kaufbeurer Straße 141, 87437 Kempten",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Jürgen Groß",
+        "position": "Vertriebsleiter Flexible Automationssysteme",
+        "email": "juergen.gross@liebherr.com",
+        "phone": null
+      },
+      {
+        "name": "Daniel Reischmann",
+        "position": "Technischer Vertrieb Zellen & Flexiblr Automationssysteme",
+        "email": "daniel.reischmann@liebherr.com",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": "Jürgen Groß",
+        "need": "bereits in Kontkt mit GK\nJan Poltmann",
+        "kam": "GK",
+        "status": "Schwebend",
+        "revenue": null,
+        "revenueDate": "?",
+        "notes": "Reminder wegen Entwicklung für Havariekonzepte\n11003411\n11003412\n11003413",
+        "notes2": null
+      },
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": "Daniel Reischmann",
+        "need": "bereits in Kontkt mit GK",
+        "kam": "GK",
+        "status": "Schwebend",
+        "revenue": null,
+        "revenueDate": "?",
+        "notes": "Reminder wegen Entwicklung für Havariekonzepte\n11003411\n11003412\n11003413",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "evomotiv-gmbh",
+    "name": "Evomotiv GmbH",
+    "country": "Deutschland",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Luise Kolb",
+        "position": null,
+        "email": "luise.kolb@evomotiv.de",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Luise Kolb",
+        "need": "Interesse alte M-1/L-1 Boxen --> regelmäßige Transporte damit\nTo Do CW",
+        "kam": "CW",
+        "status": "Verloren",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": "1003350\n11003351\n11003352",
+        "notes2": "08.08.25: Haben Angebot für Boxen erhalten."
+      }
+    ]
+  },
+  {
+    "id": "hyundai-motor-europe-technical-center-gmbh",
+    "name": "Hyundai  Motor Europe Technical Center GmbH",
+    "country": "Deutschland",
+    "address": "Hyundai-Platz, 65428 Rüsselsheim am Main",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Simon Gellineck",
+        "position": "Senior Engineer - Electrified Propulsion System Development",
+        "email": "sgellineck@hyundai-europe.com",
+        "phone": "+49 6142 7899 794"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Simon Gellineck",
+        "need": "suchen Container --> Ausschreibung läuft schon --> bekommen zeitnah Infos um Angebot zu schreiben\nTo Do CW + Logistik",
+        "kam": "CW",
+        "status": "Verloren",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "08.08.25: Angebot abgelehnt; kaufmännische Themen als Begründung der Absage. CW bleibt dran, es werden weitere Anfragen folgen."
+      }
+    ]
+  },
+  {
+    "id": "elring-klinger",
+    "name": "Elring Klinger",
+    "country": "Deutschland",
+    "address": "Paul-Lechler-Straße 31, 72581 Dettingen/Erms",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Giuseppe Dolce",
+        "position": "Product Manager Sales",
+        "email": "giuseppe.dolce@elringklinger.com",
+        "phone": "+49 170 1918652"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Giuseppe Dolce",
+        "need": "Erweiterung RAV --> Rückholungen von Kunden",
+        "kam": "MK",
+        "status": "Verloren",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "reminder 12.8 Absage weil Kunde pleite",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "fraunhofer-ise",
+    "name": "Fraunhofer ISE",
+    "country": "Deutschland",
+    "address": "Heidenhofstraße 2, 79110 Freiburg",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Adrian Heuer",
+        "position": "Strategic Partnership Manager",
+        "email": "adrian.heuer@ise.fraunhofer.de",
+        "phone": "+49 160 963 116 46"
+      },
+      {
+        "name": "Dr. Nina Kevlishvili",
+        "position": "Gruppenleiterin Batteriesystemtechnik / Elektrische Energiespeicher",
+        "email": "nina.kevlishvili@ise.fraunhofer.de",
+        "phone": "+49 761 4588 2042"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Adrian Heuer",
+        "need": "Interesse Rahmenvertrag --> LFP Angebot (Aussage MK: 3,50€ / KG)\nto do CW: Forecast, RAV, Boxenmiete,  Logistikangebot, Termin vor Ort (beide Besucher begeistert)",
+        "kam": "CW",
+        "status": "Verloren",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": null,
+        "notes2": "08.08.25: Angebote für den Kunden nach wie vor zu teuer. Angebote für sie erst interessant, ab größeren Mengen."
+      },
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Dr. Nina Kevlishvili",
+        "need": "Interesse Rahmenvertrag --> LFP Angebot (Aussage MK: 3,50€ / KG)\nto do CW: Forecast, RAV, Boxenmiete,  Logistikangebot, Termin vor Ort (beide Besucher begeistert)",
+        "kam": "CW",
+        "status": "Verloren",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": null,
+        "notes2": "08.08.25: Angebote für den Kunden nach wie vor zu teuer. Angebote für sie erst interessant, ab größeren Mengen."
+      }
+    ]
+  },
+  {
+    "id": "powerco",
+    "name": "PowerCo",
+    "country": "Deutschland",
+    "address": "Salzgitter",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Tobias Koch",
+        "position": null,
+        "email": "tobias.koch@powerco.de",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Tobias Koch",
+        "need": "haben Interesse an großen Containern mit speziellen Anforderungen",
+        "kam": "BK",
+        "status": "Verloren",
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "BK, 25.07.25: Angebot durch Kunde abgelehnt; Begründung: Kosten.",
+        "notes2": "Hatten 18.6. Teams Call zusammen mit Gerd. VW will sich intern beraten und nochmal melden ob sie sich für eine modifizierte box entscheiden oder für kostengünstige standardlösung. "
+      }
+    ]
+  },
+  {
+    "id": "ilgom-tubi-srl",
+    "name": "Ilgom Tubi Srl",
+    "country": "Italien",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Piero Quaranta",
+        "position": null,
+        "email": "piero.quaranta@ilgomtubi.com ",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-01-06T00:00:00",
+        "contact": "Piero Quaranta",
+        "need": "Vernetzung",
+        "kam": "MK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "sention-technologies",
+    "name": "Sention Technologies",
+    "country": null,
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Doga Aktug",
+        "position": "Business Development Representative",
+        "email": "doga@sention.io ",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-05-21T00:00:00",
+        "contact": "Doga Aktug",
+        "need": "Kooperation Batteriediagnostik",
+        "kam": "MK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "flex-support-lda",
+    "name": "Flex Support Lda",
+    "country": "Portugal",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Jose Mogas",
+        "position": null,
+        "email": "support@usafe.pt",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Jose Mogas",
+        "need": "Logistik weltweit\nTo Do MK",
+        "kam": "MK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "gm-global-technical-center",
+    "name": "GM Global Technical Center",
+    "country": "USA",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Laura E. Wagner",
+        "position": "Manager EV Battery Sustainability & Recycling",
+        "email": "laura.wagner@gm.com",
+        "phone": "+1 586 208 5080"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Laura E. Wagner",
+        "need": "Client is located in Michigan and looking for recyclingsolutions for their batteries in Europe. […]\nto do MK innerhalb der nächsten 2 Wochen.",
+        "kam": "MK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "logwin-air-ocean-deutschland-gmbh",
+    "name": "Logwin Air + Ocean Deutschland GmbH",
+    "country": "Deutschland",
+    "address": "Luftfrachtzentrum 605/6, Stuttgart",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Mert Kizilagil",
+        "position": "Sales Manager",
+        "email": "mert.kizilagil@logwin-logistics.com",
+        "phone": "+49 711 77071-307"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Mert Kizilagil",
+        "need": "suchen Partner für Batterielogistik\nTo Do MK",
+        "kam": "MK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "london-economic-development-corporation",
+    "name": "London Economic Development Corporation",
+    "country": "Deutschland",
+    "address": "Nimrodstraße 46, 82110 München",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Carl Gräb",
+        "position": "Head of European Representation",
+        "email": "c.graeb@cic-siteselection.com",
+        "phone": "+49 173 5688297"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Carl Gräb",
+        "need": "hatte eigentlich Termin hier. Geht um Aktivitäten in Kanada.\nTo Do MK",
+        "kam": "MK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "selictive",
+    "name": "Selictive",
+    "country": "Deutschland",
+    "address": "Röntgenstraße 6, 63755 Alzenau",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Iordanis Alevropoulos",
+        "position": "Business Development",
+        "email": "ia@selictive.com",
+        "phone": "+49 6023 405 69 22"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Iordanis Alevropoulos",
+        "need": "sucht Logistikpartner --> Interesse Container --> eröffnen Recyclingcenter Ende 2025\nTo Do EN",
+        "kam": "EN",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "tenneco",
+    "name": "Tenneco",
+    "country": "Ungarn",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Peter Agoston",
+        "position": "Key Account Manager",
+        "email": "peter.agoston@tenneco..com",
+        "phone": "+36 70 799 4022"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Peter Agoston",
+        "need": "bieten Isolationstechniken an",
+        "kam": "GK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "nicht relevant",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "viridis-recycling",
+    "name": "Viridis Recycling",
+    "country": "Deutschland",
+    "address": "Maria-Montessori-Allee 10, 63457 Hanau",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Jens Huber",
+        "position": "CEO",
+        "email": "jens.huber@viridis-recycling.de",
+        "phone": "+49 175 428 2591"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-03T00:00:00",
+        "contact": "Jens Huber",
+        "need": "eröffnet Recyclinganlage Ende 2026. Sucht Logistikpartner + Kontakt BD --> Kontaktaufnahme aber erst Ende 2025\nTo Do EN",
+        "kam": "EN",
+        "status": "In Bearbeitung",
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "4m-controls",
+    "name": "4M Controls",
+    "country": null,
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Joseph",
+        "position": null,
+        "email": "joseph@4mcontrols.com",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Joseph",
+        "need": "meldet sich eventuell, wenn einer seiner Kunden Batterien transportieren wollen. Kein direkter Bedarf.",
+        "kam": "MK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "bosch",
+    "name": "Bosch",
+    "country": "Deutschland",
+    "address": "Stuttgart",
+    "industry": null,
+    "description": null,
+    "contacts": [],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": null,
+        "need": "Truck-Batterien in ganz Europa zum Testing",
+        "kam": "CW",
+        "status": null,
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": null,
+        "notes2": "08.08.25: Keine Kontaktdaten, CW kann nicht nachgehen."
+      }
+    ]
+  },
+  {
+    "id": "mercedes-benz",
+    "name": "Mercedes-Benz",
+    "country": "Deutschland",
+    "address": "Stuttgart",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Christian Brommer",
+        "position": null,
+        "email": null,
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Christian Brommer",
+        "need": "nicht UN-zertifizierte 48Volt Batterien von Europa --> USA",
+        "kam": "PH",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "mondragon-assembly",
+    "name": "Mondragon Assembly",
+    "country": "Spanien",
+    "address": "Polígono Industrial Bainetxe – Pab. 5 A, 20550 ARETXABALETA (Gipuzkoa)",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Juan José Franco Zamora",
+        "position": "Commercial Manager",
+        "email": "J.Franco@mondragon-assembly.com ",
+        "phone": "+34 672 690 896"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Juan José Franco Zamora",
+        "need": "Batterieabfall < 50 KG Module prismatisch. --> eventuell Lagerung",
+        "kam": "MK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "murata-manufacturing",
+    "name": "Murata Manufacturing",
+    "country": "Deutschland",
+    "address": "München",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Yuki Hasegawa",
+        "position": null,
+        "email": "yuki.hasegawa@murata.com",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": "Yuki Hasegawa",
+        "need": "sucht Logistiker für Europa",
+        "kam": "MK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "palodza",
+    "name": "Palodza",
+    "country": "Deutschland",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [],
+    "deals": [
+      {
+        "date": "2025-06-04T00:00:00",
+        "contact": null,
+        "need": "einladung zu einer 2-tägigen KI-Veranstaltung",
+        "kam": "SK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "nicht vertriebsrelevant",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "cling-systems",
+    "name": "Cling Systems",
+    "country": "Schweden",
+    "address": "Stockholm",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "William Bergh",
+        "position": "Founder & Ceo",
+        "email": "william@clingsystems.com",
+        "phone": "+46 76 32 733 43"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": "William Bergh",
+        "need": "Logistik + Lagerung",
+        "kam": "BK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": "28.8.: mail an Kunden geschickt mit Broschüre und Artikel. "
+      }
+    ]
+  },
+  {
+    "id": "culimeta",
+    "name": "Culimeta",
+    "country": "Deutschland",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Michael Brehm",
+        "position": "Vertriebsleiter Brandschutz",
+        "email": "mbrehm@culimeta.de",
+        "phone": null
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": "Michael Brehm",
+        "need": "Hersteller von Brandschutz-Material",
+        "kam": "GK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": "-",
+        "notes": "nicht vertriebsrelevant",
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "poen",
+    "name": "Poen",
+    "country": "Korea",
+    "address": null,
+    "industry": null,
+    "description": null,
+    "contacts": [],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": null,
+        "need": "machen Remanufacturing und suchen einen Partner für Batterietransporte von und nach Sachsenheim.",
+        "kam": "MK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "sanwood",
+    "name": "Sanwood",
+    "country": "Deutschland",
+    "address": "Bahnhofstraße 153, 86438 Kissing",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Austin Lau",
+        "position": "Senior Sales Engineer",
+        "email": "austin.lau@sanwood.com",
+        "phone": "+86 769 81181588"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": "Austin Lau",
+        "need": "Batterie-Testing",
+        "kam": "MK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "sew-eurodrive-gmbh-co-kg",
+    "name": "SEW-EURODRIVE GmbH & Co. KG",
+    "country": "Deutschland",
+    "address": "Ernst-Blickle-Straße 42, 76646 Bruchsal",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Tobias Zweihoff",
+        "position": "Technology Field Manager",
+        "email": "tobias.zwiehoff@sew-eurodrive.de",
+        "phone": "+49 7251 75 23576"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": "Tobias Zweihoff",
+        "need": "Kunde interessiert sich für Lagerboxen für Versand und Testing \nto do GK: Kontaktaufnahme",
+        "kam": "GK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  },
+  {
+    "id": "ullrich-recyclingsysteme",
+    "name": "Ullrich-Recyclingsysteme",
+    "country": "Deutschland",
+    "address": "Jaudesring 23, 86825 Bad Wörishofen",
+    "industry": null,
+    "description": null,
+    "contacts": [
+      {
+        "name": "Rainer Ullrich",
+        "position": null,
+        "email": "info@ullrich-recyclingsysteme.de",
+        "phone": "+49 176 223 77 304"
+      }
+    ],
+    "deals": [
+      {
+        "date": "2025-06-05T00:00:00",
+        "contact": "Rainer Ullrich",
+        "need": "Interesse Verkauf von Boxen",
+        "kam": "MK",
+        "status": null,
+        "revenue": null,
+        "revenueDate": null,
+        "notes": null,
+        "notes2": null
+      }
+    ]
+  }
+]

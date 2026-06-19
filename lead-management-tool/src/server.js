@@ -3,6 +3,10 @@ import express from "express";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import * as pipeline from "./pipeline.js";
+import * as crmStore from "./crmStore.js";
+import { enrichCompany } from "./enrich.js";
+import { draftCrmEmail } from "./draftCrmEmail.js";
+import { chat } from "./chat.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -59,6 +63,51 @@ app.post(
 app.post(
   "/api/send-all",
   handle(() => pipeline.sendAll())
+);
+
+app.get("/api/companies", handle(() => crmStore.getAll()));
+
+app.get(
+  "/api/companies/:id",
+  handle((req) => {
+    const c = crmStore.findById(req.params.id);
+    if (!c) throw new Error(`Unknown company: ${req.params.id}`);
+    return c;
+  })
+);
+
+app.post(
+  "/api/companies/:id/enrich",
+  handle(async (req) => {
+    const c = crmStore.findById(req.params.id);
+    if (!c) throw new Error(`Unknown company: ${req.params.id}`);
+    const enrichment = await enrichCompany(c);
+    return crmStore.update(req.params.id, enrichment);
+  })
+);
+
+app.post(
+  "/api/companies/:id/draft-email",
+  handle(async (req) => {
+    const c = crmStore.findById(req.params.id);
+    if (!c) throw new Error(`Unknown company: ${req.params.id}`);
+    const emailDraft = await draftCrmEmail(c);
+    return crmStore.update(req.params.id, { emailDraft });
+  })
+);
+
+app.post(
+  "/api/companies/:id/email",
+  handle((req) => crmStore.update(req.params.id, { emailDraft: req.body }))
+);
+
+app.post(
+  "/api/companies/:id/chat",
+  handle(async (req) => {
+    const c = crmStore.findById(req.params.id);
+    const reply = await chat(req.body.messages || [], c);
+    return { reply };
+  })
 );
 
 const port = process.env.PORT || 4173;

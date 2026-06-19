@@ -67,6 +67,25 @@ It's a thin Express server (`src/server.js`) over the same `src/pipeline.js` fun
 uses, so both stay in sync. Branding assets (logo, process-flow icons) live in `public/assets/`,
 extracted from LogBATT's own presentation deck.
 
+## Lead management (CRM)
+
+Beyond cold acquisition, the dashboard has a second view — **Lead Management**
+(`public/crm.html`, linked from the top nav) — for working an existing lead list end-to-end:
+
+- Seeded from a real trade-show contact sheet (`data/companies.seed.json`, imported once from the
+  original Excel export; `data/companies.json` is the live, gitignored working copy).
+- Each company shows country/address, all captured contacts, and the full deal/need history
+  (status, revenue, notes) recorded by KAMs at the show.
+- **Enrich with AI** — looks up what the company actually does (web search via Serper, if
+  configured, plus Claude) and fills in industry + a plain-English description.
+- **Draft with AI** — writes a follow-up email grounded in that specific lead's recorded need and
+  notes (not a generic ICP pitch), editable and savable before sending manually.
+- **Research assistant** — a chat box scoped to the selected company that can run web searches to
+  fill in anything missing (e.g. "who's the right contact for logistics decisions here?").
+
+Endpoints: `GET /api/companies`, `GET /api/companies/:id`, `POST /api/companies/:id/enrich`,
+`POST /api/companies/:id/draft-email`, `POST /api/companies/:id/email`, `POST /api/companies/:id/chat`.
+
 ## What's intentionally not built yet
 
 - **Contact discovery**: finding a named decision-maker's email at a qualified company is a manual

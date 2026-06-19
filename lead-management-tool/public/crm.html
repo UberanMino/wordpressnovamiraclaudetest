@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LogBATT &mdash; Lead Management</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <img class="logo" src="assets/logbatt-logo.png" alt="LogBATT, member of Lagermax Group" />
+    <h1 class="tagline">Lead Management</h1>
+    <nav class="topnav">
+      <a href="index.html">Cold Acquisition</a>
+      <a href="crm.html" class="active">Lead Management</a>
+    </nav>
+  </header>
+  <div class="accent-bar"></div>
+
+  <main>
+    <section class="panel">
+      <div class="crm-filters">
+        <input type="text" id="crm-search" placeholder="Search company or contact..." />
+        <select id="crm-status-filter">
+          <option value="">All statuses</option>
+          <option value="Gewonnen">Gewonnen</option>
+          <option value="Verloren">Verloren</option>
+          <option value="Schwebend">Schwebend</option>
+          <option value="In Bearbeitung">In Bearbeitung</option>
+          <option value="Kein Angebot">Kein Angebot</option>
+        </select>
+      </div>
+
+      <div class="crm-layout">
+        <div class="crm-list-panel" id="crm-list"></div>
+        <div class="crm-detail-panel" id="crm-detail">
+          <p class="empty-state">Select a company on the left to see its details.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="crm.js"></script>
+</body>
+</html>
