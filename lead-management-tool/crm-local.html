@@ -1,0 +1,982 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>LogBATT &mdash; Lead Management (Local)</title>
+<style>
+:root {
+  --logbatt-blue: #29abe2;
+  --logbatt-blue-dark: #1c8dbf;
+  --logbatt-grey: #707074;
+  --logbatt-grey-light: #e3e3e3;
+  --logbatt-grey-bg: #f4f5f6;
+  --white: #ffffff;
+  --radius: 10px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  background: var(--logbatt-grey-bg);
+  color: #2b2b2d;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--white);
+  padding: 18px 32px;
+}
+
+.topbar .logo {
+  height: 48px;
+}
+
+.topnav {
+  display: flex;
+  gap: 18px;
+}
+
+.topnav a {
+  text-decoration: none;
+  color: var(--logbatt-grey);
+  font-weight: 600;
+  font-size: 14px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid transparent;
+}
+
+.topnav a.active,
+.topnav a:hover {
+  color: var(--logbatt-blue-dark);
+  border-bottom-color: var(--logbatt-blue);
+}
+
+.tagline {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--logbatt-grey);
+  letter-spacing: 0.02em;
+}
+
+.accent-bar {
+  height: 6px;
+  background: var(--logbatt-blue);
+}
+
+main {
+  max-width: 1100px;
+  margin: 28px auto 60px;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.panel {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 22px 26px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.panel h2 {
+  margin: 0 0 6px;
+  font-size: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--logbatt-blue-dark);
+}
+
+.hint {
+  margin: 0 0 14px;
+  color: var(--logbatt-grey);
+  font-size: 13.5px;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="email"],
+textarea {
+  border: 1px solid var(--logbatt-grey-light);
+  border-radius: 6px;
+  padding: 9px 12px;
+  font-size: 14px;
+  font-family: inherit;
+}
+
+input[type="text"] {
+  flex: 1;
+  min-width: 220px;
+}
+
+textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+#prospect-num {
+  width: 90px;
+}
+
+.btn {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: var(--logbatt-blue);
+  color: var(--white);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: var(--logbatt-blue-dark);
+}
+
+.btn-accent {
+  background: #4caf50;
+  color: var(--white);
+}
+
+.btn-accent:hover:not(:disabled) {
+  background: #3d8b40;
+}
+
+.btn-ghost {
+  background: var(--logbatt-grey-light);
+  color: var(--logbatt-grey);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  background: #d5d5d5;
+}
+
+.btn-small {
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.status {
+  margin-top: 12px;
+  font-size: 13px;
+  white-space: pre-wrap;
+  color: var(--logbatt-grey);
+}
+
+.status.error {
+  color: #c0392b;
+}
+
+#process-flow-panel {
+  display: flex;
+  justify-content: center;
+  padding: 16px;
+}
+
+.process-flow {
+  max-width: 480px;
+  width: 100%;
+}
+
+.leads-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.leads-actions {
+  display: flex;
+  gap: 10px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+th,
+td {
+  text-align: left;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--logbatt-grey-light);
+  vertical-align: top;
+}
+
+th {
+  color: var(--logbatt-grey);
+  text-transform: uppercase;
+  font-size: 11.5px;
+  letter-spacing: 0.03em;
+}
+
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  color: var(--white);
+}
+
+.badge-prospected {
+  background: var(--logbatt-grey);
+}
+.badge-disqualified {
+  background: #b0b0b0;
+}
+.badge-drafted {
+  background: var(--logbatt-blue);
+}
+.badge-sent {
+  background: #4caf50;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal[hidden] {
+  display: none;
+}
+
+.modal-card {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 24px;
+  width: 100%;
+  max-width: 560px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-card h3 {
+  margin: 0 0 10px;
+  color: var(--logbatt-blue-dark);
+}
+
+.modal-card label {
+  font-size: 12px;
+  color: var(--logbatt-grey);
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  border: none;
+  background: none;
+  font-size: 22px;
+  color: var(--logbatt-grey);
+  cursor: pointer;
+}
+
+/* CRM / Lead Management view */
+
+.crm-layout {
+  display: flex;
+  gap: 18px;
+  align-items: flex-start;
+}
+
+.crm-list-panel {
+  flex: 0 0 360px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.crm-detail-panel {
+  flex: 1;
+  min-height: 400px;
+}
+
+.crm-filters {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.crm-filters select,
+.crm-filters input {
+  border: 1px solid var(--logbatt-grey-light);
+  border-radius: 6px;
+  padding: 6px 8px;
+  font-size: 13px;
+}
+
+.crm-company-row {
+  padding: 10px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  margin-bottom: 4px;
+}
+
+.crm-company-row:hover {
+  background: var(--logbatt-grey-bg);
+}
+
+.crm-company-row.active {
+  background: #eaf6fc;
+  border-color: var(--logbatt-blue);
+}
+
+.crm-company-row .name {
+  font-weight: 600;
+}
+
+.crm-company-row .sub {
+  font-size: 12px;
+  color: var(--logbatt-grey);
+}
+
+.status-pill {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.status-Gewonnen { background: #4caf50; }
+.status-Verloren { background: #c0392b; }
+.status-Schwebend { background: #e0a800; }
+.status-In_Bearbeitung { background: var(--logbatt-blue); }
+.status-Kein_Angebot { background: #b0b0b0; }
+
+.crm-section {
+  margin-bottom: 18px;
+}
+
+.crm-section h3 {
+  margin: 0 0 8px;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--logbatt-blue-dark);
+}
+
+.contact-card {
+  border: 1px solid var(--logbatt-grey-light);
+  border-radius: 8px;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+
+.contact-card .name {
+  font-weight: 600;
+}
+
+.contact-card .meta {
+  font-size: 12.5px;
+  color: var(--logbatt-grey);
+}
+
+.deal-row {
+  border-left: 3px solid var(--logbatt-grey-light);
+  padding: 6px 0 6px 12px;
+  margin-bottom: 8px;
+  font-size: 13px;
+}
+
+.email-box {
+  border: 1px solid var(--logbatt-grey-light);
+  border-radius: 8px;
+  padding: 14px;
+  background: var(--logbatt-grey-bg);
+}
+
+.chat-window {
+  border: 1px solid var(--logbatt-grey-light);
+  border-radius: 8px;
+  padding: 10px;
+  max-height: 280px;
+  overflow-y: auto;
+  background: var(--logbatt-grey-bg);
+  margin-bottom: 10px;
+}
+
+.chat-msg {
+  margin-bottom: 10px;
+  font-size: 13.5px;
+  white-space: pre-wrap;
+}
+
+.chat-msg .who {
+  font-weight: 700;
+  font-size: 11.5px;
+  text-transform: uppercase;
+  color: var(--logbatt-grey);
+  display: block;
+  margin-bottom: 2px;
+}
+
+.empty-state {
+  color: var(--logbatt-grey);
+  font-size: 14px;
+  padding: 40px;
+  text-align: center;
+}
+
+.local-banner {
+  background: #d8f0e0;
+  color: #1f5c38;
+  text-align: center;
+  font-size: 13px;
+  padding: 8px 16px;
+  font-weight: 600;
+}
+.keys-panel {
+  background: #fff8e1;
+  border: 1px solid #f0d98c;
+}
+.keys-panel input[type="password"], .keys-panel input[type="text"] {
+  min-width: 280px;
+}
+</style>
+</head>
+<body>
+<div class="local-banner">LOCAL MODE &mdash; your data and API keys live only in this browser (localStorage). Real calls go directly from your browser to Anthropic/Serper, never through any other server.</div>
+<header class="topbar">
+<img class="logo" src="data:image/png;base64,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" alt="LogBATT, member of Lagermax Group" />
+<h1 class="tagline">Lead Management (Local)</h1>
+</header>
+<div class="accent-bar"></div>
+
+<main>
+  <section class="panel keys-panel">
+    <h2>API keys (stored only in this browser)</h2>
+    <p class="hint">Paste your own keys here. They are saved in this browser's localStorage and used only for direct calls from this page to Anthropic / Serper &mdash; never sent anywhere else, and not included in this file when you share it.</p>
+    <form id="keys-form" class="row">
+      <input type="password" id="anthropic-key" placeholder="Anthropic API key (sk-ant-...)" />
+      <input type="password" id="serper-key" placeholder="Serper.dev API key (optional)" />
+      <button type="submit" class="btn btn-primary">Save keys</button>
+    </form>
+    <div id="keys-status" class="status"></div>
+  </section>
+
+  <section class="panel">
+    <div class="crm-filters">
+      <input type="text" id="crm-search" placeholder="Search company or contact..." />
+      <select id="crm-status-filter">
+        <option value="">All statuses</option>
+        <option value="Gewonnen">Gewonnen</option>
+        <option value="Verloren">Verloren</option>
+        <option value="Schwebend">Schwebend</option>
+        <option value="In Bearbeitung">In Bearbeitung</option>
+        <option value="Kein Angebot">Kein Angebot</option>
+      </select>
+    </div>
+    <div class="crm-layout">
+      <div class="crm-list-panel" id="crm-list"></div>
+      <div class="crm-detail-panel" id="crm-detail">
+        <p class="empty-state">Select a company on the left to see its details.</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+const COMPANIES_SEED = [{"id": "idiada", "name": "IDIADA", "country": "Spanien", "address": "L'Albornar - PO Box 20, E-43710 Santa Oliva (Terragona)", "industry": null, "description": null, "contacts": [{"name": "Alejandro Morales", "position": "Passive Safety Engineer", "email": "alejandro.morales@idiada.com", "phone": "+34 977 166 000"}, {"name": "Jordi Beltran", "position": "Data Acquisition Engineer", "email": "jordi.beltran@idiada.com", "phone": null}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Alejandro Morales", "need": "Interesse Miete Storageboxen\nto do MK", "kam": "MK", "status": "Gewonnen", "revenue": 5986.05, "revenueDate": "2025-06-27T00:00:00", "notes": "aktuell kein Interesse", "notes2": "aktueller Bedarf: Reparatur und After-Sales --> PO bereits geschrieben"}, {"date": "2025-06-04T00:00:00", "contact": "Jordi Beltran", "need": "Interesse Miete Storageboxen\nto do MK", "kam": "MK", "status": "Gewonnen", "revenue": 1867.95, "revenueDate": "2025-06-27T00:00:00", "notes": "aktuell kein Interesse", "notes2": "aktueller Bedarf: Reparatur und After-Sales --> PO bereits geschrieben"}]}, {"id": "volkswagen", "name": "Volkswagen", "country": "Deutschland", "address": "38436 Wolfsburg", "industry": null, "description": null, "contacts": [{"name": "Sebastian Hoinza", "position": "Forschung und Entwicklung / Planung Prüfstände", "email": "sebastian.hoinza@volkswagen.de", "phone": "+49 5361 9 43101"}, {"name": "Ranjith Kumar", "position": "Gefahrgutbeauftragter", "email": null, "phone": null}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Sebastian Hoinza", "need": "Anfrage nach eigenen Boxen (Individualmaße) --> Kleinserie 1-5 St. Keine Frage des Geldes, müssen brandschutzsicher sein --> vom Prüfstand bis ans Band transportiert werden --> braucht 2 Zugänge für Messtechnik", "kam": "BK", "status": "Gewonnen", "revenue": 8905, "revenueDate": "2025-09-04T00:00:00", "notes": "30.06.25: Termin mit Martin Feldhaus und Marcus Klabas: Präsentation der XL-Storage vor Ort avisiert. Nachhaken durch BK", "notes2": "Wir durch MK guten Kontakt zu VW in Braunschweig (Martin Feldhaus) aufgebaut. Kürzlich auch Kontaktschiene zu VW in Salzgitter (Peter Schmitzer) und Kassel hergestellt. "}, {"date": "2025-06-04T00:00:00", "contact": "Ranjith Kumar", "need": "sucht Lösung für Sondertransporte\nKontaktdaten bei Nadine Mobile", "kam": "BK", "status": "Gewonnen", "revenue": null, "revenueDate": "2025-09-04T00:00:00", "notes": "30.06.25: Termin mit Martin Feldhaus und Marcus Klabas: Präsentation der XL-Storage vor Ort avisiert. Nachhaken durch BK", "notes2": "Wir durch MK guten Kontakt zu VW in Braunschweig (Martin Feldhaus) aufgebaut. Kürzlich auch Kontaktschiene zu VW in Salzgitter (Peter Schmitzer) und Kassel hergestellt. "}]}, {"id": "man", "name": "MAN", "country": "Deutschland", "address": null, "industry": null, "description": null, "contacts": [{"name": "Roman Randzinger", "position": "Montageplanung", "email": null, "phone": null}], "deals": [{"date": "2025-06-05T00:00:00", "contact": "Roman Randzinger", "need": "Alle Infos wegen Scania Test 208 kWh --> evtl. Batterie 219 kWh von MAN (Oliver Uhl)", "kam": "BK", "status": "Gewonnen", "revenue": 6086.28, "revenueDate": "2025-07-25T00:00:00", "notes": "Treffen mit GK und MK und Herr Uhl aufgrund Test Batterie 210 kWh. Zentrale Koordination über Scania. Weitere To-Do's BK und gK", "notes2": "BK, 25.07.25: Bestellung von MAN heute eingegangen."}]}, {"id": "robert-kunzmann-gmbh-co-kg", "name": "Robert Kunzmann GmbH & Co. KG", "country": "Deutschland", "address": null, "industry": null, "description": null, "contacts": [{"name": "Manfred Zentgraf", "position": "Arbeitssicherheit", "email": "manfred.zentgraf@kunzmann.de", "phone": null}], "deals": [{"date": null, "contact": "Manfred Zentgraf", "need": "Interesse Messe-Rabatt\n2 x Container 20ft und 3 XL-Storage", "kam": "CW", "status": "Gewonnen", "revenue": 127559.2, "revenueDate": "2025-06-30T00:00:00", "notes": "gewonnen", "notes2": null}]}, {"id": "royal-haskoning-dhv", "name": "Royal Haskoning DHV", "country": "Niederlande", "address": null, "industry": null, "description": null, "contacts": [{"name": "Lou Rutjens", "position": null, "email": "lou.rutjens@rhdhv.com ", "phone": null}], "deals": [{"date": "2025-03-18T00:00:00", "contact": "Lou Rutjens", "need": "Vernetzung", "kam": "CW", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "08.08.25: Telefonat mit KUnde. Warten auf richtigen Ansprechpartner. CW geht hinterher."}]}, {"id": "alstom", "name": "Alstom", "country": "Deutschland", "address": null, "industry": null, "description": null, "contacts": [{"name": "Christian Hufenbach", "position": "Systems Engineering", "email": "christian.hufenbach@alstomgroup.com", "phone": null}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Christian Hufenbach", "need": "ggf. Interesse Transporte. To Do MK Kontaktaufnahme", "kam": "MK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": "Umsatz in Frankreich ", "notes2": "SK, 09.09.25: ? Im System kein Umsatz hinterlegt."}]}, {"id": "enersys", "name": "EnerSys", "country": "Deutschland", "address": "Dieckstraße 42, 58089 Hagen", "industry": null, "description": null, "contacts": [{"name": "Jan-Hendrik Seeger", "position": "Global Product Manager", "email": "jan.seegler@de.enersys.com", "phone": "+49 171 7302707"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Jan-Hendrik Seeger", "need": "XL-Storage + Logistik\nTo Do CW", "kam": "CW", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "08.08.25: Richtiger Ansprechpartner in Frankreich. CW wartet auf Rückmeldung."}]}, {"id": "green-testing-lab-gmbh", "name": "Green Testing Lab GmbH", "country": "Österreich", "address": "Gewerbepark Greenbach Ost 342, 8230 Greinbach", "industry": null, "description": null, "contacts": [{"name": "Dr. Max Hofer", "position": "General Manager", "email": "m.hofer@greentestinglab.com", "phone": "+43 664 16 25 780"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Dr. Max Hofer", "need": "Testinstitut für Batterien  (auch große). Storage + Logistik + Recycling\nTo Do MK", "kam": "MK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": "13.8 reminder von MK", "notes2": null}]}, {"id": "haw-hamburg", "name": "HAW Hamburg", "country": "Deutschland", "address": null, "industry": null, "description": null, "contacts": [{"name": "Eugen Hein", "position": null, "email": "eugen.hein@haw-hamburg.de", "phone": null}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Eugen Hein", "need": "Hochschule Hamburg --> suchen Boxen für Testing", "kam": "BK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "28.8.: Mail geschickt mit Fachartikeln und Broschüre. Kunde bis 8.9. ausser Haus. "}]}, {"id": "maxxen", "name": "Maxxen", "country": "Türkei", "address": "Kemalpasa Av. 7405 St. No.8, Pinarbasi/Izmir", "industry": null, "description": null, "contacts": [{"name": "Muhammed Erdin", "position": "R&D Director", "email": "muhammed.erdin@maxxen.com", "phone": "+90 531 687 55 73"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Muhammed Erdin", "need": "Batteriespeichersysteme aus der Türkei nach EU. Konkrete Anfrage für 4 Stück Container. Perspektivisch auch Interesse an rote Batterie Transporte.\nto do BK, Kunde erwartet Rückmeldung zu Möglichkeiten des Container-Transports.", "kam": "BK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": "Kontaktiert am 23.06.2025.", "notes2": "29.08.25: Reminder an Kunde."}]}, {"id": "rpi-motors", "name": "RPI Motors", "country": "Deutschland", "address": null, "industry": null, "description": null, "contacts": [{"name": "Herr Ohlinger", "position": null, "email": "c.ohlinger@rpi-motors.com", "phone": null}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Herr Ohlinger", "need": "Hohe Priorität. Logistik + Recycling\nT Do CW", "kam": "CW", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "08.08.25: Keine Reaktion Kunde. Geplanten Call abgesagt, und um Verschiebung in den Herbst gebeten, da Projekt noch nicht so weit. CW bleibt dran."}]}, {"id": "seiplan", "name": "SEIPLAN", "country": "Deutschland", "address": null, "industry": null, "description": null, "contacts": [{"name": "Sascha Ginter", "position": "CPO", "email": "sascha.ginter@seiplan.com", "phone": "+49 151 224 60 300"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Sascha Ginter", "need": "suchen Logistik-Partner --> für CW", "kam": "CW", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "08.08.25: PH hatte CEO-Call mit Kunde. CW wartet auf Rückmeldung PH."}]}, {"id": "trigo-c-e-e-kft", "name": "Trigo C.E.E. KFT.", "country": "Ungarn", "address": "Gödöllöi ut 6/b, H-2600 Vác", "industry": null, "description": null, "contacts": [{"name": "Atilla Vitos", "position": "Global Battery & NEV expert director", "email": "attila.vitos@trigo-group.com", "phone": "+36 30 826 3521"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Atilla Vitos", "need": "hat Kontakte zu After Sales Leuten von OEM's die Interesse an Storageboxen haben könnten\nTo Do BK", "kam": "BK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "28.8.: Mail geschickt mit Fachartikeln und Broschüre. Kunde ist Dienstleistungsunternehmen. Fraglich ob hier wirklich Potential besteht."}]}, {"id": "wattical", "name": "Wattical", "country": "Deutschland", "address": "Philippstraße 8, 52068 Aachen", "industry": null, "description": null, "contacts": [{"name": "Changxin Li", "position": "Project Engineer", "email": "changxin@wattical.com", "phone": "+49 162 498 0818"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Changxin Li", "need": "kontaktieren uns", "kam": "CW", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "08.08.25: Interessantes Thema; Austausch mit Lagermax. Anfang September Besuch beim Kunden in Frankfurt zusammen mit LMX."}]}, {"id": "aspilsan-enerji-a-s", "name": "Aspilsan Enerji A.S.", "country": "Türkei", "address": "Mimarsinan O.S.B. Mahalle 1. Cadde No. 43, Melikgazi/Kayseri", "industry": null, "description": null, "contacts": [{"name": "Burak Atilgan", "position": "Business Development Executive", "email": "burak.atilgan@aspilsan.com", "phone": "+90 352 321 12 15 6300"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Burak Atilgan", "need": "sucht Logistikpartner. Transport China nach Europa + Türkei zum Endkunden.\nTo Do BK", "kam": "BK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": "Mail am 27.06.2025 gesendet inkl. Broschüre, Kundenstammdatenblatt und Checkliste.", "notes2": "29.08.25: Reminder an Kunde."}]}, {"id": "audi", "name": "Audi", "country": "Deutschland", "address": "Ingolstadt", "industry": null, "description": null, "contacts": [{"name": "Roberto Cardona Martinez", "position": null, "email": "roberto.cardona.martinez@audi.de", "phone": null}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Roberto Cardona Martinez", "need": "hat Interesse an Storagboxen\nwichtig! Follow-up 03.07.2025", "kam": "MK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": "BK, 25.07.25: BK in Kontakt mit Kunde. Projekt ist noch nicht reif. WV nach der Sommerpause (Anfang September).", "notes2": null}]}, {"id": "business-upper-austria", "name": "Business Upper Austria", "country": "Österreich", "address": "Hafenstraße 47-51, 4020 Linz", "industry": null, "description": null, "contacts": [{"name": "Robert Kerzendorfer", "position": "Projektmanager", "email": "robert.ketzendorfer@biz-up.at", "phone": "+43 664 78 62 98"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Robert Kerzendorfer", "need": "arbeitet mit Lagermax zusammen und hat diverse Kontakte und Events in Österreich zum Vernetzen\nTo Do MK", "kam": "MK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": "12.8 reminder", "notes2": null}]}, {"id": "chb-logistics-s-r-o", "name": "CHB Logistics s.r.o.", "country": "Tschechien", "address": "Jilska 527/2, 11000 Prag", "industry": null, "description": null, "contacts": [{"name": "Jan Choi", "position": "CEO", "email": "choi@chb-prague.com", "phone": "+420 724 362 853"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Jan Choi", "need": "Interesse Kooperation. Lager von 100000m² --> Neubatterien + evtl. Entsorgung für Ungarn, Slowenien, Tschechien\nTo Do BK", "kam": "BK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "5.9.: mail geschrieben und broschüre geschickt. "}]}, {"id": "dekra", "name": "Dekra", "country": "Deutschland", "address": "Handwerkstraße 15, 70565 Stuttgart", "industry": null, "description": null, "contacts": [{"name": "Joachim Defrancesco", "position": "Techniker Prüflabor", "email": "joachim.defrancesco@dekra.com", "phone": "+49 711 7861 3449"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Joachim Defrancesco", "need": "Dekrashop inkl. Logistische Dienstleistung.  500€ zu teuer Transport. Stuttgart nach Braunschweig (grün/fertige Verriegelung, Gabelstapler vor Ort).\nTo Do MK", "kam": "MK", "status": "In Bearbeitung", "revenue": null, "revenueDate": "?", "notes": "nachfragen, ob alternatives Angebot --> to do NC", "notes2": null}]}, {"id": "enpower-greentech-gmbh", "name": "Enpower Greentech GmbH", "country": "Deutschland", "address": "Amalie-Baader-Straße 2, 76187 Karlsruhe", "industry": null, "description": null, "contacts": [{"name": "Xin Zhang", "position": "Managing Director", "email": "xin.zhang@enpower-greentech.com", "phone": null}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Xin Zhang", "need": "suchen Logistikpartner + Lagerlösungen. --> Batterien kommen in Containern nach EU. EU-Logistik muss noch aufgebaut werden.\nTo Do CW", "kam": "CW", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "08.08.25: Am 06.08.25 eine NDA erhalten. Warten nun auf Ausschreibungsunterlagen. Spannender Lead."}]}, {"id": "gpa", "name": "GPA", "country": "Frankreich", "address": null, "industry": null, "description": null, "contacts": [{"name": "Marc Jolivet", "position": null, "email": "marc.jolivet@groupe-gpa.fr", "phone": "+33 777 75 33 39"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Marc Jolivet", "need": "Hohe Prio! Autoverwerter in FR, braucht dringend Boxen + später Logistik --> wünscht Termin in Paris\nto do CW: Meeting", "kam": "CW", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "08.08.25: Im Austausch mit Kunde. CW ist dran. Evtl. Notifizierung Frankreich-Schweiz."}]}, {"id": "honda-trading-europe-gmbh", "name": "Honda Trading Europe GmbH", "country": "Deutschland", "address": "Hanauer Landstrasse 222-226, 60314 Frankfurt", "industry": null, "description": null, "contacts": [{"name": "Raymond Chiu", "position": "Branch Manager", "email": "raymond.chiu@hondatrading.eu.com", "phone": "+49 162 2567 150"}, {"name": "Eva Leung", "position": "Senior Coordinator", "email": "eva.leung@hondatrading.eu.com", "phone": "+49 162 1012289"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Raymond Chiu", "need": "Interesse Boxen + Logistik\nschon in Kontakt mit CW", "kam": "CW", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "08.08.25: Sind im Austausch. Komplizierter Prozess, warten auf Angebot."}, {"date": "2025-06-04T00:00:00", "contact": "Eva Leung", "need": "Interesse Boxen + Logistik\nschon in Kontakt mit CW", "kam": "CW", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "08.08.25: Sind im Austausch. Komplizierter Prozess, warten auf Angebot."}, {"date": "2025-04-25T00:00:00", "contact": "Eva Leung", "need": "Transport Schwarze Masse Ex Europa", "kam": "MK", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": "kein Interesse", "notes2": null}]}, {"id": "hoppecke-systemtechnik-gmbh", "name": "Hoppecke Systemtechnik GmbH", "country": "Deutschland", "address": "Dr.-Sinsteden-Straße 8, 08056 Zwickau", "industry": null, "description": null, "contacts": [{"name": "Henrik Meyer-Venhaus", "position": "Peoduct Manager Innovation", "email": "henrik.meyer-venhaus@hoppecke.com", "phone": "+49 171 97 811 58"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Henrik Meyer-Venhaus", "need": "benötigen Lösungen für Entsorgung + Boxen Container", "kam": "BK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": "BK, 07.07.25: Kunde kontaktiert und Lösungen präsentiert. Demnächst Mail+Anruf.", "notes2": "25.07.: mail geschrieben und am 28.8. angerufen: kontakt besteht bereits. keine weiteren Informationen zum aktuellen Zeitpunkt benötigt. "}]}, {"id": "lg-energy-solution-europe-gmbh", "name": "LG Energy Solution Europe GmbH", "country": "Deutschland", "address": "Otto-Volger-Straße 7C, 65843 Sulzbach (Taunus)", "industry": null, "description": null, "contacts": [{"name": "Yeni Ha", "position": "Specialist ESS Residental Planning Part", "email": "yeniha@lgensol.com", "phone": "+49 152 5471 2641"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Yeni Ha", "need": "Interesse an Gesamtlösung", "kam": "CW", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "08.08.25: CW wartet auf Termin mit Kunde; bisher keine Reaktion."}]}, {"id": "mann-teknik-ab", "name": "Mann Teknik AB", "country": "Schweden", "address": "Strandvägen 16, 54231 Mariestad", "industry": null, "description": null, "contacts": [], "deals": [{"date": "2025-06-04T00:00:00", "contact": null, "need": "Kaltakquise\nto do BK", "kam": "BK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "5.9: Mail mit Broschüre geschickt."}]}, {"id": "marubeni-corporation", "name": "Marubeni  Corporation", "country": "Japan", "address": "4-2, Ohtemachi 1-chome, Chiyuda-ku, Tokyo", "industry": null, "description": null, "contacts": [{"name": "Kosuke Ninomiya", "position": "Assistant General Manager", "email": "ninomiya-k@marubeni.com", "phone": "+81 3 3282 4428"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Kosuke Ninomiya", "need": "Partner in USA + UK. Interessiert an Boxen + Logistik --> kommt wieder auf uns zu.\nto do MK", "kam": "MK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": "MK reminder", "notes2": null}]}, {"id": "numatic-international-limited", "name": "Numatic International Limited", "country": "UK", "address": null, "industry": null, "description": null, "contacts": [{"name": "Piotr Kleszyk", "position": "Energy Storage Lead R&D", "email": "piotr.kleszyk@numatic.co.uk", "phone": "+44 1460 247 877"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Piotr Kleszyk", "need": "Interesse an Storageboxen", "kam": "BK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": "BK, 07.07.25: Kunde kontaktiert und Lösungen präsentiert. Demnächst Mail+Anruf.", "notes2": "9.08.25: Reminder an Kunde."}]}, {"id": "oku-automation", "name": "OKU-Automation", "country": "Deutschland", "address": "Winterbach", "industry": null, "description": null, "contacts": [], "deals": [{"date": "2025-06-04T00:00:00", "contact": null, "need": "Fragen mit speziellen Batterien an Produktionsanlage, meldet sich.\nKontaktdaten bei Nadine Mobile", "kam": "MK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": "in Kontakt: brauchen weitere Informationen. BD hat bei Ecobat angefragt", "notes2": null}]}, {"id": "rhine-capital", "name": "Rhine Capital", "country": "UK", "address": "128 City Road, EC12NX London", "industry": null, "description": null, "contacts": [{"name": "David Lewis", "position": "Director", "email": "david@rhinecapital.co.uk", "phone": "+44 7717395373"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "David Lewis", "need": "Interesse an Logistik für BESS Systeme", "kam": "BK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "hatten Teams Call und Anfrage bekommen. Nachdem Rosa weg war, wurde die Anfrage nicht weiter verfolgt. "}]}, {"id": "tvs-motor-company-limited", "name": "TVS Motor Company Limited", "country": "Indien", "address": "P.B. No. 4, Harita, Hosur - 635 109, Tamil Nadu", "industry": null, "description": null, "contacts": [{"name": "S Anand", "position": "Member PED", "email": "anand.s@tvsmotor.com", "phone": "+91 4344 276780 - 2807"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "S Anand", "need": "Batteriehersteller. 2 Produktionsfabriken --> sucht Lösung für Transport. Interesse an Boxen.", "kam": "MK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": "reminder 12.8", "notes2": null}]}, {"id": "avs-international", "name": "AVS International", "country": "Deutschland", "address": null, "industry": null, "description": null, "contacts": [{"name": "Ahmet Baran", "position": "Inhaber/Owner", "email": "a.baran@avs-international.de", "phone": "+49 172 8803135"}], "deals": [{"date": "2025-06-05T00:00:00", "contact": "Ahmet Baran", "need": "Kunde möchte Informationen über Lager- und Transportboxen in der Türkei. Evtl. Transport-Dienstleister", "kam": "CW", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "08.08.25: CW wartet auf Kontaktaufnahme Kunde. DIeser wird sich im Herbst melden."}]}, {"id": "ligixmetal", "name": "Ligixmetal", "country": "Ungarn", "address": null, "industry": null, "description": null, "contacts": [{"name": "James Jiang", "position": null, "email": "james.jiang@ligixmetal.com", "phone": "+36 70 204 1989"}], "deals": [{"date": "2025-06-05T00:00:00", "contact": "James Jiang", "need": "Transporte Ungarn Thailand", "kam": "BK", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": "5.9.: mail geschrieben und broschüre geschickt. "}]}, {"id": "expo-display-studio-pvt-ltd", "name": "Expo Display Studio Pvt Ltd", "country": "UK", "address": null, "industry": null, "description": null, "contacts": [{"name": "Oliver Smith", "position": null, "email": "oliver@expodisplaysstudio.com ", "phone": null}, {"name": "Alexander Klein", "position": null, "email": "alexander@expodisplaystudio.de ", "phone": null}], "deals": [{"date": "2025-01-22T00:00:00", "contact": "Oliver Smith", "need": "wollen Messebau zukünftig anbieten.", "kam": "MK", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": "vertrieblich nicht interessant.", "notes2": null}, {"date": "2025-03-07T00:00:00", "contact": "Alexander Klein", "need": "wollen Messebau zukünftig anbieten.", "kam": "MK", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": "vertrieblich nicht interessant.", "notes2": null}]}, {"id": "port-de-dunkerque", "name": "Port de Dunkerque", "country": "Frankreich", "address": null, "industry": null, "description": null, "contacts": [{"name": "Julien Cattoen", "position": null, "email": "jcattoen@portdedunkerque.fr ", "phone": null}], "deals": [{"date": "2025-03-11T00:00:00", "contact": "Julien Cattoen", "need": "Vernetzung", "kam": "CW", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": null, "notes2": "08.08.25: Telefonat mit Kunde. Fokus Vernetzung und Informationsaustausch. Kein Umsatz erwartet."}]}, {"id": "jcl-logistics-benelux", "name": "JCL Logistics Benelux", "country": "Niederlande", "address": null, "industry": null, "description": null, "contacts": [{"name": "Rehim Duman", "position": null, "email": "rehim.duman@jcl-logistics.com ", "phone": null}], "deals": [{"date": "2025-03-24T00:00:00", "contact": "Rehim Duman", "need": "Vernetzung", "kam": "CW", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": null, "notes2": "08.08.25: Keine Reaktion Kunde."}]}, {"id": "pipistrel-aircraft", "name": "Pipistrel Aircraft", "country": "Slowenien", "address": null, "industry": null, "description": null, "contacts": [{"name": "Tina Paljk", "position": null, "email": "tina.paljk@pipistrel-aircraft.com", "phone": null}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Tina Paljk", "need": "Interesse Recycling\nTo Do BK", "kam": "BK", "status": "Kein Angebot", "revenue": null, "revenueDate": null, "notes": "29.08.25: Mail kann nicht zugestellt werden; AP vermutlich nicht länger im Unternehmen.", "notes2": "Am 29.7. Mail geschrieben. Keine Antwort erhalten\n29.08.25: Reminder an Kunde."}]}, {"id": "rmr", "name": "RMR", "country": "Griechenland", "address": null, "industry": null, "description": null, "contacts": [{"name": "Apostolos Panagopoulos", "position": "Logistics Coordinator", "email": "a.panagopoulos@rmr.gr", "phone": "0030 2410 669040"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Apostolos Panagopoulos", "need": "machen Beratung hinsichtlich Schadstoffe in Griechenland --> organisieren als ``Zwischenhämdler`` Transporte und Verpackungen --> Interesse an Zusammenarbeit Batterielogistik mit LogBATT --> profitieren von Netzwerken\nTo Do MK --> Kontaktaufnahme", "kam": "MK", "status": "Kein Angebot", "revenue": null, "revenueDate": null, "notes": "kein Interesse", "notes2": null}]}, {"id": "wt-management", "name": "WT Management", "country": "Deutschland", "address": "Im Löchle 14/2, 71717 Beilstein", "industry": null, "description": null, "contacts": [{"name": "Gerald Hohmann", "position": "Vertriebsmanager", "email": "gerald.hohmann@wt-management.eu", "phone": null}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Gerald Hohmann", "need": "irgendetwas mit Marketing", "kam": "SK", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": "nicht vertriebsrelevant", "notes2": null}]}, {"id": "alpha-engineered-composites-europe-gmbh", "name": "Alpha Engineered Composites Europe GmbH", "country": "Deutschland", "address": "Zum Schürmannsgraben 24, 47441 Moers", "industry": null, "description": null, "contacts": [{"name": "Alexander Hillmann", "position": "Key Account Manager", "email": "a.hillmann@alphainc-europe.com", "phone": "+49 2841 881 280-22"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Alexander Hillmann", "need": "wollte wissen, wer unsere Lieferanten für LogCOVER sind", "kam": "MKr", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": null, "notes2": null}]}, {"id": "aperam", "name": "Aperam", "country": "Deutschland", "address": "Aperam Allee 1, 42781 Haan", "industry": null, "description": null, "contacts": [{"name": "Dr. Reiner Steins", "position": "Chief Innovation and R&D Officer", "email": "reiner.steins@aperam.com", "phone": "+49 174 1704713"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Dr. Reiner Steins", "need": "Hersteller \"Stainlees Steel\"\nTo Do GK", "kam": "GK", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": "nicht vertriebsrelevant", "notes2": null}]}, {"id": "asygn", "name": "ASYGN", "country": "Frankreich", "address": null, "industry": null, "description": null, "contacts": [{"name": "Ivan Samyshev", "position": "Sales & Business Development Manager", "email": "ivan.samyshev@asygn.com", "phone": "+33 7 68 41 78 89"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Ivan Samyshev", "need": "bieten Sensoren an\nTo Do GK", "kam": "GK", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": "nicht vertriebsrelevant", "notes2": null}]}, {"id": "dbw-advanced-fiber-technologies-gmbh", "name": "DBW Advanced Fiber Technologies GmbH", "country": "Deutschland", "address": "Rodetal 40, 37120 Bovenden", "industry": null, "description": null, "contacts": [{"name": "Mark-Lubomir Cierny", "position": "Product Development / R&D Chemist", "email": "mark.cierny@dbw.de", "phone": "+49 151 536 310 21"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Mark-Lubomir Cierny", "need": "Glasfaser/Steinwolle Materialien für Auskleidung und LogBAGs", "kam": "MKr", "status": "Kein Angebot", "revenue": null, "revenueDate": null, "notes": "nicht vertriebsrelevant", "notes2": null}]}, {"id": "deutzer-ag", "name": "Deutzer AG", "country": "Deutschland", "address": "Hauptsitz in Köln", "industry": null, "description": null, "contacts": [], "deals": [{"date": "2025-06-04T00:00:00", "contact": null, "need": "Visitenkarte mitgenommen; Interesse an M-1 und melden sich.\nto do CW: Hinweis mehrere Anfragen für SBB + Transporte", "kam": "CW", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": null, "notes2": "08.08.25: Keine Kontaktdaten, CW kann nicht nachgehen."}]}, {"id": "mehler-engineered-products-lda", "name": "Mehler Engineered Products LDA", "country": "Portugal", "address": "Rua de Segures 21, 4770-330 Landim, V.N. Famalicao", "industry": null, "description": null, "contacts": [{"name": "Elisabete Silva", "position": "Innovation Manager", "email": "elisabete.silva@mehler-ep.com", "phone": "+351 252 302 723"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Elisabete Silva", "need": "bieten Brandschutzdecken an (Weberei)\nTo Do GK", "kam": "GK", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": "nicht vertriebsrelevant", "notes2": null}]}, {"id": "rimac", "name": "Rimac", "country": "Kroatien", "address": null, "industry": null, "description": null, "contacts": [{"name": "Amas Zjajo", "position": null, "email": "amar.zjajo@rimac-technology.com", "phone": null}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Amas Zjajo", "need": "spricht Deutsch, war bei BMW Einheiten für Zellen ", "kam": "MK", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": "zur Zeit keinen Bedarf", "notes2": null}]}, {"id": "s-p-samson-gmbh", "name": "S+P Samson GmbH", "country": "Deutschland", "address": "Industriestraße 32, 86438 Kissing", "industry": null, "description": null, "contacts": [{"name": "Matthias Leuschner", "position": "Industrielle Kennzeichnung", "email": "matthias.leuschner@sp-samson.com", "phone": "+49 170 5712604"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Matthias Leuschner", "need": "Herstellung Etiketten ", "kam": "GK/MKr", "status": "Kein Angebot", "revenue": null, "revenueDate": null, "notes": "nicht vertriebsrelevant", "notes2": null}]}, {"id": "saba-dinxperlo-bv", "name": "SABA Dinxperlo BV", "country": "Niederlande", "address": null, "industry": null, "description": null, "contacts": [{"name": "Michel Menting", "position": "Technical Product Manager", "email": "michel.menting@saba-adhesives.com", "phone": "+31 653 969 501"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Michel Menting", "need": "würde gerne Lösungen vorstellen, um die Nieten an unseren Boxen zu ersetzen.", "kam": "GK", "status": "Kein Angebot", "revenue": null, "revenueDate": null, "notes": "nicht vertriebsrelevant", "notes2": null}]}, {"id": "stellantis", "name": "Stellantis", "country": null, "address": "Rüsselsheim", "industry": null, "description": null, "contacts": [{"name": "Ralph P. Rump", "position": null, "email": null, "phone": null}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Ralph P. Rump", "need": "hat gefragt, welche unsere größere Transportbox ist. --> SBB XL-2.2+ scheint ok. Sie hatten einen Fall, bei welchem Spediteur keine passende Box hatte.", "kam": "CW", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": null, "notes2": "08.08.25: Wie im letzten Jahr reagiert er auf keine Mail und Telefonversuche."}]}, {"id": "zarya-partners", "name": "Zarya Partners", "country": "Schweden", "address": "Karlavägen 18, 114 31 Stockholm", "industry": null, "description": null, "contacts": [{"name": "Fredrik Kannesten", "position": "Partner", "email": "fredrik.kennesten@zaryapartners.com", "phone": "+46 735 52 41 77"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Fredrik Kannesten", "need": "Kupplung-Hersteller --> eventuell interessant für Entwicklung", "kam": "GK", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": "nicht vertriebsrelevant", "notes2": null}]}, {"id": "bester-traum", "name": "Bester Traum", "country": "Deutschland", "address": "65779 Kelkheim", "industry": null, "description": null, "contacts": [{"name": "Julius Kim", "position": "Manager", "email": "Julius@bester-traum.com", "phone": "+49 152 0660 9168"}], "deals": [{"date": "2025-06-05T00:00:00", "contact": "Julius Kim", "need": "sucht Entsorger", "kam": "CW", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": null, "notes2": "08.08.25: Keine Reaktion auf Kontaktversuche."}]}, {"id": "cleverframe", "name": "Cleverframe", "country": "Deutschland", "address": null, "industry": null, "description": null, "contacts": [], "deals": [{"date": "2025-06-05T00:00:00", "contact": null, "need": "Messebauer", "kam": "SK", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": "nicht vertriebsrelevant", "notes2": null}]}, {"id": "hktdc", "name": "HKTDC", "country": "China", "address": null, "industry": null, "description": null, "contacts": [{"name": "Wie Liu", "position": null, "email": "wie.liu@hktdc.org", "phone": null}], "deals": [{"date": "2025-06-05T00:00:00", "contact": "Wie Liu", "need": "Events rund um Logistik. In diesem Jahr erstmalig zum Thema Gefahrgut --> suchen Experten für die Teilnahme an Events und Fachvorträge", "kam": "MK", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": "erledigt, 12.8", "notes2": null}]}, {"id": "instawerk", "name": "Instawerk", "country": "Deutschland", "address": "Zettachring 12A, 70567 Stuttgart", "industry": null, "description": null, "contacts": [], "deals": [{"date": "2025-06-05T00:00:00", "contact": null, "need": "Hersteller für Dreh- und Fräßteile --> Kontakt MKr", "kam": "MKr", "status": "Kein Angebot", "revenue": null, "revenueDate": "-", "notes": "nicht vertriebsrelevant", "notes2": null}]}, {"id": "prettl-metal-components-gmbh", "name": "Prettl metal components GmbH", "country": "Deutschland", "address": "Marktstraße 155, 72793 Pfullingen", "industry": null, "description": null, "contacts": [{"name": "Eugen Miller", "position": "Projektleiter Technischer Betriebsleiter", "email": "eugen.miller@prettl.com", "phone": "+49 151 440 61 477"}], "deals": [{"date": "2025-06-05T00:00:00", "contact": "Eugen Miller", "need": "Lieferant von Blech, Biege- und Laserteile", "kam": "MKr", "status": "Kein Angebot", "revenue": null, "revenueDate": null, "notes": "nicht vertriebsrelevant", "notes2": null}]}, {"id": "huawei", "name": "Huawei", "country": "Deutschland", "address": null, "industry": null, "description": null, "contacts": [{"name": "Berk Civici", "position": null, "email": "berk.civici@huawei.com", "phone": "0178 3856576"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Berk Civici", "need": "Hohe Prio! Sitz in Nürnberg + Kollegen aus Ungarn. --> brauchen dringend Unterstützung bei Logistik für kritische Zellen\nTo Do BK", "kam": "BK", "status": "Schwebend", "revenue": null, "revenueDate": null, "notes": "2.09.25: Teilangebot an Huawei übermittelt.", "notes2": "Kontaktschiene durch Teams Call am 18.6. installiert. NDA gezeichnet. Kunde hat Anfrage geschickt. Transport 50 defekter Zellen. Weitere Anfragen folgen: Transport EU 50 defekte Batterie Packs + Lagerung von defekter Batterien bzw. Havariebox."}]}, {"id": "recovolt", "name": "RecoVolt", "country": null, "address": null, "industry": null, "description": null, "contacts": [{"name": "Dr. Mahfuz Kamal", "position": null, "email": "mahfuz@recovolt.io", "phone": null}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Dr. Mahfuz Kamal", "need": "Looking for battery isolation for thermal runaway cases.  Needs removable lid with water fill if possible. Located in UK. Producer start up of battery discharging systems..\nto do BK: urgent meeting next week", "kam": "BK", "status": "Schwebend", "revenue": null, "revenueDate": null, "notes": "Meeting am 12.06.25. BK ist dran.\n29.08.25: Angebot an Kunde versendet(11003374).\nFälligkeit bis 30.09.2025.", "notes2": "Teams Call mit Heiko und Kunden am 12.6. Kunde wünscht modifizierte Box XL2.2+. Follow up call mit Gerd und Kunde für 30.6. fixiert. Haben NDA erhalten. Philipp prüft. Elias hat Kunden auf der AABC in Mainz getroffen. Gerd hat Angebot geschickt Mitte August. Entscheidung erst Jahresende zu erwarten"}]}, {"id": "bredenoord-b-v", "name": "Bredenoord B.V.", "country": "Niederlande", "address": "Zutphensestraat 315, 7325 WT Apeldoorn", "industry": null, "description": null, "contacts": [{"name": "Lukas Krüger", "position": "Produktspezialist Batteriespeichersysteme", "email": "l.krueger@bredenoord.com", "phone": "+49 160 2713130"}, {"name": "Robbin Sanders", "position": "Product Manager Energy Storage", "email": "r.sanders@bredenoord.com", "phone": "+31 613 424303"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Lukas Krüger", "need": "Interesse an Boxen + Container (universelle Batterien) --> ggf. Logistik für defekte Batterien", "kam": "CW", "status": "Schwebend", "revenue": null, "revenueDate": "?", "notes": null, "notes2": "08.08.25: Angebot für Container erhalten. Wollen sich mit der Entscheidung im Herbst zurückmelden. CW bleibt dran."}, {"date": "2025-06-04T00:00:00", "contact": "Robbin Sanders", "need": "Interesse an Boxen + Container (universelle Batterien) --> ggf. Logistik für defekte Batterien", "kam": "CW", "status": "Schwebend", "revenue": null, "revenueDate": "?", "notes": null, "notes2": "08.08.25: Angebot für Container erhalten. Wollen sich mit der Entscheidung im Herbst zurückmelden. CW bleibt dran."}]}, {"id": "atc", "name": "ATC", "country": "Deutschland", "address": "Parkallee 20, 74638 Waldenburg", "industry": null, "description": null, "contacts": [{"name": "Dennis Franke", "position": "Head of Sales, EMEA", "email": "dennis.franke@atcreman.com", "phone": "+49 160 222 3660"}], "deals": [{"date": "2025-06-05T00:00:00", "contact": "Dennis Franke", "need": "Kunde braucht Transport-DL zur Abholung von Batterien europaweit.", "kam": "CW", "status": "Schwebend", "revenue": null, "revenueDate": "?", "notes": null, "notes2": "08.08.25: Hochspannendes Thema. Sind aktuell dabei, das Angebot zu finalisieren."}]}, {"id": "liebherr", "name": "Liebherr", "country": "Deutschlabd", "address": "Kaufbeurer Straße 141, 87437 Kempten", "industry": null, "description": null, "contacts": [{"name": "Jürgen Groß", "position": "Vertriebsleiter Flexible Automationssysteme", "email": "juergen.gross@liebherr.com", "phone": null}, {"name": "Daniel Reischmann", "position": "Technischer Vertrieb Zellen & Flexiblr Automationssysteme", "email": "daniel.reischmann@liebherr.com", "phone": null}], "deals": [{"date": "2025-06-05T00:00:00", "contact": "Jürgen Groß", "need": "bereits in Kontkt mit GK\nJan Poltmann", "kam": "GK", "status": "Schwebend", "revenue": null, "revenueDate": "?", "notes": "Reminder wegen Entwicklung für Havariekonzepte\n11003411\n11003412\n11003413", "notes2": null}, {"date": "2025-06-05T00:00:00", "contact": "Daniel Reischmann", "need": "bereits in Kontkt mit GK", "kam": "GK", "status": "Schwebend", "revenue": null, "revenueDate": "?", "notes": "Reminder wegen Entwicklung für Havariekonzepte\n11003411\n11003412\n11003413", "notes2": null}]}, {"id": "evomotiv-gmbh", "name": "Evomotiv GmbH", "country": "Deutschland", "address": null, "industry": null, "description": null, "contacts": [{"name": "Luise Kolb", "position": null, "email": "luise.kolb@evomotiv.de", "phone": null}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Luise Kolb", "need": "Interesse alte M-1/L-1 Boxen --> regelmäßige Transporte damit\nTo Do CW", "kam": "CW", "status": "Verloren", "revenue": null, "revenueDate": null, "notes": "1003350\n11003351\n11003352", "notes2": "08.08.25: Haben Angebot für Boxen erhalten."}]}, {"id": "hyundai-motor-europe-technical-center-gmbh", "name": "Hyundai  Motor Europe Technical Center GmbH", "country": "Deutschland", "address": "Hyundai-Platz, 65428 Rüsselsheim am Main", "industry": null, "description": null, "contacts": [{"name": "Simon Gellineck", "position": "Senior Engineer - Electrified Propulsion System Development", "email": "sgellineck@hyundai-europe.com", "phone": "+49 6142 7899 794"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Simon Gellineck", "need": "suchen Container --> Ausschreibung läuft schon --> bekommen zeitnah Infos um Angebot zu schreiben\nTo Do CW + Logistik", "kam": "CW", "status": "Verloren", "revenue": null, "revenueDate": null, "notes": null, "notes2": "08.08.25: Angebot abgelehnt; kaufmännische Themen als Begründung der Absage. CW bleibt dran, es werden weitere Anfragen folgen."}]}, {"id": "elring-klinger", "name": "Elring Klinger", "country": "Deutschland", "address": "Paul-Lechler-Straße 31, 72581 Dettingen/Erms", "industry": null, "description": null, "contacts": [{"name": "Giuseppe Dolce", "position": "Product Manager Sales", "email": "giuseppe.dolce@elringklinger.com", "phone": "+49 170 1918652"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Giuseppe Dolce", "need": "Erweiterung RAV --> Rückholungen von Kunden", "kam": "MK", "status": "Verloren", "revenue": null, "revenueDate": "-", "notes": "reminder 12.8 Absage weil Kunde pleite", "notes2": null}]}, {"id": "fraunhofer-ise", "name": "Fraunhofer ISE", "country": "Deutschland", "address": "Heidenhofstraße 2, 79110 Freiburg", "industry": null, "description": null, "contacts": [{"name": "Adrian Heuer", "position": "Strategic Partnership Manager", "email": "adrian.heuer@ise.fraunhofer.de", "phone": "+49 160 963 116 46"}, {"name": "Dr. Nina Kevlishvili", "position": "Gruppenleiterin Batteriesystemtechnik / Elektrische Energiespeicher", "email": "nina.kevlishvili@ise.fraunhofer.de", "phone": "+49 761 4588 2042"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Adrian Heuer", "need": "Interesse Rahmenvertrag --> LFP Angebot (Aussage MK: 3,50€ / KG)\nto do CW: Forecast, RAV, Boxenmiete,  Logistikangebot, Termin vor Ort (beide Besucher begeistert)", "kam": "CW", "status": "Verloren", "revenue": null, "revenueDate": "-", "notes": null, "notes2": "08.08.25: Angebote für den Kunden nach wie vor zu teuer. Angebote für sie erst interessant, ab größeren Mengen."}, {"date": "2025-06-04T00:00:00", "contact": "Dr. Nina Kevlishvili", "need": "Interesse Rahmenvertrag --> LFP Angebot (Aussage MK: 3,50€ / KG)\nto do CW: Forecast, RAV, Boxenmiete,  Logistikangebot, Termin vor Ort (beide Besucher begeistert)", "kam": "CW", "status": "Verloren", "revenue": null, "revenueDate": "-", "notes": null, "notes2": "08.08.25: Angebote für den Kunden nach wie vor zu teuer. Angebote für sie erst interessant, ab größeren Mengen."}]}, {"id": "powerco", "name": "PowerCo", "country": "Deutschland", "address": "Salzgitter", "industry": null, "description": null, "contacts": [{"name": "Tobias Koch", "position": null, "email": "tobias.koch@powerco.de", "phone": null}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Tobias Koch", "need": "haben Interesse an großen Containern mit speziellen Anforderungen", "kam": "BK", "status": "Verloren", "revenue": null, "revenueDate": "-", "notes": "BK, 25.07.25: Angebot durch Kunde abgelehnt; Begründung: Kosten.", "notes2": "Hatten 18.6. Teams Call zusammen mit Gerd. VW will sich intern beraten und nochmal melden ob sie sich für eine modifizierte box entscheiden oder für kostengünstige standardlösung. "}]}, {"id": "ilgom-tubi-srl", "name": "Ilgom Tubi Srl", "country": "Italien", "address": null, "industry": null, "description": null, "contacts": [{"name": "Piero Quaranta", "position": null, "email": "piero.quaranta@ilgomtubi.com ", "phone": null}], "deals": [{"date": "2025-01-06T00:00:00", "contact": "Piero Quaranta", "need": "Vernetzung", "kam": "MK", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "sention-technologies", "name": "Sention Technologies", "country": null, "address": null, "industry": null, "description": null, "contacts": [{"name": "Doga Aktug", "position": "Business Development Representative", "email": "doga@sention.io ", "phone": null}], "deals": [{"date": "2025-05-21T00:00:00", "contact": "Doga Aktug", "need": "Kooperation Batteriediagnostik", "kam": "MK", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "flex-support-lda", "name": "Flex Support Lda", "country": "Portugal", "address": null, "industry": null, "description": null, "contacts": [{"name": "Jose Mogas", "position": null, "email": "support@usafe.pt", "phone": null}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Jose Mogas", "need": "Logistik weltweit\nTo Do MK", "kam": "MK", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "gm-global-technical-center", "name": "GM Global Technical Center", "country": "USA", "address": null, "industry": null, "description": null, "contacts": [{"name": "Laura E. Wagner", "position": "Manager EV Battery Sustainability & Recycling", "email": "laura.wagner@gm.com", "phone": "+1 586 208 5080"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Laura E. Wagner", "need": "Client is located in Michigan and looking for recyclingsolutions for their batteries in Europe. […]\nto do MK innerhalb der nächsten 2 Wochen.", "kam": "MK", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "logwin-air-ocean-deutschland-gmbh", "name": "Logwin Air + Ocean Deutschland GmbH", "country": "Deutschland", "address": "Luftfrachtzentrum 605/6, Stuttgart", "industry": null, "description": null, "contacts": [{"name": "Mert Kizilagil", "position": "Sales Manager", "email": "mert.kizilagil@logwin-logistics.com", "phone": "+49 711 77071-307"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Mert Kizilagil", "need": "suchen Partner für Batterielogistik\nTo Do MK", "kam": "MK", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "london-economic-development-corporation", "name": "London Economic Development Corporation", "country": "Deutschland", "address": "Nimrodstraße 46, 82110 München", "industry": null, "description": null, "contacts": [{"name": "Carl Gräb", "position": "Head of European Representation", "email": "c.graeb@cic-siteselection.com", "phone": "+49 173 5688297"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Carl Gräb", "need": "hatte eigentlich Termin hier. Geht um Aktivitäten in Kanada.\nTo Do MK", "kam": "MK", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "selictive", "name": "Selictive", "country": "Deutschland", "address": "Röntgenstraße 6, 63755 Alzenau", "industry": null, "description": null, "contacts": [{"name": "Iordanis Alevropoulos", "position": "Business Development", "email": "ia@selictive.com", "phone": "+49 6023 405 69 22"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Iordanis Alevropoulos", "need": "sucht Logistikpartner --> Interesse Container --> eröffnen Recyclingcenter Ende 2025\nTo Do EN", "kam": "EN", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "tenneco", "name": "Tenneco", "country": "Ungarn", "address": null, "industry": null, "description": null, "contacts": [{"name": "Peter Agoston", "position": "Key Account Manager", "email": "peter.agoston@tenneco..com", "phone": "+36 70 799 4022"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Peter Agoston", "need": "bieten Isolationstechniken an", "kam": "GK", "status": null, "revenue": null, "revenueDate": "-", "notes": "nicht relevant", "notes2": null}]}, {"id": "viridis-recycling", "name": "Viridis Recycling", "country": "Deutschland", "address": "Maria-Montessori-Allee 10, 63457 Hanau", "industry": null, "description": null, "contacts": [{"name": "Jens Huber", "position": "CEO", "email": "jens.huber@viridis-recycling.de", "phone": "+49 175 428 2591"}], "deals": [{"date": "2025-06-03T00:00:00", "contact": "Jens Huber", "need": "eröffnet Recyclinganlage Ende 2026. Sucht Logistikpartner + Kontakt BD --> Kontaktaufnahme aber erst Ende 2025\nTo Do EN", "kam": "EN", "status": "In Bearbeitung", "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "4m-controls", "name": "4M Controls", "country": null, "address": null, "industry": null, "description": null, "contacts": [{"name": "Joseph", "position": null, "email": "joseph@4mcontrols.com", "phone": null}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Joseph", "need": "meldet sich eventuell, wenn einer seiner Kunden Batterien transportieren wollen. Kein direkter Bedarf.", "kam": "MK", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "bosch", "name": "Bosch", "country": "Deutschland", "address": "Stuttgart", "industry": null, "description": null, "contacts": [], "deals": [{"date": "2025-06-04T00:00:00", "contact": null, "need": "Truck-Batterien in ganz Europa zum Testing", "kam": "CW", "status": null, "revenue": null, "revenueDate": "-", "notes": null, "notes2": "08.08.25: Keine Kontaktdaten, CW kann nicht nachgehen."}]}, {"id": "mercedes-benz", "name": "Mercedes-Benz", "country": "Deutschland", "address": "Stuttgart", "industry": null, "description": null, "contacts": [{"name": "Christian Brommer", "position": null, "email": null, "phone": null}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Christian Brommer", "need": "nicht UN-zertifizierte 48Volt Batterien von Europa --> USA", "kam": "PH", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "mondragon-assembly", "name": "Mondragon Assembly", "country": "Spanien", "address": "Polígono Industrial Bainetxe – Pab. 5 A, 20550 ARETXABALETA (Gipuzkoa)", "industry": null, "description": null, "contacts": [{"name": "Juan José Franco Zamora", "position": "Commercial Manager", "email": "J.Franco@mondragon-assembly.com ", "phone": "+34 672 690 896"}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Juan José Franco Zamora", "need": "Batterieabfall < 50 KG Module prismatisch. --> eventuell Lagerung", "kam": "MK", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "murata-manufacturing", "name": "Murata Manufacturing", "country": "Deutschland", "address": "München", "industry": null, "description": null, "contacts": [{"name": "Yuki Hasegawa", "position": null, "email": "yuki.hasegawa@murata.com", "phone": null}], "deals": [{"date": "2025-06-04T00:00:00", "contact": "Yuki Hasegawa", "need": "sucht Logistiker für Europa", "kam": "MK", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "palodza", "name": "Palodza", "country": "Deutschland", "address": null, "industry": null, "description": null, "contacts": [], "deals": [{"date": "2025-06-04T00:00:00", "contact": null, "need": "einladung zu einer 2-tägigen KI-Veranstaltung", "kam": "SK", "status": null, "revenue": null, "revenueDate": "-", "notes": "nicht vertriebsrelevant", "notes2": null}]}, {"id": "cling-systems", "name": "Cling Systems", "country": "Schweden", "address": "Stockholm", "industry": null, "description": null, "contacts": [{"name": "William Bergh", "position": "Founder & Ceo", "email": "william@clingsystems.com", "phone": "+46 76 32 733 43"}], "deals": [{"date": "2025-06-05T00:00:00", "contact": "William Bergh", "need": "Logistik + Lagerung", "kam": "BK", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": "28.8.: mail an Kunden geschickt mit Broschüre und Artikel. "}]}, {"id": "culimeta", "name": "Culimeta", "country": "Deutschland", "address": null, "industry": null, "description": null, "contacts": [{"name": "Michael Brehm", "position": "Vertriebsleiter Brandschutz", "email": "mbrehm@culimeta.de", "phone": null}], "deals": [{"date": "2025-06-05T00:00:00", "contact": "Michael Brehm", "need": "Hersteller von Brandschutz-Material", "kam": "GK", "status": null, "revenue": null, "revenueDate": "-", "notes": "nicht vertriebsrelevant", "notes2": null}]}, {"id": "poen", "name": "Poen", "country": "Korea", "address": null, "industry": null, "description": null, "contacts": [], "deals": [{"date": "2025-06-05T00:00:00", "contact": null, "need": "machen Remanufacturing und suchen einen Partner für Batterietransporte von und nach Sachsenheim.", "kam": "MK", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "sanwood", "name": "Sanwood", "country": "Deutschland", "address": "Bahnhofstraße 153, 86438 Kissing", "industry": null, "description": null, "contacts": [{"name": "Austin Lau", "position": "Senior Sales Engineer", "email": "austin.lau@sanwood.com", "phone": "+86 769 81181588"}], "deals": [{"date": "2025-06-05T00:00:00", "contact": "Austin Lau", "need": "Batterie-Testing", "kam": "MK", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "sew-eurodrive-gmbh-co-kg", "name": "SEW-EURODRIVE GmbH & Co. KG", "country": "Deutschland", "address": "Ernst-Blickle-Straße 42, 76646 Bruchsal", "industry": null, "description": null, "contacts": [{"name": "Tobias Zweihoff", "position": "Technology Field Manager", "email": "tobias.zwiehoff@sew-eurodrive.de", "phone": "+49 7251 75 23576"}], "deals": [{"date": "2025-06-05T00:00:00", "contact": "Tobias Zweihoff", "need": "Kunde interessiert sich für Lagerboxen für Versand und Testing \nto do GK: Kontaktaufnahme", "kam": "GK", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}, {"id": "ullrich-recyclingsysteme", "name": "Ullrich-Recyclingsysteme", "country": "Deutschland", "address": "Jaudesring 23, 86825 Bad Wörishofen", "industry": null, "description": null, "contacts": [{"name": "Rainer Ullrich", "position": null, "email": "info@ullrich-recyclingsysteme.de", "phone": "+49 176 223 77 304"}], "deals": [{"date": "2025-06-05T00:00:00", "contact": "Rainer Ullrich", "need": "Interesse Verkauf von Boxen", "kam": "MK", "status": null, "revenue": null, "revenueDate": null, "notes": null, "notes2": null}]}];
+</script>
+<script>
+// LOCAL-ONLY APP: data lives in this file + your browser's localStorage.
+// API keys you enter below are stored only in this browser's localStorage and
+// are sent ONLY directly to Anthropic / Serper from your machine. Nothing is
+// sent to any third server, and nothing is saved if you close the tab unless
+// you re-open this same file in the same browser.
+
+const LOGBATT = {
+  name: "LogBATT GmbH",
+  positioning:
+    "Pioneer and fully certified end-to-end reverse logistics provider for lithium-ion batteries, " +
+    "combining logistics services (collection, storage, packaging, transport, recycling routing) with " +
+    "in-house manufacturing of certified SafetyBATTbox transport/storage/quarantine containers.",
+  services: [
+    "Collection and pickup of EV/HV lithium-ion batteries (intact, defective, critically defective)",
+    "Storage and quarantine of lithium-ion batteries",
+    "Certified ADR packaging (incl. P911/LP906 for critically defective batteries, ADR 2025)",
+    "Transport across Europe",
+    "Routing to recycling facilities or final destination",
+    "Manufacturing and sale of SafetyBATTbox containers",
+  ],
+  referenceCustomers: ["Northvolt", "Volvo Truck", "Stena Recycling"],
+};
+
+const STORAGE_KEY = "logbatt_crm_overrides_v1";
+const KEYS_STORAGE_KEY = "logbatt_crm_api_keys_v1";
+
+function loadOverrides() {
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function saveOverrides(overrides) {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(overrides));
+}
+
+function loadKeys() {
+  try {
+    return JSON.parse(localStorage.getItem(KEYS_STORAGE_KEY) || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function saveKeys(keys) {
+  localStorage.setItem(KEYS_STORAGE_KEY, JSON.stringify(keys));
+}
+
+let overrides = loadOverrides();
+let apiKeys = loadKeys();
+let companies = COMPANIES_SEED.map((c) => ({ ...c, ...(overrides[c.id] || {}) }));
+let activeId = null;
+let chatHistory = [];
+
+function persist(id, patch) {
+  overrides[id] = { ...(overrides[id] || {}), ...patch };
+  saveOverrides(overrides);
+  const idx = companies.findIndex((c) => c.id === id);
+  companies[idx] = { ...companies[idx], ...patch };
+  return companies[idx];
+}
+
+// ---------- Settings (API keys) ----------
+
+const keysForm = document.getElementById("keys-form");
+document.getElementById("anthropic-key").value = apiKeys.anthropic || "";
+document.getElementById("serper-key").value = apiKeys.serper || "";
+updateKeysStatus();
+
+keysForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  apiKeys = {
+    anthropic: document.getElementById("anthropic-key").value.trim(),
+    serper: document.getElementById("serper-key").value.trim(),
+  };
+  saveKeys(apiKeys);
+  updateKeysStatus();
+});
+
+function updateKeysStatus() {
+  const el = document.getElementById("keys-status");
+  el.textContent = apiKeys.anthropic
+    ? `Anthropic key saved in this browser. ${apiKeys.serper ? "Serper key saved too." : "No Serper key set — research will rely on Claude's own knowledge only."}`
+    : "No Anthropic API key set yet — enrich/draft/chat won't work until you add one above.";
+}
+
+// ---------- Anthropic + Serper direct calls ----------
+
+async function claudeAsk(prompt, { json = false, maxTokens = 1024 } = {}) {
+  if (!apiKeys.anthropic) throw new Error("Set your Anthropic API key above first.");
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": apiKeys.anthropic,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true",
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: maxTokens,
+      messages: [{ role: "user", content: prompt }],
+    }),
+  });
+  if (!res.ok) throw new Error(`Anthropic API error ${res.status}: ${await res.text()}`);
+  const data = await res.json();
+  const text = (data.content || []).map((b) => (b.type === "text" ? b.text : "")).join("");
+  if (!json) return text;
+  const match = text.match(/\{[\s\S]*\}/);
+  if (!match) throw new Error(`Expected JSON, got: ${text}`);
+  return JSON.parse(match[0]);
+}
+
+async function claudeChat(messages, system, tools) {
+  if (!apiKeys.anthropic) throw new Error("Set your Anthropic API key above first.");
+  const res = await fetch("https://api.anthropic.com/v1/messages", {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-api-key": apiKeys.anthropic,
+      "anthropic-version": "2023-06-01",
+      "anthropic-dangerous-direct-browser-access": "true",
+    },
+    body: JSON.stringify({
+      model: "claude-sonnet-4-6",
+      max_tokens: 800,
+      system,
+      tools: tools || [],
+      messages,
+    }),
+  });
+  if (!res.ok) throw new Error(`Anthropic API error ${res.status}: ${await res.text()}`);
+  return res.json();
+}
+
+async function serperSearch(query, num = 5) {
+  if (!apiKeys.serper) return [];
+  const res = await fetch("https://google.serper.dev/search", {
+    method: "POST",
+    headers: { "X-API-KEY": apiKeys.serper, "Content-Type": "application/json" },
+    body: JSON.stringify({ q: query, num }),
+  });
+  if (!res.ok) throw new Error(`Serper error ${res.status}: ${await res.text()}`);
+  const data = await res.json();
+  return (data.organic || []).map((r) => ({ name: r.title, snippet: r.snippet, url: r.link }));
+}
+
+// ---------- UI ----------
+
+const listEl = document.getElementById("crm-list");
+const detailEl = document.getElementById("crm-detail");
+const searchEl = document.getElementById("crm-search");
+const statusFilterEl = document.getElementById("crm-status-filter");
+
+function statusClass(status) {
+  return `status-${(status || "").replace(/\s+/g, "_")}`;
+}
+
+function latestStatus(company) {
+  const deals = company.deals || [];
+  return deals[deals.length - 1]?.status || "-";
+}
+
+function filtered() {
+  const q = searchEl.value.trim().toLowerCase();
+  const statusFilter = statusFilterEl.value;
+  return companies.filter((c) => {
+    if (statusFilter && latestStatus(c) !== statusFilter) return false;
+    if (!q) return true;
+    const haystack = [c.name, ...(c.contacts || []).map((ct) => ct.name)].join(" ").toLowerCase();
+    return haystack.includes(q);
+  });
+}
+
+function renderList() {
+  const rows = filtered();
+  listEl.innerHTML = rows
+    .map(
+      (c) => `
+    <div class="crm-company-row ${c.id === activeId ? "active" : ""}" data-id="${c.id}">
+      <div class="name">${c.name}</div>
+      <div class="sub">${c.country || ""} &middot; <span class="status-pill ${statusClass(latestStatus(c))}">${latestStatus(c)}</span></div>
+    </div>`
+    )
+    .join("");
+  if (!rows.length) listEl.innerHTML = `<p class="empty-state">No companies match.</p>`;
+}
+
+function emailBlock(company) {
+  const draft = company.emailDraft;
+  const mailtoContact = (company.contacts || [])[0];
+  const mailtoHref = draft && mailtoContact?.email
+    ? `mailto:${encodeURIComponent(mailtoContact.email)}?subject=${encodeURIComponent(draft.subject || "")}&body=${encodeURIComponent(draft.body || "")}`
+    : null;
+  return `
+    <div class="crm-section" id="email-section">
+      <h3>Cold / follow-up email</h3>
+      <div class="row" style="margin-bottom:10px;">
+        <button class="btn btn-primary btn-small" id="draft-email-btn">${draft ? "Re-draft with AI" : "Draft with AI"}</button>
+      </div>
+      ${
+        draft
+          ? `<div class="email-box">
+              <label>Subject</label>
+              <input type="text" id="email-subject" value="${(draft.subject || "").replace(/"/g, "&quot;")}" style="width:100%;margin-bottom:8px;" />
+              <label>Body</label>
+              <textarea id="email-body" rows="10" style="width:100%;">${draft.body || ""}</textarea>
+              <div class="row" style="margin-top:8px;">
+                <button class="btn btn-ghost btn-small" id="save-email-btn">Save edits</button>
+                ${mailtoHref ? `<a class="btn btn-accent btn-small" href="${mailtoHref}">Open in email client</a>` : `<span class="hint">No contact email on file &mdash; copy manually.</span>`}
+              </div>
+            </div>`
+          : `<p class="hint">No draft yet. Click "Draft with AI" to generate one grounded in this lead's recorded needs.</p>`
+      }
+    </div>`;
+}
+
+function renderDetail(company) {
+  const contacts = company.contacts || [];
+  const deals = company.deals || [];
+
+  detailEl.innerHTML = `
+    <div class="crm-section">
+      <h3>Company</h3>
+      <h2 style="margin:0 0 4px;">${company.name}</h2>
+      <p class="hint" style="margin-bottom:10px;">${company.country || ""}${company.address ? " &middot; " + company.address : ""}</p>
+      <p><strong>Industry:</strong> ${company.industry || "<span class=\"hint\">unknown</span>"}</p>
+      <p><strong>What they do:</strong> ${company.description || "<span class=\"hint\">unknown &mdash; click Enrich</span>"}</p>
+      <button class="btn btn-ghost btn-small" id="enrich-btn">Enrich with AI</button>
+    </div>
+
+    <div class="crm-section">
+      <h3>Contacts</h3>
+      ${
+        contacts.length
+          ? contacts
+              .map(
+                (c) => `<div class="contact-card">
+                  <div class="name">${c.name}</div>
+                  <div class="meta">${c.position || ""}</div>
+                  <div class="meta">${c.email ? `<a href="mailto:${c.email}">${c.email}</a>` : "no email"} ${c.phone ? "&middot; " + c.phone : ""}</div>
+                </div>`
+              )
+              .join("")
+          : `<p class="hint">No contact captured yet.</p>`
+      }
+    </div>
+
+    <div class="crm-section">
+      <h3>Needs &amp; deal history</h3>
+      ${deals
+        .map(
+          (d) => `<div class="deal-row">
+            <span class="status-pill ${statusClass(d.status)}">${d.status || "-"}</span>
+            ${d.date ? `<span class="hint">${d.date.slice(0, 10)}</span>` : ""}
+            <div>${(d.need || "").replace(/\n/g, "<br>")}</div>
+            ${d.notes ? `<div class="hint">${d.notes}</div>` : ""}
+            ${d.notes2 ? `<div class="hint">${d.notes2}</div>` : ""}
+            ${d.revenue ? `<div class="hint">Revenue: &euro;${d.revenue}</div>` : ""}
+          </div>`
+        )
+        .join("")}
+    </div>
+
+    ${emailBlock(company)}
+
+    <div class="crm-section">
+      <h3>Research assistant</h3>
+      <p class="hint">Ask about anything missing &mdash; e.g. "who would be the right contact for logistics decisions here?"</p>
+      <div class="chat-window" id="chat-window"></div>
+      <div class="row">
+        <input type="text" id="chat-input" placeholder="Ask the research assistant..." style="flex:1;" />
+        <button class="btn btn-primary btn-small" id="chat-send-btn">Ask</button>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("enrich-btn").addEventListener("click", () => enrich(company.id));
+  document.getElementById("draft-email-btn").addEventListener("click", () => draftEmail(company.id));
+  const saveBtn = document.getElementById("save-email-btn");
+  if (saveBtn) saveBtn.addEventListener("click", () => saveEmail(company.id));
+  document.getElementById("chat-send-btn").addEventListener("click", () => sendChat(company.id));
+  document.getElementById("chat-input").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") sendChat(company.id);
+  });
+  renderChat();
+}
+
+function renderChat() {
+  const win = document.getElementById("chat-window");
+  if (!win) return;
+  win.innerHTML = chatHistory
+    .map(
+      (m) =>
+        `<div class="chat-msg"><span class="who">${m.role === "user" ? "You" : "Assistant"}</span>${m.content}</div>`
+    )
+    .join("");
+  win.scrollTop = win.scrollHeight;
+}
+
+function selectCompany(id) {
+  activeId = id;
+  chatHistory = [];
+  renderList();
+  const company = companies.find((c) => c.id === id);
+  if (company) renderDetail(company);
+}
+
+async function enrich(id) {
+  const btn = document.getElementById("enrich-btn");
+  btn.disabled = true;
+  btn.textContent = "Enriching...";
+  try {
+    const company = companies.find((c) => c.id === id);
+    let snippets = "";
+    if (apiKeys.serper) {
+      const results = await serperSearch(`${company.name} ${company.country || ""}`);
+      snippets = results.map((r) => `- ${r.name}: ${r.snippet}`).join("\n");
+    }
+    const prompt = `You are a B2B sales researcher for ${LOGBATT.name}. ${LOGBATT.positioning}
+
+Research target company:
+Name: ${company.name}
+Country: ${company.country || "unknown"}
+Known notes from a trade-show lead sheet: ${JSON.stringify((company.deals || []).map((d) => d.need).filter(Boolean))}
+
+Web search snippets (may be empty):
+"""
+${snippets || "(no search results available)"}
+"""
+
+Return JSON only, with this exact shape:
+{"industry": "short industry/category label", "description": "2-4 sentence description of what this company does, written for a sales rep who needs context fast"}`;
+    const result = await claudeAsk(prompt, { json: true, maxTokens: 500 });
+    const updated = persist(id, result);
+    renderDetail(updated);
+  } catch (err) {
+    alert(`Enrich failed: ${err.message}`);
+    btn.disabled = false;
+    btn.textContent = "Enrich with AI";
+  }
+}
+
+async function draftEmail(id) {
+  const btn = document.getElementById("draft-email-btn");
+  btn.disabled = true;
+  btn.textContent = "Drafting...";
+  try {
+    const company = companies.find((c) => c.id === id);
+    const primaryContact = company.contacts?.[0];
+    const needs = (company.deals || []).map((d) => d.need).filter(Boolean).join("\n- ");
+    const notes = (company.deals || []).flatMap((d) => [d.notes, d.notes2]).filter(Boolean).join("\n- ");
+    const prompt = `You are writing a cold/follow-up sales email on behalf of ${LOGBATT.name} (${LOGBATT.positioning}).
+
+LogBATT services: ${LOGBATT.services.join("; ")}.
+Reference customers: ${LOGBATT.referenceCustomers.join(", ")}.
+
+Lead company: ${company.name} (${company.industry || "industry unknown"}${company.country ? ", " + company.country : ""})
+${company.description ? `What they do: ${company.description}` : ""}
+Contact: ${primaryContact ? `${primaryContact.name}, ${primaryContact.position || "role unknown"}` : "no named contact yet"}
+
+Specific needs/interests captured from the trade-show conversation:
+- ${needs || "none recorded"}
+
+Internal notes/status history:
+- ${notes || "none"}
+
+Write a short (under 180 words), specific email that:
+1. References the actual conversation/need above (not generic boilerplate)
+2. Links 1-2 concrete LogBATT services directly to that need
+3. Has a clear, low-friction call to action (a short call or next step)
+
+Return JSON only: {"subject": "...", "body": "..."}`;
+    const emailDraft = await claudeAsk(prompt, { json: true, maxTokens: 700 });
+    const updated = persist(id, { emailDraft });
+    renderDetail(updated);
+  } catch (err) {
+    alert(`Draft failed: ${err.message}`);
+    btn.disabled = false;
+    btn.textContent = "Draft with AI";
+  }
+}
+
+function saveEmail(id) {
+  const subject = document.getElementById("email-subject").value;
+  const body = document.getElementById("email-body").value;
+  persist(id, { emailDraft: { subject, body } });
+}
+
+const SEARCH_TOOL = {
+  name: "web_search",
+  description: "Search the web for information missing from the CRM record.",
+  input_schema: { type: "object", properties: { query: { type: "string" } }, required: ["query"] },
+};
+
+function companyContext(company) {
+  if (!company) return "(no company selected)";
+  return `Company: ${company.name}
+Country: ${company.country || "unknown"}
+Industry: ${company.industry || "unknown"}
+Description: ${company.description || "unknown"}
+Contacts: ${(company.contacts || []).map((c) => `${c.name} (${c.position || "?"}) ${c.email || ""}`).join("; ") || "none"}
+Needs recorded: ${(company.deals || []).map((d) => d.need).filter(Boolean).join(" | ") || "none"}
+Status/notes: ${(company.deals || []).map((d) => `${d.status}: ${d.notes || ""} ${d.notes2 || ""}`).join(" | ")}`;
+}
+
+async function sendChat(id) {
+  const input = document.getElementById("chat-input");
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = "";
+  chatHistory.push({ role: "user", content: text });
+  renderChat();
+
+  try {
+    const company = companies.find((c) => c.id === id);
+    const system = `You are a sales research assistant for ${LOGBATT.name}, helping a rep fill in missing
+information about a lead from a trade-show contact list. Use the web_search tool when you need
+information not already given. Be concise and cite what you found vs. what's uncertain.
+
+Current CRM record for this lead:
+${companyContext(company)}`;
+
+    let convo = chatHistory.map((m) => ({ role: m.role, content: m.content }));
+    let reply = "I wasn't able to find a confident answer after a few searches.";
+    for (let i = 0; i < 3; i++) {
+      const data = await claudeChat(convo, system, apiKeys.serper ? [SEARCH_TOOL] : []);
+      const toolUse = (data.content || []).find((b) => b.type === "tool_use");
+      if (!toolUse) {
+        reply = (data.content || []).map((b) => (b.type === "text" ? b.text : "")).join("");
+        break;
+      }
+      const results = await serperSearch(toolUse.input.query);
+      convo = [
+        ...convo,
+        { role: "assistant", content: data.content },
+        { role: "user", content: [{ type: "tool_result", tool_use_id: toolUse.id, content: JSON.stringify(results) }] },
+      ];
+    }
+    chatHistory.push({ role: "assistant", content: reply });
+  } catch (err) {
+    chatHistory.push({ role: "assistant", content: `Error: ${err.message}` });
+  }
+  renderChat();
+}
+
+listEl.addEventListener("click", (e) => {
+  const row = e.target.closest(".crm-company-row");
+  if (row) selectCompany(row.dataset.id);
+});
+searchEl.addEventListener("input", renderList);
+statusFilterEl.addEventListener("change", renderList);
+
+renderList();
+
+</script>
+</body>
+</html>
