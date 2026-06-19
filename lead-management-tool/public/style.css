@@ -450,3 +450,26 @@ th {
   padding: 40px;
   text-align: center;
 }
+
+
+/* Local tool tabs */
+.local-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.local-tabs button {
+  border: none;
+  background: var(--logbatt-grey-light);
+  color: var(--logbatt-grey);
+  font-weight: 600;
+  font-size: 14px;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.local-tabs button.active {
+  background: var(--logbatt-blue);
+  color: var(--white);
+}
+.tab-panel[hidden] { display: none; }
