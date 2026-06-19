@@ -36,9 +36,36 @@
   .reveal.delay-3{animation-delay:.24s;}
   .reveal.delay-4{animation-delay:.32s;}
 
-  /* ---------- header ---------- */
-  header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
+  /* ---------- arrow / basic-link ---------- */
+  .arrow{display:inline-block;transition:transform .25s var(--ease);}
+  .basic-link{display:inline-flex;align-items:center;gap:6px;font-weight:700;color:var(--blue-dark);font-size:14.5px;}
+  .basic-link:hover{text-decoration:none;}
+  .basic-link:hover .arrow{transform:translateX(5px);}
+  .caption{display:inline-block;font-size:12.5px;font-weight:800;color:var(--blue-dark);text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;}
+
+  /* ---------- pill buttons w/ hover slide ---------- */
+  .btn{position:relative;display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:999px;font-weight:700;font-size:15px;overflow:hidden;isolation:isolate;transition:transform .25s var(--ease),box-shadow .25s var(--ease);}
+  .btn span{position:relative;z-index:1;}
+  .btn-primary{background:var(--blue);color:#fff;box-shadow:0 10px 26px rgba(47,173,227,.3);}
+  .btn-primary::before{content:'';position:absolute;inset:0;background:var(--blue-dark);transform:translateY(100%);transition:transform .35s var(--ease);z-index:0;}
+  .btn-primary:hover::before{transform:translateY(0);}
+  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(47,173,227,.4);text-decoration:none;}
+  .btn-ghost{background:#fff;color:var(--ink);border:1px solid var(--line);}
+  .btn-ghost::before{content:'';position:absolute;inset:0;background:var(--blue-tint);transform:translateY(100%);transition:transform .35s var(--ease);z-index:0;}
+  .btn-ghost:hover::before{transform:translateY(0);}
+  .btn-ghost:hover{transform:translateY(-3px);box-shadow:var(--shadow);text-decoration:none;}
+  .btn-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+
+  /* ---------- header (utility bar + main bar) ---------- */
+  .util-bar{background:var(--ink);color:#cbd2d9;font-size:12.5px;}
+  .util-bar .wrap{display:flex;justify-content:flex-end;gap:24px;padding:8px 28px;}
+  .util-bar a{color:#cbd2d9;font-weight:600;}
+  .util-bar a:hover{color:#fff;}
+  header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);}
   .nav{max-width:1180px;margin:0 auto;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;gap:24px;}
+  .nav-left{display:flex;align-items:center;gap:28px;}
+  .burger{display:flex;flex-direction:column;gap:4px;width:22px;cursor:pointer;}
+  .burger span{height:2px;background:var(--ink);border-radius:2px;}
   .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:20px;letter-spacing:-.02em;color:var(--ink);}
   .logo span{color:var(--blue);}
   .nav ul{list-style:none;display:flex;gap:28px;margin:0;padding:0;}
@@ -47,28 +74,42 @@
   .nav .cta{background:var(--blue);color:#fff;padding:10px 20px;border-radius:999px;font-weight:700;font-size:14.5px;transition:transform .25s var(--ease),box-shadow .25s var(--ease);}
   .nav .cta:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(47,173,227,.35);text-decoration:none;}
 
-  /* ---------- hero ---------- */
-  .hero{padding:110px 0 90px;background:linear-gradient(180deg,var(--blue-tint) 0%,#fff 100%);position:relative;overflow:hidden;}
-  .hero-inner{max-width:780px;margin:0 auto;text-align:center;}
-  .eyebrow{display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:7px 16px;font-size:13px;font-weight:700;color:var(--blue-dark);box-shadow:var(--shadow);}
-  h1{font-size:clamp(32px,5vw,52px);line-height:1.12;letter-spacing:-.02em;margin:24px 0 20px;font-weight:800;}
-  h1 .accent{color:var(--blue);}
-  .lead{font-size:19px;color:var(--muted);max-width:620px;margin:0 auto 36px;}
-  .btn-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
-  .btn{display:inline-flex;align-items:center;gap:8px;padding:14px 28px;border-radius:999px;font-weight:700;font-size:15px;transition:transform .25s var(--ease),box-shadow .25s var(--ease);}
-  .btn-primary{background:var(--blue);color:#fff;box-shadow:0 10px 26px rgba(47,173,227,.3);}
-  .btn-primary:hover{transform:translateY(-3px);box-shadow:0 16px 34px rgba(47,173,227,.4);text-decoration:none;}
-  .btn-ghost{background:#fff;color:var(--ink);border:1px solid var(--line);}
-  .btn-ghost:hover{transform:translateY(-3px);box-shadow:var(--shadow);text-decoration:none;}
+  /* ---------- hero with wave ---------- */
+  .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,var(--blue-dark) 0%,var(--blue) 100%);color:#fff;padding:140px 0 170px;}
+  .hero-inner{max-width:780px;margin:0 auto;text-align:center;position:relative;z-index:2;}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);border-radius:999px;padding:7px 16px;font-size:13px;font-weight:700;color:#fff;}
+  h1{font-size:clamp(32px,5vw,54px);line-height:1.12;letter-spacing:-.02em;margin:24px 0 20px;font-weight:800;color:#fff;}
+  h1 .accent{color:#0B2030;background:#fff;padding:0 10px;border-radius:8px;}
+  .hero .lead{font-size:19px;color:rgba(255,255,255,.88);max-width:620px;margin:0 auto 36px;}
+  .hero .btn-ghost{background:#fff;color:var(--blue-dark);border:none;}
+  .hero-waves{position:absolute;left:0;right:0;bottom:-2px;line-height:0;z-index:1;}
+  .hero-waves svg{display:block;width:100%;height:90px;}
 
-  .hero-card{margin:64px auto 0;max-width:960px;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-lg);position:relative;animation:floatY 7s ease-in-out infinite;}
+  .hero-card{margin:64px auto 0;max-width:960px;border-radius:24px;overflow:hidden;box-shadow:var(--shadow-lg);position:relative;animation:floatY 7s ease-in-out infinite;z-index:2;}
   .hero-card video,.hero-card img{width:100%;display:block;}
+
+  /* ---------- link banner ---------- */
+  .link-banner{border-bottom:1px solid var(--line);}
+  .link-banner ul{display:flex;flex-wrap:wrap;list-style:none;margin:0;padding:22px 0;gap:36px;justify-content:center;}
+  .link-banner a{font-weight:700;font-size:14.5px;color:var(--ink);display:inline-flex;align-items:center;gap:6px;}
+  .link-banner a:hover{color:var(--blue-dark);text-decoration:none;}
+  .link-banner a:hover .arrow{transform:translateX(5px);}
 
   /* ---------- section heads ---------- */
   .section-head{text-align:center;max-width:680px;margin:0 auto 56px;}
   .section-head .tag{display:inline-block;font-size:13px;font-weight:700;color:var(--blue-dark);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;}
   .section-head h2{font-size:clamp(26px,3.4vw,38px);font-weight:800;letter-spacing:-.02em;margin:0 0 14px;}
   .section-head p{color:var(--muted);font-size:17px;margin:0;}
+
+  /* ---------- text-media alternating ---------- */
+  .text-media{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;}
+  .text-media.reverse .tm-media{order:2;}
+  .text-media.reverse .tm-content{order:1;}
+  .tm-media{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lg);}
+  .tm-media .ph{background:linear-gradient(135deg,var(--blue-tint),#fff);aspect-ratio:4/5;display:flex;align-items:center;justify-content:center;font-size:60px;color:var(--blue);}
+  .tm-content h3{font-size:clamp(22px,2.6vw,30px);font-weight:800;letter-spacing:-.01em;margin:0 0 16px;}
+  .tm-content p{color:var(--muted);margin:0 0 20px;}
+  .text-media + .text-media{margin-top:96px;}
 
   /* ---------- intro ---------- */
   .intro-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;}
@@ -82,9 +123,19 @@
   .cta-banner p{margin:0;opacity:.92;max-width:560px;}
   .cta-banner .btn-ghost{background:#fff;color:var(--blue-dark);border:none;}
 
-  /* ---------- vorteile grid ---------- */
+  /* ---------- quick-access tiles ---------- */
   .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;}
   .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:28px;}
+  .tile{background:linear-gradient(135deg,var(--blue-dark),var(--blue));border-radius:var(--radius);padding:32px 28px;color:#fff;transition:transform .3s var(--ease),box-shadow .3s var(--ease);}
+  .tile:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);}
+  .tile .tile-icon{font-size:30px;margin-bottom:16px;}
+  .tile .caption{color:rgba(255,255,255,.75);}
+  .tile h4{margin:0 0 14px;font-size:18px;font-weight:800;}
+  .tile ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
+  .tile ul a{color:#fff;font-size:14.5px;font-weight:600;display:inline-flex;align-items:center;gap:6px;}
+  .tile ul a:hover{text-decoration:none;opacity:.85;}
+
+  /* ---------- card grid (vorteile) ---------- */
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:32px 28px;transition:transform .3s var(--ease),box-shadow .3s var(--ease),border-color .3s var(--ease);}
   .card:hover{transform:translateY(-6px);box-shadow:var(--shadow-lg);border-color:transparent;}
   .icon-circle{width:54px;height:54px;border-radius:14px;background:var(--blue-tint);color:var(--blue-dark);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:20px;font-weight:800;}
@@ -97,15 +148,20 @@
   .step h4{margin:0;font-size:15.5px;font-weight:700;}
   .steps-wrap{position:relative;}
 
-  /* ---------- video block ---------- */
-  .video-frame{border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow-lg);aspect-ratio:16/9;background:#000;}
-  .video-frame iframe{width:100%;height:100%;border:0;display:block;}
+  /* ---------- search-element ---------- */
+  .search-element{background:var(--blue-tint);}
+  .search-element .search-bar{max-width:640px;margin:0 auto;display:flex;gap:12px;background:#fff;border-radius:999px;padding:8px 8px 8px 22px;box-shadow:var(--shadow);}
+  .search-element input{flex:1;border:0;outline:0;font-size:15px;font-family:var(--font);background:transparent;}
+  .search-element button{border:0;background:var(--blue);color:#fff;border-radius:999px;padding:12px 24px;font-weight:700;cursor:pointer;font-size:14.5px;}
 
-  /* ---------- logos ---------- */
-  .logo-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:24px;align-items:center;}
-  .logo-grid .logo-item{background:#fff;border:1px solid var(--line);border-radius:var(--radius-sm);padding:20px;display:flex;align-items:center;justify-content:center;height:84px;transition:transform .25s var(--ease),box-shadow .25s var(--ease);filter:grayscale(.15);}
-  .logo-grid .logo-item:hover{transform:translateY(-4px);box-shadow:var(--shadow);filter:none;}
-  .logo-grid img{max-height:38px;width:auto;object-fit:contain;}
+  /* ---------- logo-element band ---------- */
+  .logo-element{background:linear-gradient(135deg,var(--blue-dark),var(--blue));color:#fff;}
+  .logo-element .le-grid{display:grid;grid-template-columns:1fr 1.4fr;gap:56px;align-items:center;}
+  .logo-element h2{color:#fff;}
+  .logo-element p{color:rgba(255,255,255,.85);}
+  .logo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;align-items:center;}
+  .logo-grid .logo-item{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);border-radius:var(--radius-sm);padding:18px;display:flex;align-items:center;justify-content:center;height:74px;font-weight:700;font-size:13.5px;color:#fff;transition:transform .25s var(--ease),background .25s var(--ease);}
+  .logo-grid .logo-item:hover{transform:translateY(-4px);background:rgba(255,255,255,.2);}
 
   /* ---------- FAQ ---------- */
   .faq-list{max-width:820px;margin:0 auto;}
@@ -117,34 +173,55 @@
   .faq-item .faq-body{padding:0 4px 22px;color:var(--muted);animation:fadeIn .25s var(--ease);}
 
   /* ---------- footer ---------- */
-  footer{background:var(--ink);color:#cbd2d9;padding:64px 0 32px;}
+  footer{background:var(--ink);color:#cbd2d9;position:relative;overflow:hidden;}
+  .footer-waves{line-height:0;}
+  .footer-waves svg{display:block;width:100%;height:70px;}
+  .footer-ticker{padding:48px 0;border-bottom:1px solid #2c3138;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px;}
+  .footer-ticker .tagline{font-size:clamp(22px,3.6vw,38px);font-weight:800;color:#fff;letter-spacing:-.02em;max-width:680px;}
+  .footer-ticker .logo{font-size:32px;}
+  footer .wrap{padding-top:0;}
+  .footer-main{padding:56px 0 32px;}
   .footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;margin-bottom:40px;}
   footer h5{color:#fff;font-size:15px;margin:0 0 16px;}
   footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:10px;}
   footer a{color:#aab2bb;font-size:14.5px;}
   footer a:hover{color:#fff;}
-  .footer-bottom{border-top:1px solid #2c3138;padding-top:24px;font-size:13px;color:#7c828a;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
+  .social-row{display:flex;gap:14px;margin-top:24px;}
+  .social-row a{width:38px;height:38px;border-radius:50%;border:1px solid #3a4047;display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;transition:background .2s var(--ease),transform .2s var(--ease);}
+  .social-row a:hover{background:var(--blue);transform:translateY(-3px);text-decoration:none;}
+  .footer-bottom{border-top:1px solid #2c3138;padding:24px 0 32px;font-size:13px;color:#7c828a;display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px;}
 
   @media (max-width:900px){
-    .intro-grid,.grid-3,.grid-4,.footer-grid{grid-template-columns:1fr;}
-    .logo-grid{grid-template-columns:repeat(3,1fr);}
+    .intro-grid,.grid-3,.grid-4,.footer-grid,.text-media,.logo-element .le-grid{grid-template-columns:1fr;}
+    .text-media.reverse .tm-media,.text-media.reverse .tm-content{order:initial;}
+    .logo-grid{grid-template-columns:repeat(2,1fr);}
     .nav ul{display:none;}
     section{padding:64px 0;}
+    .util-bar .wrap{justify-content:center;}
   }
 </style>
 </head>
 <body>
 
+<div class="util-bar">
+  <div class="wrap">
+    <a href="tel:+497153925080">+49 7153 925080</a>
+    <a href="mailto:info@logbatt.de">info@logbatt.de</a>
+    <a href="#faq">FAQ</a>
+  </div>
+</div>
+
 <header class="site">
   <div class="nav">
+    <div class="nav-left">
+      <div class="burger"><span></span><span></span><span></span></div>
+      <ul>
+        <li><a href="#vorteile">Vorteile</a></li>
+        <li><a href="#prozess">Ablauf</a></li>
+        <li><a href="#referenzen">Referenzen</a></li>
+      </ul>
+    </div>
     <div class="logo">Log<span>BATT</span></div>
-    <ul>
-      <li><a href="#vorteile">Vorteile</a></li>
-      <li><a href="#prozess">Ablauf</a></li>
-      <li><a href="#referenzen">Referenzen</a></li>
-      <li><a href="#news">News</a></li>
-      <li><a href="#faq">FAQ</a></li>
-    </ul>
     <a class="cta" href="tel:+497153925080">+49 7153 925080</a>
   </div>
 </header>
@@ -155,21 +232,36 @@
     <h1 class="reveal delay-1">Die <span class="accent">Gesamtlösung</span> für Batterielogistik</h1>
     <p class="lead reveal delay-2">LogBATT übernimmt Transport, Lagerung, Verpackung, Entsorgung und Recycling von Lithium-Ionen-Batterien – gefahrgutkonform, zertifiziert und aus einer Hand.</p>
     <div class="btn-row reveal delay-3">
-      <a class="btn btn-primary" href="mailto:info@logbatt.de">Jetzt Kontakt aufnehmen</a>
-      <a class="btn btn-ghost" href="#faq">FAQ ansehen</a>
+      <a class="btn btn-primary" href="mailto:info@logbatt.de"><span>Jetzt Kontakt aufnehmen</span></a>
+      <a class="btn btn-ghost" href="#faq"><span>FAQ ansehen</span></a>
     </div>
-  </div>
-  <div class="wrap">
     <div class="hero-card reveal delay-4">
       <iframe src="https://www.youtube-nocookie.com/embed/DTB8vPQZ060" title="LogBATT – Interview" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="aspect-ratio:16/9;width:100%;border:0;"></iframe>
     </div>
   </div>
+  <div class="hero-waves" aria-hidden="true">
+    <svg viewBox="0 0 1440 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,40 C240,90 480,0 720,40 C960,80 1200,10 1440,50 L1440,100 L0,100 Z" fill="#fff"></path>
+    </svg>
+  </div>
 </section>
+
+<div class="link-banner">
+  <div class="wrap">
+    <ul>
+      <li><a href="#vorteile">Unsere Vorteile <span class="arrow">→</span></a></li>
+      <li><a href="#prozess">Ablauf der Batterielogistik <span class="arrow">→</span></a></li>
+      <li><a href="#referenzen">Referenzen ansehen <span class="arrow">→</span></a></li>
+      <li><a href="https://www.logbatt.de/wp-content/uploads/sites/10112/2025/04/FAQ-Batterielogistik.pdf" target="_blank" rel="noreferrer noopener">FAQ Batterielogistik (PDF) <span class="arrow">→</span></a></li>
+    </ul>
+  </div>
+</div>
 
 <section>
   <div class="wrap">
     <div class="intro-grid">
       <div class="reveal">
+        <span class="caption">Über LogBATT</span>
         <p>Die LogBATT GmbH hat sich vom ersten Tag auf die <strong>Gesamtlösung von Lithium-Ionen-Batterielogistik</strong> spezialisiert, um Kunden einzigartige und durchdachte Lösungen über die <strong>komplette Batterie-Supply-Chain</strong> anbieten zu können. Wir besitzen die notwendigen <strong>rechtlichen Zertifikate</strong> und Ressourcen, um alle Aspekte des Gefahrgut- und Abfallrechtes gesetzeskonform und verlässlich abzudecken.</p>
         <p>Egal welche Batteriegröße oder Branche – wir haben die passende Lösung, und das alles aus einer Hand.</p>
       </div>
@@ -188,7 +280,7 @@
         <h3>Lagerbehälter – jetzt auch zur Miete!</h3>
         <p>Unsere SafetyBATTbox Storage Family für die sichere Lagerung von Lithium-Ionen-Batterien können Sie nicht nur kaufen, sondern auch mieten – ideal für wechselnde Bedarfe und kurzfristige Anforderungen.</p>
       </div>
-      <a class="btn btn-ghost" href="mailto:info@logbatt.de">Beratung anfragen</a>
+      <a class="btn btn-ghost" href="mailto:info@logbatt.de"><span>Beratung anfragen</span></a>
     </div>
   </div>
 </section>
@@ -213,7 +305,30 @@
   </div>
 </section>
 
-<section id="prozess">
+<section>
+  <div class="wrap">
+    <div class="text-media">
+      <div class="tm-media reveal"><div class="ph">📦</div></div>
+      <div class="tm-content reveal delay-1">
+        <span class="caption">Entwicklung</span>
+        <h3>Eigene Transport- und Lagerbehälter</h3>
+        <p>Mit der SafetyBATTbox-Familie entwickeln und produzieren wir Transport-, Lager- und Quarantänebehälter selbst – inklusive eigener realer Brandtests und BAM-Bauartzulassungen.</p>
+        <a class="basic-link" href="#prozess">Mehr zum Ablauf <span class="arrow">→</span></a>
+      </div>
+    </div>
+    <div class="text-media reverse">
+      <div class="tm-media reveal"><div class="ph">🛡️</div></div>
+      <div class="tm-content reveal delay-1">
+        <span class="caption">Zertifizierung</span>
+        <h3>Höchste gefahrgutrechtliche Anforderungsstufe</h3>
+        <p>Für kritisch defekte Batterien verfügen wir über eine Verfahrensfestlegung nach ADR 2025 P911/LP906 sowie die Genehmigungen zum Sammeln, Befördern und Makeln gefährlicher Abfälle.</p>
+        <a class="basic-link" href="#faq">Häufige Fragen ansehen <span class="arrow">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="prozess" class="soft">
   <div class="wrap">
     <div class="section-head reveal">
       <span class="tag">Ablauf</span>
@@ -227,31 +342,83 @@
       <div class="step reveal delay-3"><div class="num">4</div><h4>Verbringung zur Recyclinganlage / Bestimmungsort</h4></div>
     </div>
     <div class="btn-row" style="margin-top:48px;">
-      <a class="btn btn-ghost" href="https://www.logbatt.de/wp-content/uploads/sites/10112/2025/04/FAQ-Batterielogistik.pdf" target="_blank" rel="noreferrer noopener">FAQ Batterielogistik (PDF)</a>
+      <a class="btn btn-ghost" href="https://www.logbatt.de/wp-content/uploads/sites/10112/2025/04/FAQ-Batterielogistik.pdf" target="_blank" rel="noreferrer noopener"><span>FAQ Batterielogistik (PDF)</span></a>
     </div>
   </div>
 </section>
 
-<section id="referenzen" class="soft">
+<section>
+  <div class="wrap">
+    <div class="grid-3">
+      <div class="tile reveal">
+        <div class="tile-icon">🚚</div>
+        <span class="caption">Logistik</span>
+        <h4>Transport &amp; Lagerung</h4>
+        <ul>
+          <li><a href="#vorteile">Gefahrgutkonformer Transport <span class="arrow">→</span></a></li>
+          <li><a href="#vorteile">Sichere Lagerung <span class="arrow">→</span></a></li>
+          <li><a href="#vorteile">Quarantänelagerung <span class="arrow">→</span></a></li>
+        </ul>
+      </div>
+      <div class="tile reveal delay-1">
+        <div class="tile-icon">♻️</div>
+        <span class="caption">Entsorgung</span>
+        <h4>Recycling &amp; Entsorgung</h4>
+        <ul>
+          <li><a href="#prozess">Verbringung zur Recyclinganlage <span class="arrow">→</span></a></li>
+          <li><a href="#vorteile">Entsorgungsfachbetrieb (EfB) <span class="arrow">→</span></a></li>
+          <li><a href="#faq">Mehr erfahren <span class="arrow">→</span></a></li>
+        </ul>
+      </div>
+      <div class="tile reveal delay-2">
+        <div class="tile-icon">🎓</div>
+        <span class="caption">Beratung</span>
+        <h4>Schulung &amp; Academy</h4>
+        <ul>
+          <li><a href="#vorteile">E-Learning Academy <span class="arrow">→</span></a></li>
+          <li><a href="#vorteile">Schulungen vor Ort <span class="arrow">→</span></a></li>
+          <li><a href="mailto:info@logbatt.de">Beratung anfragen <span class="arrow">→</span></a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="search-element tight">
   <div class="wrap">
     <div class="section-head reveal">
-      <span class="tag">Vertrauen</span>
-      <h2>Auszug unserer Referenzen</h2>
-      <p>Wir bieten Kunden aus Automotive, Industrie, Werkzeug und Consumer Electronics innovative, marktführende Dienstleistungen – darunter namhafte Automobilhersteller, Zulieferer und Werkzeuganbieter.</p>
+      <span class="tag">Suche</span>
+      <h2>Wonach suchen Sie?</h2>
     </div>
-    <div class="logo-grid">
-      <div class="logo-item reveal">BMW</div>
-      <div class="logo-item reveal delay-1">Mercedes-Benz</div>
-      <div class="logo-item reveal delay-2">Porsche</div>
-      <div class="logo-item reveal delay-3">Ford</div>
-      <div class="logo-item reveal delay-4">Bosch eBike</div>
-      <div class="logo-item reveal">Daimler</div>
-      <div class="logo-item reveal delay-1">DHL</div>
-      <div class="logo-item reveal delay-2">UPS</div>
-      <div class="logo-item reveal delay-3">Toyota</div>
-      <div class="logo-item reveal delay-4">Volvo</div>
-      <div class="logo-item reveal">MAN</div>
-      <div class="logo-item reveal delay-1">Northvolt</div>
+    <form class="search-bar reveal" onsubmit="return false;">
+      <input type="text" placeholder="z. B. SafetyBATTbox, FAQ, Kontakt …">
+      <button type="submit">Suchen</button>
+    </form>
+  </div>
+</section>
+
+<section id="referenzen" class="logo-element">
+  <div class="wrap">
+    <div class="le-grid">
+      <div class="reveal">
+        <span class="caption">Vertrauen</span>
+        <h2>Auszug unserer Referenzen</h2>
+        <p>Wir bieten Kunden aus Automotive, Industrie, Werkzeug und Consumer Electronics innovative, marktführende Dienstleistungen – darunter namhafte Automobilhersteller, Zulieferer und Werkzeuganbieter.</p>
+      </div>
+      <div class="logo-grid">
+        <div class="logo-item reveal">BMW</div>
+        <div class="logo-item reveal delay-1">Mercedes-Benz</div>
+        <div class="logo-item reveal delay-2">Porsche</div>
+        <div class="logo-item reveal delay-3">Ford</div>
+        <div class="logo-item reveal delay-4">Bosch eBike</div>
+        <div class="logo-item reveal">Daimler</div>
+        <div class="logo-item reveal delay-1">DHL</div>
+        <div class="logo-item reveal delay-2">UPS</div>
+        <div class="logo-item reveal delay-3">Toyota</div>
+        <div class="logo-item reveal delay-4">Volvo</div>
+        <div class="logo-item reveal">MAN</div>
+        <div class="logo-item reveal delay-1">Northvolt</div>
+      </div>
     </div>
   </div>
 </section>
@@ -264,7 +431,7 @@
       <p>LogBATT ist jetzt auch auf Social Media. Erhalten Sie auf Instagram exklusive Einblicke ins Unternehmen!</p>
     </div>
     <div class="btn-row">
-      <a class="btn btn-primary" href="/ueber-uns/#instagram">Zum Instagram-Feed</a>
+      <a class="btn btn-primary" href="/ueber-uns/#instagram"><span>Zum Instagram-Feed</span></a>
     </div>
   </div>
 </section>
@@ -277,7 +444,7 @@
       <p>Alles Wichtige zur LogBATT GmbH und Batterielogistik.</p>
     </div>
     <div class="faq-list">
-      <details class="faq-item reveal"><summary>Was ist die LogBATT GmbH?</summary><div class="faq-body">Die LogBATT GmbH mit Sitz in Plochingen ist ein auf die Logistik von Lithium-Ionen-Batterien spezialisiertes Unternehmen. LogBATT deckt die komplette Batterie-Supply-Chain aus einer Hand ab – Transport, Lagerung, Verpackung, Entsorgung und Recycling – und entwickelt und produziert zugleich eigene Gefahrgut- und Brandschutzbehälter. Seit Mitte 2023 ist LogBATT Teil der Lagermax Group.</div></details>
+      <details class="faq-item reveal"><summary>Was ist die LogBATT GmbH?<div class="faq-body">Die LogBATT GmbH mit Sitz in Plochingen ist ein auf die Logistik von Lithium-Ionen-Batterien spezialisiertes Unternehmen. LogBATT deckt die komplette Batterie-Supply-Chain aus einer Hand ab – Transport, Lagerung, Verpackung, Entsorgung und Recycling – und entwickelt und produziert zugleich eigene Gefahrgut- und Brandschutzbehälter. Seit Mitte 2023 ist LogBATT Teil der Lagermax Group.</div></details>
       <details class="faq-item reveal"><summary>Welche Leistungen bietet LogBATT an?</summary><div class="faq-body">LogBATT bietet gefahrgutkonformen Transport, sichere Lagerung und Quarantänelagerung, Entsorgungs- und Recyclinglogistik sowie die Entwicklung, Produktion und Verkauf sowie Miete von Transport- und Lagerbehältern. Ergänzend bietet LogBATT Verpackungsschulungen über die eigene E-Learning Academy oder vor Ort an.</div></details>
       <details class="faq-item reveal"><summary>Stellt LogBATT seine Transport- und Lagerbehälter selbst her?</summary><div class="faq-body">Ja. LogBATT ist Hersteller der SafetyBATTbox-Familie und entwickelt und produziert die Transport-, Lager- und Quarantänebehälter selbst – inklusive eigener realer Brandtests und BAM-Bauartzulassungen. Damit ist LogBATT nicht nur Logistikdienstleister, sondern auch Entwickler und Produzent der eingesetzten Behälter.</div></details>
       <details class="faq-item reveal"><summary>Für welche Batteriezustände bietet LogBATT Lösungen?</summary><div class="faq-body">LogBATT bietet Lösungen für nicht defekte, defekte und kritisch defekte Lithium-Ionen-Batterien. Für kritisch defekte Batterien verfügt LogBATT über eine Verfahrensfestlegung nach ADR 2025 P911/LP906 – die höchste gefahrgutrechtliche Anforderungsstufe.</div></details>
@@ -297,34 +464,49 @@
 </section>
 
 <footer>
+  <div class="footer-waves" aria-hidden="true">
+    <svg viewBox="0 0 1440 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,40 C240,0 480,70 720,30 C960,0 1200,60 1440,20 L1440,0 L0,0 Z" fill="#fff"></path>
+    </svg>
+  </div>
   <div class="wrap">
-    <div class="footer-grid">
-      <div>
-        <div class="logo" style="color:#fff;margin-bottom:14px;">Log<span>BATT</span></div>
-        <p style="color:#aab2bb;max-width:340px;font-size:14.5px;">Die Gesamtlösung für Batterielogistik, Vorwärtslogistik &amp; After-Sales-Logistik. Mitglied der Lagermax Group.</p>
-      </div>
-      <div>
-        <h5>Kontakt</h5>
-        <ul>
-          <li>Plochingen, Deutschland</li>
-          <li><a href="tel:+497153925080">+49 7153 925080</a></li>
-          <li><a href="mailto:info@logbatt.de">info@logbatt.de</a></li>
-        </ul>
-      </div>
-      <div>
-        <h5>Unternehmen</h5>
-        <ul>
-          <li><a href="/ueber-uns/">Über uns</a></li>
-          <li><a href="/logistik/">Logistik</a></li>
-          <li><a href="/entwicklung/">Entwicklung</a></li>
-          <li><a href="/impressum/">Impressum</a></li>
-          <li><a href="/datenschutz/">Datenschutz</a></li>
-        </ul>
-      </div>
+    <div class="footer-ticker">
+      <div class="tagline">Batterielogistik. Sicher. Zertifiziert. Aus einer Hand.</div>
+      <div class="logo" style="color:#fff;">Log<span>BATT</span></div>
     </div>
-    <div class="footer-bottom">
-      <span>© 2026 LogBATT GmbH. Alle Rechte vorbehalten.</span>
-      <span>ISO 9001 · ISO 14001 · QSP · EfB</span>
+    <div class="footer-main">
+      <div class="footer-grid">
+        <div>
+          <p style="color:#aab2bb;max-width:340px;font-size:14.5px;">Die Gesamtlösung für Batterielogistik, Vorwärtslogistik &amp; After-Sales-Logistik. Mitglied der Lagermax Group.</p>
+          <div class="social-row">
+            <a href="#" aria-label="LinkedIn">in</a>
+            <a href="#" aria-label="Instagram">ig</a>
+            <a href="#" aria-label="YouTube">yt</a>
+          </div>
+        </div>
+        <div>
+          <h5>Kontakt</h5>
+          <ul>
+            <li>Plochingen, Deutschland</li>
+            <li><a href="tel:+497153925080">+49 7153 925080</a></li>
+            <li><a href="mailto:info@logbatt.de">info@logbatt.de</a></li>
+          </ul>
+        </div>
+        <div>
+          <h5>Unternehmen</h5>
+          <ul>
+            <li><a href="/ueber-uns/">Über uns</a></li>
+            <li><a href="/logistik/">Logistik</a></li>
+            <li><a href="/entwicklung/">Entwicklung</a></li>
+            <li><a href="/impressum/">Impressum</a></li>
+            <li><a href="/datenschutz/">Datenschutz</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© 2026 LogBATT GmbH. Alle Rechte vorbehalten.</span>
+        <span>ISO 9001 · ISO 14001 · QSP · EfB</span>
+      </div>
     </div>
   </div>
 </footer>
