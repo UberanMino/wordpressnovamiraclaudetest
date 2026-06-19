@@ -573,6 +573,9 @@ th {
         <button type="submit" class="btn btn-primary">Search</button>
       </form>
       <div id="prospect-status" class="status"></div>
+      <div class="row" style="margin-top:10px;">
+        <button id="prospect-add-all" class="btn btn-accent" hidden>Add all</button>
+      </div>
       <div id="prospect-list" style="margin-top:14px;"></div>
     </div>
   </section>
@@ -1192,16 +1195,25 @@ ${companyContext(company)}`;
     let reply = "I wasn't able to find a confident answer after a few searches.";
     for (let i = 0; i < 3; i++) {
       const data = await claudeChat(convo, system, activeSearchProvider() ? [SEARCH_TOOL] : []);
-      const toolUse = (data.content || []).find((b) => b.type === "tool_use");
-      if (!toolUse) {
+      const toolUses = (data.content || []).filter((b) => b.type === "tool_use");
+      if (toolUses.length === 0) {
         reply = (data.content || []).map((b) => (b.type === "text" ? b.text : "")).join("");
         break;
       }
-      const results = await webSearch(toolUse.input.query);
+      const toolResults = [];
+      for (const toolUse of toolUses) {
+        let results;
+        try {
+          results = await webSearch(toolUse.input.query);
+        } catch (err) {
+          results = { error: err.message };
+        }
+        toolResults.push({ type: "tool_result", tool_use_id: toolUse.id, content: JSON.stringify(results) });
+      }
       convo = [
         ...convo,
         { role: "assistant", content: data.content },
-        { role: "user", content: [{ type: "tool_result", tool_use_id: toolUse.id, content: JSON.stringify(results) }] },
+        { role: "user", content: toolResults },
       ];
     }
     chatHistory.push({ role: "assistant", content: reply });
@@ -1221,45 +1233,81 @@ amFilterEl.addEventListener("change", renderList);
 
 // ---------- Cold Acquisition tab ----------
 
-let prospects = []; // { name, snippet, url, status: "found"|"qualifying"|"qualified"|"disqualified"|"added" }
+let prospects = []; // { name, snippet, url, status: "found"|"researching"|"qualified"|"disqualified"|"error"|"added" }
 
 const prospectForm = document.getElementById("prospect-form");
 const prospectListEl = document.getElementById("prospect-list");
 const prospectStatusEl = document.getElementById("prospect-status");
+const addAllBtn = document.getElementById("prospect-add-all");
 
 prospectForm.addEventListener("submit", async (e) => {
   e.preventDefault();
+  if (!apiKeys.anthropic) {
+    prospectStatusEl.textContent = "Set your Anthropic API key above first.";
+    prospectStatusEl.classList.add("error");
+    return;
+  }
+  if (!activeSearchProvider()) {
+    prospectStatusEl.textContent = "Set a web search key (Tavily, Serper, or Brave) above first.";
+    prospectStatusEl.classList.add("error");
+    return;
+  }
   const query = document.getElementById("prospect-query").value.trim() ||
     "EV battery recycling reverse logistics partner needed Germany Austria Switzerland";
+  prospectStatusEl.classList.remove("error");
   prospectStatusEl.textContent = "Searching...";
+  prospects = [];
+  renderProspects();
   try {
     const results = await webSearch(query, 10);
+    if (!results.length) {
+      prospectStatusEl.textContent = "Search returned 0 results. Try a different query or check your search API key/quota.";
+      prospectStatusEl.classList.add("error");
+      return;
+    }
     prospects = results.map((r) => ({ ...r, status: "found" }));
-    prospectStatusEl.textContent = `Found ${prospects.length} candidate(s).`;
+    prospectStatusEl.textContent = `Found ${prospects.length} candidate(s). Researching each against LogBATT's ICP...`;
     renderProspects();
+    for (let i = 0; i < prospects.length; i++) {
+      await qualifyProspect(i);
+      prospectStatusEl.textContent = `Researched ${i + 1} of ${prospects.length} candidate(s).`;
+    }
+    const qualifiedCount = prospects.filter((p) => p.status === "qualified").length;
+    prospectStatusEl.textContent = `Done. ${qualifiedCount} of ${prospects.length} candidate(s) look like a fit.`;
   } catch (err) {
     prospectStatusEl.textContent = `Search failed: ${err.message}`;
     prospectStatusEl.classList.add("error");
   }
 });
 
+addAllBtn.addEventListener("click", () => {
+  prospects.forEach((p, i) => {
+    if (p.status !== "added") addProspectToCrm(i, { skipRender: true });
+  });
+  renderProspects();
+  renderList();
+});
+
 function renderProspects() {
+  if (addAllBtn) addAllBtn.hidden = prospects.length === 0;
   prospectListEl.innerHTML = prospects
-    .map(
-      (p, i) => `
+    .map((p, i) => {
+      const statusLabel = { found: "Pending research...", researching: "Researching...", error: "Research failed" }[p.status];
+      return `
     <div class="contact-card">
       <div class="name">${p.name}</div>
       <div class="meta">${p.snippet || ""}</div>
-      <div class="meta"><a href="${p.url}" target="_blank" rel="noopener">${p.url}</a></div>
-      <div class="row" style="margin-top:8px;">
-        <button class="btn btn-primary btn-small" data-idx="${i}" data-action="qualify">${p.status === "qualifying" ? "Qualifying..." : "Qualify & draft"}</button>
-        ${p.status === "qualified" ? `<button class="btn btn-accent btn-small" data-idx="${i}" data-action="add">Add to Lead Management</button>` : ""}
-        ${p.status === "added" ? `<span class="status-pill status-Gewonnen">Added</span>` : ""}
-      </div>
-      ${p.qualification ? `<div class="hint" style="margin-top:6px;">Score ${p.qualification.score}/100: ${p.qualification.reason}</div>` : ""}
+      <div class="meta">${p.url ? `<a href="${p.url}" target="_blank" rel="noopener">${p.url}</a>` : ""}</div>
+      ${p.qualification ? `<div class="hint" style="margin-top:6px;">Score ${p.qualification.score}/100 (${p.qualification.qualified ? "qualified" : "not a fit"}): ${p.qualification.reason}</div>` : ""}
       ${p.emailDraft ? `<div class="hint" style="margin-top:6px;"><strong>${p.emailDraft.subject}</strong><br>${p.emailDraft.body}</div>` : ""}
-    </div>`
-    )
+      ${p.error ? `<div class="hint status error">${p.error}</div>` : ""}
+      <div class="row" style="margin-top:8px;">
+        ${statusLabel ? `<span class="hint">${statusLabel}</span>` : ""}
+        ${p.status !== "added" ? `<button class="btn btn-accent btn-small" data-idx="${i}" data-action="add">Add</button>` : `<span class="status-pill status-Gewonnen">Added</span>`}
+        ${p.status === "error" ? `<button class="btn btn-ghost btn-small" data-idx="${i}" data-action="retry">Retry research</button>` : ""}
+      </div>
+    </div>`;
+    })
     .join("");
 }
 
@@ -1268,13 +1316,14 @@ prospectListEl.addEventListener("click", async (e) => {
   if (!btn) return;
   const idx = Number(btn.dataset.idx);
   const action = btn.dataset.action;
-  if (action === "qualify") await qualifyProspect(idx);
+  if (action === "retry") await qualifyProspect(idx);
   if (action === "add") addProspectToCrm(idx);
 });
 
 async function qualifyProspect(idx) {
   const p = prospects[idx];
-  p.status = "qualifying";
+  p.status = "researching";
+  p.error = null;
   renderProspects();
   try {
     const icp = LOGBATT.icp;
@@ -1312,13 +1361,13 @@ Return JSON only: {"subject": "...", "body": "..."}`;
       p.status = "disqualified";
     }
   } catch (err) {
-    p.status = "found";
-    alert(`Qualify failed: ${err.message}`);
+    p.status = "error";
+    p.error = `Research failed: ${err.message}`;
   }
   renderProspects();
 }
 
-function addProspectToCrm(idx) {
+function addProspectToCrm(idx, { skipRender = false } = {}) {
   const p = prospects[idx];
   const id = slugify(p.name) + "-" + Math.random().toString(36).slice(2, 6);
   const company = {
@@ -1347,8 +1396,10 @@ function addProspectToCrm(idx) {
   };
   addNewLead(company);
   p.status = "added";
-  renderProspects();
-  renderList();
+  if (!skipRender) {
+    renderProspects();
+    renderList();
+  }
 }
 
 renderList();
