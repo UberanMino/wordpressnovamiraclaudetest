@@ -623,7 +623,7 @@ th {
       <h2>Neue Leads finden</h2>
       <p class="hint">Durchsucht das Web (über den oben gesetzten Such-Key) nach Firmen, die zum ICP von LogBATT passen, bewertet sie automatisch und entwirft Ansprache-Mails mit Claude. Bereits bewertete Firmen werden nicht erneut recherchiert.</p>
       <form id="prospect-form" class="row">
-        <input type="text" id="prospect-query" placeholder="Eigene Suchanfrage (optional &mdash; Standard zielt auf EV-/Batterie-Reverse-Logistik)" />
+        <input type="text" id="prospect-query" placeholder="z.B. 'Kunden in Köln' oder 'Batterie-Havarien letzte Woche' &mdash; wird automatisch für LogBATT aufbereitet" />
         <button type="submit" class="btn btn-primary">Suchen</button>
       </form>
       <div id="prospect-status" class="status"></div>
@@ -874,31 +874,44 @@ async function perplexityAsk(question, context) {
   return data.choices?.[0]?.message?.content || "(keine Antwort)";
 }
 
-async function webSearch(query, num = 5) {
+// timeRange: null | "day" | "week" | "month" | "year" (begrenzt Treffer auf
+//   diesen Zeitraum, damit z.B. "Havariefälle letzte Woche" keine 5 Jahre
+//   alten Treffer liefert)
+// topic: "general" | "news" (news = aktuelle Meldungen; Tavily nutzt das direkt)
+async function webSearch(query, num = 5, { timeRange = null, topic = "general" } = {}) {
   const provider = activeSearchProvider();
   if (!provider) return [];
   if (provider === "tavily") {
+    const body = { api_key: apiKeys.tavily, query, max_results: num };
+    if (topic === "news") body.topic = "news";
+    if (timeRange) body.time_range = timeRange; // Tavily: day|week|month|year
     const res = await fetch("https://api.tavily.com/search", {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ api_key: apiKeys.tavily, query, max_results: num }),
+      body: JSON.stringify(body),
     });
     if (!res.ok) throw new Error(`Tavily-Fehler ${res.status}: ${await res.text()}`);
     const data = await res.json();
     return (data.results || []).map((r) => ({ name: r.title, snippet: r.content, url: r.url }));
   }
   if (provider === "serper") {
+    const tbsMap = { day: "qdr:d", week: "qdr:w", month: "qdr:m", year: "qdr:y" };
+    const serperBody = { q: query, num };
+    if (timeRange && tbsMap[timeRange]) serperBody.tbs = tbsMap[timeRange];
     const res = await fetch("https://google.serper.dev/search", {
       method: "POST",
       headers: { "X-API-KEY": apiKeys.serper, "Content-Type": "application/json" },
-      body: JSON.stringify({ q: query, num }),
+      body: JSON.stringify(serperBody),
     });
     if (!res.ok) throw new Error(`Serper-Fehler ${res.status}: ${await res.text()}`);
     const data = await res.json();
     return (data.organic || []).map((r) => ({ name: r.title, snippet: r.snippet, url: r.link }));
   }
   if (provider === "brave") {
-    const res = await fetch(`https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query)}&count=${num}`, {
+    const freshMap = { day: "pd", week: "pw", month: "pm", year: "py" };
+    let braveUrl = `https://api.search.brave.com/res/v1/web/search?q=${encodeURIComponent(query)}&count=${num}`;
+    if (timeRange && freshMap[timeRange]) braveUrl += `&freshness=${freshMap[timeRange]}`;
+    const res = await fetch(braveUrl, {
       headers: { Accept: "application/json", "X-Subscription-Token": apiKeys.brave },
     });
     if (!res.ok) throw new Error(`Brave-Fehler ${res.status}: ${await res.text()}`);
@@ -906,6 +919,41 @@ async function webSearch(query, num = 5) {
     return (data.web?.results || []).map((r) => ({ name: r.title, snippet: r.description, url: r.url }));
   }
   return [];
+}
+
+// Wandelt die (evtl. leere/vage) Sucheingabe der Vertriebsperson in eine
+// LogBATT-taugliche Web-Suchanfrage um und erkennt einen Zeitbezug. So werden
+// z.B. "Kunden in Köln" auf das ICP kontextualisiert und "Havariefälle letzte
+// Woche" zeitlich eingegrenzt.
+async function planSearch(userInput) {
+  const icp = LOGBATT.icp;
+  const today = new Date().toISOString().slice(0, 10);
+  const prompt = `Du hilfst dem Vertriebsteam von ${LOGBATT.name} bei der Neukunden-Akquise (Kaltakquise).
+
+${LOGBATT.name}: ${LOGBATT.positioning}
+Ziel-Branchen: ${icp.industries.join(", ")}
+Ziel-Regionen: ${icp.regions.join(", ")}
+Positive Trigger/Kaufsignale: ${icp.triggers.join("; ")}
+Disqualifizierer: ${icp.disqualifiers.join("; ")}
+
+Heutiges Datum: ${today}
+
+Die Vertriebsperson hat folgende Suchabsicht eingegeben (kann leer, vage, nur eine Region oder nur ein Thema sein, meist auf Deutsch):
+"""
+${userInput || "(leer — allgemeine Suche nach passenden Neukunden im ICP)"}
+"""
+
+Erzeuge daraus EINE optimierte Web-Suchanfrage, die IMMER im Sinne der Neukunden-Akquise für LogBATT Sinn ergibt. Kontextualisiere sie so, dass sie zum ICP passt (Lithium-Ionen-/EV-/HV-Batterien, Reverse-Logistik, Gefahrgut/ADR, Batterie-Recycling, Havarie/Brände/Rückrufe von Batterien, Gigafactory/Flotten-Ausbau usw.) — auch wenn die Eingabe nur einen Ort ("Köln") oder ein vages Thema nennt. Wenn nur eine Region genannt ist, suche nach passenden Firmen/Branchen aus dem ICP in dieser Region.
+
+Erkenne außerdem, ob die Eingabe einen Zeitbezug hat (z.B. "letzte Woche", "aktuell", "neueste", "gestern", ein Jahr).
+
+Gib NUR JSON zurück, exakt in dieser Form:
+{"query": "die optimierte Suchanfrage; bevorzugt Englisch für bessere Web-Abdeckung, aber Eigennamen/Orte beibehalten", "topic": "news" oder "general", "timeRange": "day" | "week" | "month" | "year" | null, "explanation": "1 kurzer deutscher Satz, wonach konkret gesucht wird"}
+
+Regeln:
+- "topic":"news" mit passendem "timeRange" NUR wenn die Eingabe wirklich einen aktuellen/zeitlichen Bezug hat (Havariefälle, Brände, Rückrufe, News, "letzte Woche" …). Sonst "topic":"general" und "timeRange":null.
+- Zeitbezug-Zuordnung: "gestern/heute" -> "day", "letzte Woche" -> "week", "letzter Monat" -> "month", "aktuell/neueste/dieses Jahr" -> "year".`;
+  return await claudeAsk(prompt, { json: true, maxTokens: 400 });
 }
 
 // Apollos API ist für serverseitige Nutzung gedacht; CORS kann diese Aufrufe
@@ -1500,14 +1548,34 @@ prospectForm.addEventListener("submit", async (e) => {
     prospectStatusEl.classList.add("error");
     return;
   }
-  const query = document.getElementById("prospect-query").value.trim() ||
-    "EV battery recycling reverse logistics partner needed Germany Austria Switzerland";
+  const userInput = document.getElementById("prospect-query").value.trim();
   prospectStatusEl.classList.remove("error");
-  prospectStatusEl.textContent = "Suche läuft...";
+  prospectStatusEl.textContent = "Suchanfrage wird für LogBATT aufbereitet...";
   prospects = [];
   renderProspects();
   try {
-    const results = await webSearch(query, 10);
+    // 1) Eingabe zu einer LogBATT-tauglichen Suchanfrage + Zeitbezug aufbereiten.
+    let plan;
+    try {
+      plan = await planSearch(userInput);
+    } catch (err) {
+      // Fällt auf die Roh-Eingabe zurück, falls der Planer scheitert.
+      plan = {
+        query: userInput || "EV battery recycling reverse logistics partner Germany Austria Switzerland",
+        topic: "general",
+        timeRange: null,
+        explanation: "Suchanfrage konnte nicht aufbereitet werden, nutze Eingabe direkt.",
+      };
+    }
+    const query = plan.query;
+    const searchOpts = { timeRange: plan.timeRange || null, topic: plan.topic === "news" ? "news" : "general" };
+    const timeLabelMap = { day: "letzte 24 h", week: "letzte Woche", month: "letzter Monat", year: "letztes Jahr" };
+    const scopeBits = [`Suche: "${query}"`];
+    if (searchOpts.timeRange) scopeBits.push(`Zeitraum: ${timeLabelMap[searchOpts.timeRange] || searchOpts.timeRange}`);
+    prospectStatusEl.textContent = `${plan.explanation || ""}\n${scopeBits.join(" · ")}\nSuche läuft...`;
+
+    // 2) Web-Suche mit Zeitbezug ausführen.
+    const results = await webSearch(query, 10, searchOpts);
     if (!results.length) {
       prospectStatusEl.textContent = "Suche ergab 0 Treffer. Versuch eine andere Anfrage oder prüfe deinen Websuche-Key/Kontingent.";
       prospectStatusEl.classList.add("error");
@@ -1525,7 +1593,7 @@ prospectForm.addEventListener("submit", async (e) => {
       prospectStatusEl.textContent = `${n + 1} von ${toResearch.length} neue(n) Treffer(n) recherchiert.`;
     }
     const qualifiedCount = prospects.filter((p) => p.status === "qualified").length;
-    prospectStatusEl.textContent = `Fertig. ${qualifiedCount} von ${prospects.length} Treffer(n) passen ins Profil.`;
+    prospectStatusEl.textContent = `Fertig. ${qualifiedCount} von ${prospects.length} Treffer(n) passen ins Profil.\n${scopeBits.join(" · ")}`;
   } catch (err) {
     prospectStatusEl.textContent = `Suche fehlgeschlagen: ${err.message}`;
     prospectStatusEl.classList.add("error");
